@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="article:published_time" content="2020-03-06T03:59:12.000Z">
-<meta property="article:modified_time" content="2020-03-06T07:42:57.207Z">
+<meta property="article:modified_time" content="2020-03-06T07:49:52.457Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3186 个字)
+                    21 分钟 读完 (大约 3100 个字)
                 </span>
                 
                 
@@ -168,25 +168,17 @@
         </h1>
         <div class="content">
             <ul>
-<li><p><strong>互联网</strong>：网络把主机连接起来，而互联网是通过某种协议将多种不同的网络连接起来，因此<strong>互联网是网络的网络</strong>。国际标准的互联网写法是<strong>internet</strong>，字母i小写！ </p>
-<a id="more"></a>
+<li><strong>互联网</strong>：网络把主机连接起来，而互联网是通过某种协议将多种不同的网络连接起来，因此<strong>互联网是网络的网络</strong>。国际标准的互联网写法是<strong>internet</strong>，字母i小写！ <a id="more"></a>
+<!-- TOC -->
+
+
 </li>
-<li><p><a href="#互联网因特网与万维网">互联网、因特网与万维网</a></p>
-</li>
-<li><p><a href="#端系统通信方式cs与p2p">端系统通信方式：C/S与P2P</a></p>
-</li>
-<li><p><a href="#比特率与带宽">比特率与带宽</a></p>
-</li>
-<li><p><a href="#ip端口号和dns">IP、端口号和DNS</a></p>
-</li>
-<li><p><a href="#计算机网络体系结构">计算机网络体系结构</a></p>
-<h2 id="互联网、因特网与万维网"><a href="#互联网、因特网与万维网" class="headerlink" title="互联网、因特网与万维网"></a>互联网、因特网与万维网</h2></li>
-<li><p><strong>互联网</strong>：网络把主机连接起来，而互联网是通过某种协议将多种不同的网络连接起来，  因此<strong>互联网是网络的网络</strong>。  国际标准的互联网写法是<strong>internet</strong>，字母i小写！  </p>
-</li>
-<li><p><strong>因特网</strong>：<strong>采用TCP/IP协议族作为通信的规则的互联网</strong>。国际标准的因特网写法是<strong>Internet</strong>，字母I大写！ TCP/IP协议由很多协议组成，不同类型的协议又被放在不同的层，其中，位于应用层的协议就有很多，比如FTP、SMTP、HTTP。所以，因特网提供的服务一般包括有：www（万维网）服务、电子邮件服务（outlook）、远程登录（QQ）服务、文件传输（FTP）服务、网络电话等等  </p>
-</li>
-<li><p><strong>万维网(www)</strong>：<strong>只要应用层使用的是HTTP协议，就称为万维网</strong>。<br>万维网又称环球网，是一种建立在Internet上的全球性的、交互的、动态、多平台、分布式、图形信息系统。它只是建立在Internet上的一种网络服务。  之所以在浏览器里输入百度网址时，能看见百度网提供的网页，就是因为你的个人浏览器和百度网的服务器之间使用的是HTTP协议在交流。  </p>
-</li>
+</ul>
+<!-- /TOC -->
+<h2 id="互联网、因特网与万维网"><a href="#互联网、因特网与万维网" class="headerlink" title="互联网、因特网与万维网"></a>互联网、因特网与万维网</h2><ul>
+<li><strong>互联网</strong>：网络把主机连接起来，而互联网是通过某种协议将多种不同的网络连接起来，  因此<strong>互联网是网络的网络</strong>。  国际标准的互联网写法是<strong>internet</strong>，字母i小写！  </li>
+<li><strong>因特网</strong>：<strong>采用TCP/IP协议族作为通信的规则的互联网</strong>。国际标准的因特网写法是<strong>Internet</strong>，字母I大写！ TCP/IP协议由很多协议组成，不同类型的协议又被放在不同的层，其中，位于应用层的协议就有很多，比如FTP、SMTP、HTTP。所以，因特网提供的服务一般包括有：www（万维网）服务、电子邮件服务（outlook）、远程登录（QQ）服务、文件传输（FTP）服务、网络电话等等  </li>
+<li><strong>万维网(www)</strong>：<strong>只要应用层使用的是HTTP协议，就称为万维网</strong>。<br>万维网又称环球网，是一种建立在Internet上的全球性的、交互的、动态、多平台、分布式、图形信息系统。它只是建立在Internet上的一种网络服务。  之所以在浏览器里输入百度网址时，能看见百度网提供的网页，就是因为你的个人浏览器和百度网的服务器之间使用的是HTTP协议在交流。  </li>
 </ul>
 <p>三者关系：<strong>互联网包含因特网，因特网包含万维网</strong>  </p>
 <p>目前，围绕互联网发展的业务主要有两类，分别是<strong>ISP（因特网服务提供商）</strong>与<strong>ICP（因特网网内容提供商）</strong></p>
@@ -218,17 +210,23 @@
 <li><p><strong>分组交换</strong> ：分组交换采用<strong>存储转发技术</strong>。每个分组都有首部和尾部，包含了源地址和目的地址等控制信息，在同一个传输线路上同时传输多个分组互相不会影响，因此在同一条传输线路上允许同时传输多个分组，也就是说分组交换不需要占用传输线路。</p>
 </li>
 </ol>
-<h2 id="计算机网络类别"><a href="#计算机网络类别" class="headerlink" title="计算机网络类别"></a>计算机网络类别</h2><h3 id="按照网络的作用范围进行分类"><a href="#按照网络的作用范围进行分类" class="headerlink" title="按照网络的作用范围进行分类"></a>按照网络的作用范围进行分类</h3><ol>
-<li><strong>广域网WAN</strong>: 通过长距离(例如跨越不同国家)运送主机发送数据。  作用范围通常为几十到几千公里</li>
+<h2 id="计算机网络类别"><a href="#计算机网络类别" class="headerlink" title="计算机网络类别"></a>计算机网络类别</h2><h4>按照网络的作用范围进行分类</h4>
+
+<ol>
+<li><strong>广域网WAN</strong>:通过长距离(例如跨越不同国家)运送主机发送数据。  作用范围通常为几十到几千公里</li>
 <li><strong>城域网MAN</strong>: 一般是一个城市。 作用距离为5~50km</li>
 <li><strong>局域网LAN</strong>: 用计算机或工作站通过高速通信线路相连。作用距离为1km左右。学校或企业大都拥有多个互连的局域网称为校园网或企业网。</li>
 <li><strong>个人局域网PAN</strong>:把属于个人的电子设备用无线技术连接起来的网络，也常称为<strong>无线个人局域网(WPAN)</strong>。 作用距离10m左右。</li>
 </ol>
-<h3 id="按照网络的使用者进行分类"><a href="#按照网络的使用者进行分类" class="headerlink" title="按照网络的使用者进行分类"></a>按照网络的使用者进行分类</h3><ol>
+<h4>按照网络的使用者进行分类</h4>
+
+<ol>
 <li><strong>公用网</strong>：  指电信公司出资建造的大型网络。需要向电信公司交纳一定的费用</li>
 <li><strong>专用网</strong>： 指某个部门因为特殊业务工作需要而建造的网络。不向本单位以外的人提供服务。如军队、铁路、银行、电力系统等。</li>
 </ol>
-<h3 id="用来把用户接入到互联网的网络"><a href="#用来把用户接入到互联网的网络" class="headerlink" title="用来把用户接入到互联网的网络"></a>用来把用户接入到互联网的网络</h3><p><strong>接入网AN</strong>： 搭建起用户与互联网连接的”桥梁”。</p>
+<h4>用来把用户接入到互联网的网络</h4>
+
+<p><strong>接入网AN</strong>： 搭建起用户与互联网连接的”桥梁”。</p>
 <h2 id="计算机网络的性能"><a href="#计算机网络的性能" class="headerlink" title="计算机网络的性能"></a>计算机网络的性能</h2><ul>
 <li><p><strong>比特率</strong>：连接在计算机网络上的主机在数字信道上传送数据的速率。比特率速率的单位是b/s（比特每秒），有时候也写为bps，即bit persecond  </p>
 </li>
@@ -451,15 +449,15 @@
         <span class="has-mr-6">3</span>
         <span>计算机网络类别</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#按照网络的作用范围进行分类">
+        <a class="is-flex" href="#undefined">
         <span class="has-mr-6">3.1</span>
         <span>按照网络的作用范围进行分类</span>
         </a></li><li>
-        <a class="is-flex" href="#按照网络的使用者进行分类">
+        <a class="is-flex" href="#undefined">
         <span class="has-mr-6">3.2</span>
         <span>按照网络的使用者进行分类</span>
         </a></li><li>
-        <a class="is-flex" href="#用来把用户接入到互联网的网络">
+        <a class="is-flex" href="#undefined">
         <span class="has-mr-6">3.3</span>
         <span>用来把用户接入到互联网的网络</span>
         </a></li></ul></li><li>
