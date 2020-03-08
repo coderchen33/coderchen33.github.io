@@ -10,14 +10,16 @@
 <title>网络层 - chen33的个人博客</title>
 
 
-    <meta property="og:type" content="article">
+    <meta name="description" content="主要内容  虚拟互联网络的概念 IP地址和物理地址的关系 传统的分类的IP地址（包括子网掩码）和无分类域间路由选择CIDR 路由选择协议的工作原理">
+<meta property="og:type" content="article">
 <meta property="og:title" content="网络层">
 <meta property="og:url" content="http://yoursite.com/2020/03/07/%E7%BD%91%E7%BB%9C%E5%B1%82/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容  虚拟互联网络的概念 IP地址和物理地址的关系 传统的分类的IP地址（包括子网掩码）和无分类域间路由选择CIDR 路由选择协议的工作原理">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="article:published_time" content="2020-03-07T03:48:40.000Z">
-<meta property="article:modified_time" content="2020-03-07T03:52:53.057Z">
+<meta property="article:modified_time" content="2020-03-08T09:32:54.370Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -152,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 1 个字)
+                    3 分钟 读完 (大约 480 个字)
                 </span>
                 
                 
@@ -165,7 +167,35 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
+            <p><strong>主要内容</strong></p>
+<ul>
+<li>虚拟互联网络的概念</li>
+<li>IP地址和物理地址的关系</li>
+<li>传统的分类的IP地址（包括子网掩码）和无分类域间路由选择CIDR</li>
+<li>路由选择协议的工作原理<a id="more"></a>
+
+</li>
+</ul>
+<h2 id="网络层服务及虚拟互联网的概念"><a href="#网络层服务及虚拟互联网的概念" class="headerlink" title="网络层服务及虚拟互联网的概念"></a>网络层服务及虚拟互联网的概念</h2><p>因为网络层是整个互联网的核心，因此应当让网络层尽可能简单。</p>
+<p>网络层向上只<strong>提供简单的、无连接的、尽最大努力交互(不可靠)的数据报服务</strong><br>。</p>
+<ul>
+<li><strong>无连接：IP并不需要事先建立连接或者维护任何关于后续数据报的状态信息</strong>。每个数据报的处理相互独立，并且可以不按发送顺序接收。  </li>
+<li><strong>不可靠：它不能保证IP数据报能成功地到达目的地。IP仅提供最好的传输服务</strong>  所传送的分组可能出错、丢失、重复和失序，当然也不保证分组交付的时限。</li>
+</ul>
+<p>使用 IP 协议，可以把异构的物理网络连接起来，使得在网络层看起来好像是一个统一的网络称为<strong>虚拟互联网络</strong>，由于使用的是IP协议也称为IP网。</p>
+<p>与IP协议配套使用的还有三个协议：</p>
+<ul>
+<li><strong>地址解析协议 ARP</strong>   (Address Resolution Protocol)</li>
+<li><strong>网际控制报文协议 ICMP</strong>  (Internet Control Message Protocol)</li>
+<li><strong>网际组管理协议 IGMP</strong>  (Internet Group Management Protocol) </li>
+<li><del>逆地址解析协议(RARP)</del> (DHCP协议(应用层协议)已经包含了RARP协议，所以RARP协议现在已经不使用了)</li>
+</ul>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/IP%E5%8D%8F%E8%AE%AE.png"></div><br>
+
+<hr>
+<h2 id="IP地址和物理地址的关系"><a href="#IP地址和物理地址的关系" class="headerlink" title="IP地址和物理地址的关系"></a>IP地址和物理地址的关系</h2><p>物理地址是数据链路层和物理层使用的地址，而IP地址是网络层和以上各层使用的地址，是一种逻辑地址。</p>
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/imageIP%E5%9C%B0%E5%9D%80%E5%92%8C%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80.png"></div><br>
+
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -346,6 +376,25 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#网络层服务及虚拟互联网的概念">
+        <span class="has-mr-6">1</span>
+        <span>网络层服务及虚拟互联网的概念</span>
+        </a></li><li>
+        <a class="is-flex" href="#IP地址和物理地址的关系">
+        <span class="has-mr-6">2</span>
+        <span>IP地址和物理地址的关系</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
 
     
         
