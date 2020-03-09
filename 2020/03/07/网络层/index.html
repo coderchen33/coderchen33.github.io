@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="article:published_time" content="2020-03-07T03:48:40.000Z">
-<meta property="article:modified_time" content="2020-03-08T22:44:39.857Z">
+<meta property="article:modified_time" content="2020-03-08T23:47:07.263Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2222 个字)
+                    18 分钟 读完 (大约 2747 个字)
                 </span>
                 
                 
@@ -192,7 +192,7 @@
 <div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/IP%E5%8D%8F%E8%AE%AE.png"></div><br>
 
 <hr>
-<h2 id="IP地址和物理地址"><a href="#IP地址和物理地址" class="headerlink" title="IP地址和物理地址"></a>IP地址和物理地址</h2><p>物理地址是数据链路层和物理层使用的地址，而IP地址是网络层和以上各层使用的地址，是一种逻辑地址。</p>
+<h2 id="IP地址和物理地址"><a href="#IP地址和物理地址" class="headerlink" title="IP地址和物理地址"></a>IP地址和物理地址</h2><p>物理地址是数据链路层和物理层使用的地址，而IP地址（32位）是网络层和以上各层使用的地址，是一种逻辑地址。</p>
 <div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/imageIP%E5%9C%B0%E5%9D%80%E5%92%8C%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80.png"></div><br>
 
 <p>下图为3个局域网用2个路由器R1和R2连接起来，现在主机H1要和主机H2进行通信。</p>
@@ -275,6 +275,30 @@
 <p><strong>CIDR的地址掩码可以继续称为子网掩码，子网掩码1的长度为网络前缀的长度</strong>。</p>
 <p>一个组织通常被分配成一块连续的地址，即具有相同前缀的一段地址，这种情况下，该组织内部的设备的IP地址将共享共同的前缀。剩余的32-x比特用于区分该组织内部设备。</p>
 <p>一个 CIDR地址块中有很多地址，一个CIDR表示的网络就可以表示原来的很多个网络，并且在路由表中只需要一个路由就可以代替原来的多个路由，减少了路由表项的数量。把这种通过使用网络前缀来减少路由表项的方式称为路由聚合，也称为构成<strong>超网</strong>。</p>
+<hr>
+<h2 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h2><p>上面使用子网的IP地址和无分类编址CIDR都提到了子网掩码，什么是子网掩码呢？它的作用是什么呢？我们举个例子就可以理解了</p>
+<p>下图表示某单位拥有一个B类IP地址，网络地址是145.13.0.0（网络号是145.13） </p>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%AD%90%E7%BD%91.png"></div><br>
+
+
+<p>现把上图中的网络划分为三个子网，这里假定子网号占用8位，因此主机号只剩8位。所划分的子网分别是：145.13.3.0 145.13.7.0、145.13.21.0  </p>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%AD%90%E7%BD%911.png"></div><br>
+
+<p>划分子网后，整个网络对外仍表现为一个网络，其网络地址仍为145.13.0.0，但是路由器R1在收到外来的数据报后，再根据数据报的目的地址把它转发到相应的子网。</p>
+<p>假定有一个数据报的目的地址是145.13.3.10已经到达路由器R1，那么这个路由器如何把它转发到子网145.13.3.0呢？这就需要借助<strong>子网掩码</strong>（subnetmask）来实现了。</p>
+<p><strong>路由器会把子网掩码和收到的数据报地址的目的IP地址145.13.3.10进行按位“与”操作，得出所要找的子网的网络地址</strong>  </p>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%AD%90%E7%BD%912.png"></div><br>
+
+<p>可以看到，子网掩码与IP地址进行“与”操作之后，就将主机号“过滤”掉了，只剩下了网络号与子网号。 </p>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%AD%90%E7%BD%913.png"></div><br>
+
+
+<p>实际上，<strong>因特网的标准规定：所有网络必须使用子网掩码。</strong>即便一个网络没有划分子网，也要使用默认子网掩码。<strong>默认子网掩码中1的位置和IP地址中的网络号字段正好相对应</strong>，因此，两者进行“与”操作后，就能得出该IP地址的网络地址。</p>
+<p>A类、B类、C类地址的默认子网掩码是固定的： </p>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%AD%90%E7%BD%914.png"></div><br>
+
+<p>例，已知 IP 地址是141.14.72.24（注意是IP数据报中的目的地址），子网掩码是 255.255.192.0。试求子网网络地址。</p>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%AD%90%E7%BD%915.png"></div><br>
 
         </div>
         
@@ -333,9 +357,9 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/07/%E4%BC%A0%E8%BE%93%E5%B1%82/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/09/%E7%BD%91%E7%BB%9C%E5%B1%822/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">传输层</span>
+                <span class="level-item">网络层(二)</span>
             </a>
         </div>
         
@@ -491,7 +515,11 @@
         <a class="is-flex" href="#无分类编址CIDR（构造超网）">
         <span class="has-mr-6">3.3</span>
         <span>无分类编址CIDR（构造超网）</span>
-        </a></li></ul></li></ul>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#子网掩码">
+        <span class="has-mr-6">4</span>
+        <span>子网掩码</span>
+        </a></li></ul>
             </div>
         </div>
     </div>
@@ -511,7 +539,7 @@
                 <span class="level-item">计算机基础</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">
@@ -519,7 +547,7 @@
                 <span class="level-item">计算机网络</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li></ul></li>
             </ul>
@@ -540,10 +568,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-07T14:42:03.000Z">2020-03-07</time></div>
-                    <a href="/2020/03/07/%E4%BC%A0%E8%BE%93%E5%B1%82/" class="title has-link-black-ter is-size-6 has-text-weight-normal">传输层</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-08T22:49:26.000Z">2020-03-09</time></div>
+                    <a href="/2020/03/09/%E7%BD%91%E7%BB%9C%E5%B1%822/" class="title has-link-black-ter is-size-6 has-text-weight-normal">网络层(二)</a>
                     <p class="is-size-7 is-uppercase">
-                        
+                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
                     </p>
                 </div>
             </div>
@@ -683,10 +711,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-07T14:42:03.000Z">2020-03-07</time></div>
-                    <a href="/2020/03/07/%E4%BC%A0%E8%BE%93%E5%B1%82/" class="title has-link-black-ter is-size-6 has-text-weight-normal">传输层</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-08T22:49:26.000Z">2020-03-09</time></div>
+                    <a href="/2020/03/09/%E7%BD%91%E7%BB%9C%E5%B1%822/" class="title has-link-black-ter is-size-6 has-text-weight-normal">网络层(二)</a>
                     <p class="is-size-7 is-uppercase">
-                        
+                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
                     </p>
                 </div>
             </div>
