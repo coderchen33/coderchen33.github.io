@@ -7,19 +7,19 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>网络层(二) - chen33的个人博客</title>
+<title>传输层 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容  IP数据报格式 IP层分组转发算法 路由选择协议 ICMP协议、ping、traceroute">
+    <meta name="description" content="主要内容  传输层概念、端口号、套接字 UDP传输特点和数据报格式 TCP传输特点和数据报格式 可靠传输原理 TCP可靠运输的实现 TCP流量控制、拥塞控制 三次握手和四次握手抓包分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络层(二)">
-<meta property="og:url" content="http://yoursite.com/2020/03/09/%E7%BD%91%E7%BB%9C%E5%B1%822/index.html">
+<meta property="og:title" content="传输层">
+<meta property="og:url" content="http://yoursite.com/2020/03/09/%E4%BC%A0%E8%BE%93%E5%B1%82/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容  IP数据报格式 IP层分组转发算法 路由选择协议 ICMP协议、ping、traceroute">
+<meta property="og:description" content="主要内容  传输层概念、端口号、套接字 UDP传输特点和数据报格式 TCP传输特点和数据报格式 可靠传输原理 TCP可靠运输的实现 TCP流量控制、拥塞控制 三次握手和四次握手抓包分析">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="article:published_time" content="2020-03-08T22:49:26.000Z">
-<meta property="article:modified_time" content="2020-03-09T07:35:00.206Z">
+<meta property="article:published_time" content="2020-03-09T08:25:21.000Z">
+<meta property="article:modified_time" content="2020-03-10T03:55:37.880Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -81,7 +81,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="网络层(二)" height="28">
+                <img src="/images/logo.png" alt="传输层" height="28">
             
             </a>
         </div>
@@ -144,7 +144,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-08T22:49:26.000Z">2020-03-09</time>
+                <time class="level-item has-text-grey" datetime="2020-03-09T08:25:21.000Z">2020-03-09</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
@@ -154,7 +154,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    30 分钟 读完 (大约 4529 个字)
+                    39 分钟 读完 (大约 5909 个字)
                 </span>
                 
                 
@@ -163,181 +163,246 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                网络层(二)
+                传输层
             
         </h1>
         <div class="content">
             <p><strong>主要内容</strong></p>
-<ul>
-<li>IP数据报格式</li>
-<li>IP层分组转发算法</li>
-<li>路由选择协议</li>
-<li>ICMP协议、ping、traceroute<a id="more"></a>
+<ol>
+<li>传输层概念、端口号、套接字</li>
+<li>UDP传输特点和数据报格式</li>
+<li>TCP传输特点和数据报格式</li>
+<li>可靠传输原理</li>
+<li>TCP可靠运输的实现</li>
+<li>TCP流量控制、拥塞控制</li>
+<li>三次握手和四次握手抓包分析<a id="more"></a>
 
+</li>
+</ol>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>运输层向它上面应用层提供通信服务，它属于面向通信部分的最高层，同时也是用户功能中的最底层。</p>
+<p>两个主机进行通信实际上就是<strong>两个主机中的应用进程互相通信</strong>。应用进程之间的通信又称为<strong>端到端的通信</strong>。</p>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E4%BC%A0%E8%BE%93%E5%B1%82.png"></div><br>
+
+<p>传输层有两种不同的协议：<strong>用户数据报协议UDP</strong>和<strong>传输控制协议TCP</strong></p>
+<p>学习这两个重要协议之前，先简单了解下端口的概念。</p>
+<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><p>端口(16位)用来<strong>对 TCP/IP 体系的应用进程</strong>进行区分。</p>
+<p><strong>端口号只具有本地意义</strong>，即端口号只是为了标志本计算机应用层中的各进程。在因特网中不同计算机的相同端口号是没有联系的。</p>
+<p>端口号分为两类：</p>
+<ol>
+<li>服务端使用的端口号<br>服务器端使用的端口又分为两类：<strong>熟知端口</strong>和<strong>登记端口</strong>。<br>熟知端口数值一般为0~1023(比如我们<strong>常见的http使用的就是80端口</strong>)。<br>登记端口数值为1024 ~ 49151，这些端口是为没有熟知端口号的应用程序使用的。使用这个范围的端口号必须在 IANA 登记，以防止重复。</li>
+</ol>
+<p>服务器端常见端口号：</p>
+<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E7%86%9F%E7%9F%A5%E7%AB%AF%E5%8F%A3.png"></div><br>
+
+<ol start="2">
+<li>客户端使用的端口号<br>数值为49152~65535，留给客户进程选择暂时使用，仅在客户进程运行时才动态选择，因此又叫<strong>短暂端口号</strong>。当服务器进程收到客户进程的报文时，就知道了客户进程所使用的动态端口号。通信结束后，这个端口号可供其他客户进程以后使用。</li>
+</ol>
+<h3 id="套接字"><a href="#套接字" class="headerlink" title="套接字"></a>套接字</h3><p>套接字针对的是TCP连接，每一条TCP连接有两个端点，那两个端点称为<strong>套接字（socket）</strong></p>
+<p>端口号拼接到IP地址后面构成套接字。<br><strong>套接字socket=（IP地址：端口号）</strong></p>
+<p>所以每一条TCP连接唯一地被通信两端的两个端点（两个套接字）所确定。即：<br><strong>TCP连接::={socket1,socket2}={(IP1:port1),(IP2:port2)}</strong></p>
+<hr>
+<h2 id="用户数据报协议UDP"><a href="#用户数据报协议UDP" class="headerlink" title="用户数据报协议UDP"></a>用户数据报协议UDP</h2><p>UDP 只在IP的数据报服务之上增加了很少一点的功能，即端口的功能和差错检测的功能。</p>
+<h3 id="UDP特点"><a href="#UDP特点" class="headerlink" title="UDP特点"></a>UDP特点</h3><ul>
+<li><strong>无连接</strong>   (即发送数据之前不需要建立连接)</li>
+<li><strong>不可靠</strong>   (UDP使用尽最大努力交付，即不保证可靠交付，同时也不使用拥塞控制)</li>
+<li><strong>面向报文</strong> (对于应用程序传下来的报文不合并也不拆分，只是添加 UDP 首部)</li>
+<li><strong>支持一对一、一对多、多对一、多对多的交互通信</strong></li>
+<li><strong>UDP没有拥塞机制</strong>(网络出现拥塞不会使源主机发送速率降低，对于一些实时应用如视频会议等十分合适)</li>
+<li><strong>UDP首部开销小</strong> 只有8个字节，比TCP20个字节要短。</li>
+</ul>
+<h3 id="UDP首部"><a href="#UDP首部" class="headerlink" title="UDP首部"></a>UDP首部</h3><div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/UDP%E9%A6%96%E9%83%A8.png"></div><br>
+
+<p>首部字段只有 8 个字节，包括：<br><strong>源端口</strong>  源端口号，在需要对方回信时调用<br><strong>目的端口</strong> 目的端口号 在重点交付报文时使用<br><strong>长度</strong>：UDP用户数据报的长度，其最小值是8（仅有首部）<br><strong>检验和</strong> 检测UDP用户数据报在传输中是否有错，有错就丢弃。</p>
+<p>注意：</p>
+<ol>
+<li>虽然在UDP之间的通信要用到其端口号，但由于UDP通信是无连接的，因此不需要使用套接字。</li>
+<li>在计算检验和时，要在UDP用户数据报之前添加12个字节的“伪首部”。这个伪首部既不向下传递也不向上递交。仅仅是为了计算检验和。</li>
+<li><strong>UDP在计算检验和时是把首部和数据部分一起检验</strong>，而<strong>IP数据报首部检验和只检验IP数据报首部，不检验数据部分</strong></li>
+</ol>
+<hr>
+<h2 id="传输控制协议TCP"><a href="#传输控制协议TCP" class="headerlink" title="传输控制协议TCP"></a>传输控制协议TCP</h2><p>TCP除了基本的数据交付和差错检查外，还提供了<strong>可靠数据传输</strong>和<strong>拥塞控制服务</strong></p>
+<h3 id="TCP特点"><a href="#TCP特点" class="headerlink" title="TCP特点"></a>TCP特点</h3><ul>
+<li><strong>面向连接</strong>  (应用程序使用TCP协议前必须先建立TCP连接)</li>
+<li><strong>只能是点对点的（一对一）</strong> (每一条TCP连接只能有两个端点)</li>
+<li><strong>提供可靠交付</strong> (TCP连接传送的数据无差错、不丢失、不重复，按序到达)</li>
+<li><strong>全双工通信</strong>  允许通信双方的应用进程再任何时候都能发送数据。</li>
+<li><strong>面向字节流</strong>  （把应用层传下来的报文看成字节流，把字节流组织成大小不等的数据块）</li>
+</ul>
+<h3 id="TCP首部"><a href="#TCP首部" class="headerlink" title="TCP首部"></a>TCP首部</h3><div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/TCP%E9%A6%96%E9%83%A8.png"></div><br>
+
+<ul>
+<li><p><strong>源端口和目的端口</strong>：各占2个字节，分别写入源端口号和目的端口号。</p>
+</li>
+<li><p><strong>序号</strong> ：占4个字节。序号范围是[0,2^32 - 1],<strong>用于对字节流进行编号</strong>。例如序号为 301，表示第一个字节的编号为 301，如果携带的数据长度为 100 字节，那么下一个报文段的序号应为 401。</p>
+</li>
+<li><p><strong>确认号</strong> ：占4个字节，是期望收到对方下一个报文段的第一个数据字节的序号。例如 B 正确收到 A 发送来的一个报文段，序号为 501，携带的数据长度为 200 字节，因此 B 期望下一个报文段的序号为 701，B 发送给 A 的确认报文段中确认号就为 701。<strong>若确认号=N，则表明：到序号N-1为止的所有数据都已正确收到</strong></p>
+</li>
+<li><p><strong>数据偏移</strong> ：占4位，指的是TCP报文段数据起始处距离报文段起始处的偏移量，实际上指的是<strong>TCP报文段的首部长度</strong>。</p>
+</li>
+<li><p><strong>保留</strong>：占6位，保留为今后使用，但目前应置为0.</p>
+</li>
+<li><p><strong>紧急URG</strong>:当URG=1时，表明紧急指针字段有效。告诉系统此报文段中有紧急数据，应尽快传送，而不要按原来的排队顺序来传送。</p>
+</li>
+<li><p><strong>确认 ACK</strong> ：仅当 ACK=1 时确认号字段有效，否则无效。TCP 规定，<strong>在连接建立后所有传送的报文段都必须把 ACK 置 1</strong>。</p>
+</li>
+<li><p><strong>推送PSH</strong>：发送方把PSH置1，并立即创建一个报文段发送出去，接收方TCP收到PSH=1的报文段，就尽快地交付接收应用进程，而不用等到整个缓存都填满了后再向上交付。很少使用</p>
+</li>
+<li><p><strong>复位RST</strong>：当RST=1时，表明TCP连接中出现严重差错，必须释放连接，然后再重新建立运输连接。</p>
+</li>
+<li><p><strong>同步 SYN</strong> ：<strong>在连接建立时用来同步序号。当 SYN=1，ACK=0 时表示这是一个连接请求报文段。若对方同意建立连接，则响应报文中 SYN=1，ACK=1</strong>。</p>
+</li>
+<li><p><strong>终止 FIN</strong> ：用来释放一个连接，当 FIN=1 时，表示此报文段的发送方的数据已发送完毕，并要求释放连接。</p>
+</li>
+<li><p><strong>窗口</strong> ：占2个字节。值是[0,2^16 - 1]之间的整数。<strong>窗口指的是发送本报文段一方的接收窗口</strong>。窗口值告诉对方：从本报文段首部中的确认号算起，接收方目前允许对方发送的数据量（以字节为单位）。<strong>窗口字段明确指出了现在允许对方发送的数据量。窗口值经常在动态变化。</strong></p>
+</li>
+<li><p><strong>检验和</strong>：占2个字节。检验和字段检验的范围包括首部和数据这两部分。和UDP一样，在计算检验和时，要在TCP报文段的前面加上12字节的伪首部。</p>
+</li>
+<li><p><strong>紧急指针</strong>：占2个字节。紧急指针仅在URG=1时才有意义，它指出本报文段中的紧急数据的字节数。</p>
+</li>
+<li><p><strong>选项</strong>： 长度可变，最长可达40字节。当没有使用选项是，TCP首部为20字节。</p>
 </li>
 </ul>
-<p><strong>路由器的功能就是进行分组转发和路由选择</strong>，路由器是如何在知道IP地址时进行分组转发或者路由选择呢？</p>
-<p>为此，我们需要先了解下IP数据报的格式。</p>
-<h2 id="IP数据报的格式"><a href="#IP数据报的格式" class="headerlink" title="IP数据报的格式"></a>IP数据报的格式</h2><div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/ip%E6%95%B0%E6%8D%AE%E6%8A%A5.jpg"></div><br>
-
+<hr>
+<h2 id="可靠传输原理"><a href="#可靠传输原理" class="headerlink" title="可靠传输原理"></a>可靠传输原理</h2><p>理想的传输条件有以下两个特点：</p>
+<ol>
+<li>传输信道不产生差错。</li>
+<li>不管发送方以多快的速度发送数据，接收方总是来得及处理收到的数据。<br>然而实际的网络都不具备以上两个理想条件。必须使用一些可靠传输协议，在不可靠的传输信道实现可靠传输</li>
+</ol>
+<p>那么在TCP中就有两种方式来实现可靠传输了</p>
 <ul>
-<li><strong>版本</strong> : 有 4（IPv4）和 6（IPv6）两个值；</li>
-<li><strong>首部长度</strong> : 占4位，因此最大值为15。值为1表示的是1个32位字的长度，也就是4字节（即单位是4个字节，最多表示60个字节）。因为<strong>IP首部固定部分长度为20字节</strong>，因此该值最小为5。如果可选字段的长度不是4字节的整数倍，就用尾部的填充部分来填充。最常用的首部长度是20字节，这时不适用任何选项。</li>
-<li><strong>区分服务</strong> : 占8位，用来获得更好的服务，一般情况下不使用。</li>
-<li><strong>总长度</strong> : <strong>包括首部长度和数据部分长度</strong>。单位为字节。因此数据报最大长度为2^16-1=65535字节。但我们知道数据链路层中规定了<strong>数据帧中的数据字段的最大长度即最大传送单元MTU（通常为1500字节）</strong>。当数据报总长度超过MTU时，就必须把过长的数据报进行<strong>分片处理</strong>。<br>在进行<strong>分片</strong>时，数据报首部中的总长度字段指分片后的每一个分片的首部长度与该分片的数据长度的总和。</li>
-<li><strong>标识</strong> : 在数据报长度过长从而发生分片的情况下，相同数据报的不同分片具有相同的标识符。</li>
-<li><strong>标志</strong> ： 占3位，但目前只有两位有意义。<br>其中最低位记为MF。MF=1即表示后面还有分片的数据报，MF=0表示这是若干数据报中的最后一个。<br>中间位记为DF，意思是不能分片，只有当DF=0时才允许分片。</li>
-<li><strong>片偏移</strong> : 和标识符一起，用于发生分片的情况。表明较长的分组在分片后，某片在原分组中的相对位置，也就是说相对于用户数据字段的起点。片偏移的单位为8字节。 </li>
-<li><strong>生存时间</strong> ：TTL，它的存在是为了防止无法交付的数据报在互联网中不断兜圈子。以路由器跳数为单位，当 TTL为0时就丢弃数据报。</li>
-<li><strong>协议</strong> ：指出携带的数据应该上交给哪个协议进行处理，例如 ICMP、TCP、UDP 等。</li>
-<li><strong>首部检验和</strong> ：因为数据报每经过一个路由器，都要重新计算检验和，因此检验和不包含数据部分可以减少计算的工作量。</li>
-<li><strong>源地址</strong>：32位</li>
-<li><strong>目的地址</strong>：32位</li>
+<li><strong>停止等待协议</strong></li>
+<li><strong>连续 ARQ 协议</strong></li>
 </ul>
-<p>分片：</p>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%88%86%E7%89%87.png"></div><br>
-
-<h2 id="分组转发算法"><a href="#分组转发算法" class="headerlink" title="分组转发算法"></a>分组转发算法</h2><h3 id="使用分类IP的分组转发算"><a href="#使用分类IP的分组转发算" class="headerlink" title="使用分类IP的分组转发算"></a>使用分类IP的分组转发算</h3><p>使用分类的IP地址的转发，可以看到路由表中主要是以下两个信息：</p>
-<p><strong>（目的网络地址， 下一跳地址）</strong></p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E5%88%86%E7%B1%BBIP%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91.png"></div><br>
-
-<p>以路由器R2的路由表为例，由于R2同时连接在网络2和3上，因此只要目的主机在网络2或3上，都可以通过接口0或1有路由器R2直接进行交付（当然还要利用地址解析协议ARP才能找到这些主机的硬件地址）。若目的主机在网络1中，则下一跳路由应为R1，其IP地址为20.0.0.7。路由器R1和R2由于同时连接在网络2上，因此从路由器R2把分组转发给路由器R1是很容易的。</p>
-<p><strong>使用分类IP的分组转发算法过程</strong></p>
-<ol>
-<li><p>从数据报的首部提取目的主机的 IP 地址 D, 得出目的网络地址为 N。</p>
+<h3 id="停止等待协议"><a href="#停止等待协议" class="headerlink" title="停止等待协议"></a>停止等待协议</h3><p><strong>“停止等待”就是每发送完一个分组就停止发送，等待对方的确认。在收到确认后再发送下一个分组。</strong></p>
+<p>停止等待协议有两种情况：</p>
+<ul>
+<li><p>无差错情况<br>如下图a，A发送分组M1，发送完就暂停，等待B的确认。B收到了M1就向A发送确认。A收到了对M1的确认后就再发送下一个分组M2。之后收到确认后再发送M3</p>
 </li>
-<li><p>若网络 N 与此路由器直接相连，则把数据报直接交付目的主机 D；否则是间接交付，执行步骤3。</p>
+<li><p>出现差错<br>可能M1在传输过程中直接丢失，B未收到分组则什么也不做或者B收到分组后检测出了差错，就丢弃M1并且也什么都不做。</p>
 </li>
-<li><p>若路由表中有目的地址为 D 的特定主机路由，则把数据报传送给路由表中所指明的下一跳路由器；否则，执行步骤4。</p>
-</li>
-<li><p>若路由表中有到达网络 N 的路由，则把数据报传送给路由表指明的下一跳路由器；否则，执行步骤5。</p>
-</li>
-<li><p>若路由表中有一个默认路由，则把数据报传送给路由表中所指明的默认路由器；否则，执行步骤6。</p>
-</li>
-<li><p>报告转发分组出错。</p>
-</li>
-</ol>
-<p>上面步骤5中提到的默认路由对于连接在小网络上的主机发送IP数据报时是十分有用的。如下图中连接在网络N1上的任何一个主机中的路由表只需要三个项目即可。</p>
-<ol>
-<li>本网络主机路由，其目的网络就是本网络N1,因而不需要路由转发。</li>
-<li>到网络N2的路由，对应的下一条路由器是R2</li>
-<li>默认路由，只要目的网络是其他网络(不是N1或N2),就一律选择默认路由，把数据报先交付路由器R1,让R1再转发给互联网中的下一个路由，一直转发到目的网络上的路由器，最后进行直接交付。</li>
-</ol>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95.jpg"></div><br>
+</ul>
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E5%81%9C%E6%AD%A2%E7%AD%89%E5%BE%85%E5%8D%8F%E8%AE%AE.png"></div><br>
 
-<h3 id="使用子网的分组转发算法"><a href="#使用子网的分组转发算法" class="headerlink" title="使用子网的分组转发算法"></a>使用子网的分组转发算法</h3><p>在划分子网的情况下，分组转发算法必须做相应改动，路由表中必须包含以下三项内容:<br><strong>目的网络地址、子网掩码、下一跳地址</strong></p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E4%BD%BF%E7%94%A8%E5%AD%90%E7%BD%91%E7%9A%84IP%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95.png"></div><br>
-
-<p><strong>使用子网的分组转发算法</strong></p>
-<ol>
-<li>从收到的数据报的首部提取目的IP地址D。</li>
-<li>先判断是否为直接交付。对路由器直接相连的网络逐个进行检查：用各网络的子网掩码和D逐位“与”，看结果是否和相应的网络地址匹配，若匹配，则把分组进行直接交付（当然还需要把D转换成物理地址，把数据报封装成帧发送出去），转发任务结束。否则是间接交付，执行步骤3。</li>
-<li>若路由表中有目的地址为D的特定主机路由，则把数据报传送给路由表中所指明的下一跳路由。否则执行步骤4</li>
-<li>对路由表中的每一行（目的网络地址、子网掩码、下一跳地址），用其中的子网掩码和D逐位相“与”，其结果为N。若N与该行的目的网络地址匹配，则把数据报传动给该行指明的下一跳路由。否则执行步骤5.</li>
-<li>若路由表中有一个默认路由，则把数据报传送给路由表中所指明的默认路由器；否则，执行步骤6。</li>
-<li>报告转发分组出错。</li>
-</ol>
-<p>比如对于上面的图中H1与主机H2之间进行通信，首先H1会将H2的IP地址128.30.33.128和本子网的网络地址128.30.33.0相与，得到128.30.33.0，与自己本子网的网络地址不同，则判断为间接交付，将数据报交付给路由器R1，由R1进行转发。</p>
-<p>路由器收到数据报后，根据路由表中的记录，将IP地址与子网掩码进行逐位相与，如先看R1路由表的第一行。将子网掩码和目的IP逐位相与后得到128.30.33.128，与这一行的目的网路地址128.30.33.0比较不匹配。   则继续寻找下一行。  可以看到在第二行中匹配成功，则不再继续找下去而是R1把分组从接口1直接交付主机H2。</p>
-<h3 id="使用CIDR的分组转发算法"><a href="#使用CIDR的分组转发算法" class="headerlink" title="使用CIDR的分组转发算法"></a>使用CIDR的分组转发算法</h3><p>在使用CIDR时，由于采用了网络前缀的这种方法，因此在路由表中的项目也要有相应改变。这时，每个项目由两个内容构成：<br><strong>网络前缀、下一跳地址</strong></p>
-<p>但是在查找时可能会得到不止一个匹配结果，此时应当采用<strong>最长前缀匹配</strong>来确定应该匹配哪一个。这是因为网络前缀越长，其地址块越小，因而路由选择就越具体。</p>
-<p>具体转发流程和使用子网的分组转发方法类似，只不过中间是用掩码相与后，再使用最长前缀匹配进行选择，不在赘述。</p>
-<p>比如，大学下属四系希望ISP把转发给四系的数据报直接发送到四系而不经过大学路由器，则在ISP路由器的路由表中至少有以下两个项目，即206.0.68.0/22(大学) 和206.0.71.128/25。假定目的IP地址为D=206.0.171.130,则按照下图进行掩码逐位与后都匹配，根据最长匹配前缀原理，应当选择后者。</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E6%9C%80%E9%95%BF%E5%89%8D%E7%BC%80%E5%8C%B9%E9%85%8D.png"></div><br>
-
-
+<p>对于上面分组丢失的问题，可靠传输协议的解决：</p>
+<ul>
+<li>A 为每一个已发送的分组都设置了一个<strong>超时计时器</strong>。</li>
+<li>A 只要在超时计时器到期之前收到了相应的确认，就撤销该超时计时器，继续发送下一个分组 M2 。</li>
+</ul>
 <p>注意：</p>
 <ul>
-<li><p>CIDR使用32位的<strong>地址掩码</strong>，其中<strong>1的长度为网络前缀的长度</strong>，例如/20的地址掩码为11111111 11111111 11110000 0000。</p>
+<li>在发送完一个分组后，<strong>必须暂时保留已发送的分组的副本，以备重发</strong>。</li>
+<li><strong>分组和确认分组都必须进行编号</strong>。</li>
+<li>超时计时器的重传时间应当比数据在分组传输的平均往返时间更长一些。</li>
+</ul>
+<p>像上述的这种可靠传输协议常称为<strong>自动重传请求 ARQ</strong>  (Automatic Repeat reQuest)。即<strong>重传的请求是自动进行的，接收方不需要请求发送方重传某个出错的分组</strong>。</p>
+<p><strong>为了提高传输效率，发送方可以不使用低效率的停止等待协议，而是采用流水线传输</strong>。</p>
+<blockquote>
+<p>流水线传输就是发送方可连续发送多个分组，不必每发完一个分组就停顿下来等待对方的确认。这样可使信道上一直有数据不间断地传送。</p>
+</blockquote>
+<h3 id="连续ARQ协议"><a href="#连续ARQ协议" class="headerlink" title="连续ARQ协议"></a>连续ARQ协议</h3><p>滑动窗口协议是TCP协议的精髓，现在简单介绍下</p>
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E8%BF%9E%E7%BB%ADARQ.png"></div><br>
+
+
+<ul>
+<li><p>发送方维持的发送窗口，它的意义是：<strong>位于发送窗口内的分组都可连续发送出去，而不需要等待对方的确认。这样，信道利用率就提高了</strong>。</p>
 </li>
-<li><p>虽然CIDR不使用子网了，但是<strong>仍然可将地址掩码称为子网掩码</strong>。注意这个不使用子网的意思是说没有在32位地址中指明若干位作为子网字段，但分配到一个CIDR地址块后，仍然可以在本单位继续划分子网。 并且<strong>这些子网的网络前缀比整个单位网路的网络前缀长</strong>。</p>
+<li><p>连续 ARQ 协议规定，<strong>发送方每收到一个确认，就把发送窗口向前滑动一个分组的位置</strong>。</p>
 </li>
-<li><p>由于CIDR使用的是地址块，因此在路由表中可以直接利用CIDR地址块来查找目的网络，使得路由表中的一个项目可以表示原来传统分类地址的多个路由。这种路由聚合也称为<strong>构成超网</strong></p>
-</li>
+</ul>
+<p>即不必对收到的分组逐个发送确认，<strong>而是对按序到达的最后一个分组发送确认，这样就表示：到这个分组为止的所有分组都已正确收到了</strong>。</p>
+<p>优点：<strong>容易实现，即使确认丢失也不必重传</strong>。<br>缺点：<strong>不能向发送方反映出接收方已经正确收到的所有分组的信息</strong>。</p>
+<p>如果发送方发送了前 5 个分组，<strong>而中间的第 3 个分组丢失了。这时接收方只能对前两个分组发出确认。发送方无法知道后面三个分组的下落，而只好把后面的三个分组都再重传一次</strong>。<br>这就叫做 <strong>Go-back-N（回退 N）</strong>，表示需要再退回来重传已发送过的 N 个分组。</p>
+<hr>
+<h2 id="TCP可靠传输的实现"><a href="#TCP可靠传输的实现" class="headerlink" title="TCP可靠传输的实现"></a>TCP可靠传输的实现</h2><p>上面我们已经了解了可靠传输的简单原理，现在我们看先TCP是如何具体实现的。</p>
+<ul>
+<li><strong>TCP 连接的每一端都必须设有一个发送窗口和一个接收窗口</strong>。两端的四个窗口经常处于动态变化之中。</li>
+<li><strong>TCP 的可靠传输机制用字节为单位使用字节序号进行控制。TCP 所有的确认都是基于序号而不是基于报文段</strong>。</li>
+<li><strong>TCP超时重传的时间选择不是固定不变的，而是自适应的</strong>（使用特定的算法估算较为合理的重传时间）。</li>
 </ul>
 <hr>
-<h2 id="路由选择协议"><a href="#路由选择协议" class="headerlink" title="路由选择协议"></a>路由选择协议</h2><p>路由选择协议就是用来解决路由器中的路由表是如何获得的。</p>
-<p>互联网采用的路由选择协议主要是自适应的(即动态的)，分布式路由选择协议。</p>
-<p>互联网可以划分为许多较小的自治系统 AS，<strong>一个 AS 可以使用一种和别的 AS 不同的路由选择协议。在目前的互联网中，一个大的ISP就是一个自治系统</strong>。这样互联网就把路由选择协议划分为两大类：</p>
-<p>-<strong>内部网关协议IGP</strong> ： 即在一个自治系统内部使用的路由选择协议。主要有RIP 和 OSPF协议<br>-<strong>外部网关协议EGP</strong>： 若源主机和目的主机处在不同的自治系统中，当数据报传送到一个自治系统边界时，就需要使用一种协议将路由选择信息传递到另一个自治系统中。这样的协议就是外部网关协议。主要有BGP协议。</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE.png"></div><br>
-
-
-<h3 id="内部网关协议"><a href="#内部网关协议" class="headerlink" title="内部网关协议"></a>内部网关协议</h3><h4> 内部网关协议RIP</h4>
-
-<p><strong>RIP 是一种基于距离向量的路由选择协议</strong>。距离是指跳数，直接相连的路由器跳数为 1。跳数最多为 15，超过 15 表示不可达。</p>
-<p><strong>RIP 按固定的时间间隔仅和相邻路由器交换自己的路由表</strong>，经过若干次交换之后，所有路由器最终会知道到达本自治系统中任何一个网络的最短距离和下一跳路由器地址。</p>
-<p>距离向量算法：</p>
-<ul>
-<li>对地址为 X 的相邻路由器发来的 RIP 报文，先修改报文中的所有项目，把下一跳字段中的地址改为 X，并把所有的距离字段加 1；</li>
-<li>对修改后的 RIP 报文中的每一个项目，进行以下步骤：</li>
-<li>若原来的路由表中没有目的网络 N，则把该项目添加到路由表中；</li>
-<li>否则：若下一跳路由器地址是 X，则把收到的项目替换原来路由表中的项目；否则：若收到的项目中的距离 d 小于路由表中的距离，则进行更新（例如原始路由表项为 Net2, 5, P，新表项为 Net2, 4, X，则更新）；否则什么也不做。</li>
-<li>若 3 分钟还没有收到相邻路由器的更新路由表，则把该相邻路由器标为不可达，即把距离置为 16。</li>
+<h2 id="TCP的流量控制"><a href="#TCP的流量控制" class="headerlink" title="TCP的流量控制"></a>TCP的流量控制</h2><ul>
+<li><p><strong>TCP流量控制通过滑动窗口实现，就是让发送方的发送速率不要太快，要让接收方来得及接收</strong>。</p>
+</li>
+<li><p><strong>发送方的发送窗口不能超过接收方给出的接收窗口的数值</strong>。</p>
+</li>
 </ul>
-<p>RIP 协议实现简单，开销小。但是 RIP 能使用的最大距离为 15，限制了网络的规模。并且当网络出现故障时，要经过比较长的时间才能将此消息传送到所有路由器。</p>
-<h4> 内部网关协议 OSPF</h4>
-开放最短路径优先 OSPF，是为了克服 RIP 的缺点而开发出来的。
+<p>如果B向A发送了零窗口的报文段后不久，B的接收缓存又有了一些存储空间，B向A发送非零窗口报文段，但是这个报文段丢失了，那么就会造成A一直等待收到B发送的非零窗口的通知，而B也一直等待A发送的数据，如果没有其他措施，这种互相等待的死锁局面会一直延续下去。</p>
+<p>为了解决上述问题，TCP为每个连接接设有一个<strong>持续计时器</strong>，只要TCP连接的一方收到对方的零窗口通知，就启动持续计时器。 若持续计时器设置的时间到期，就发送一个零窗口探测报文段。对方在确认这个探测报文段时给出现在窗口值，如果窗口仍然是零，那么收到这个报文段的一方就重新设置持续计时器。如果窗口不是零就，就可以打破死锁的僵局。</p>
+<hr>
+<h2 id="TCP的拥塞控制"><a href="#TCP的拥塞控制" class="headerlink" title="TCP的拥塞控制"></a>TCP的拥塞控制</h2><h3 id="拥塞控制原理"><a href="#拥塞控制原理" class="headerlink" title="拥塞控制原理"></a>拥塞控制原理</h3><p>出现拥塞的条件：<strong>对资源需求  &gt; 可用资源</strong></p>
+<ul>
+<li><p>即使增大资源也不是能解决拥塞的问题的。不但不能解决拥塞问题，而且还可能使网络的性能更坏。</p>
+</li>
+<li><p>拥塞引起的重传并不会缓解网络的拥塞，反而会加剧网络的拥塞。因为会引起更多的分组流入网络和被网络中的路由器丢弃。</p>
+</li>
+</ul>
+<p><strong>拥塞控制就是防止过多的数据注入到网络中，这样可以使网络中的路由器或链路不致过载</strong></p>
+<h4>拥塞控制和流量控制的区别</h4>
 
-<p>开放表示 OSPF 不受某一家厂商控制，而是公开发表的；最短路径优先表示使用了 Dijkstra 提出的最短路径算法 SPF。</p>
-<p>OSPF 具有以下特点：</p>
+<ol>
+<li><strong>拥塞控制是全局性的，而流量控制是指点对点通信量的控制</strong></li>
+<li><strong>拥塞控制是防止过多的数据注入到网路中，而流量控制是控制发送端发送数据的速率，以便接收端来得及接收</strong>。</li>
+</ol>
+<p>拥塞控制的作用：<br>注意横坐标代表的是单位时间内输入给网络的分组数目。</p>
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E4%BD%9C%E7%94%A8.png"></div><br>
+
+<h3 id="TCP拥塞控制方法"><a href="#TCP拥塞控制方法" class="headerlink" title="TCP拥塞控制方法"></a>TCP拥塞控制方法</h3><p>有四种：慢开始、拥塞避免、快重传、快恢复。</p>
+<p>拥塞的判断：</p>
 <ul>
-<li>向本自治系统中的所有路由器发送信息，这种方法是<strong>洪泛法</strong>。</li>
-<li>发送的信息就是与相邻路由器的链路状态，链路状态包括与哪些路由器相连以及链路的度量，度量用费用、距离、时延、带宽等来表示。</li>
-<li>只有当链路状态发生变化时，路由器才会发送信息。</li>
+<li><strong>重传定时器超时</strong></li>
+<li><strong>收到三个相同（重复）的 ACK</strong>（丢失个别报文段时，快重传对接收到的报文段的重复确认）</li>
 </ul>
-<p>所有路由器都具有全网的拓扑结构图，并且是一致的。相比于 RIP，OSPF 的更新过程收敛的很快。</p>
-<h3 id="外部网关协议-BGP"><a href="#外部网关协议-BGP" class="headerlink" title="外部网关协议 BGP"></a>外部网关协议 BGP</h3><p>BGP（Border Gateway Protocol，边界网关协议）</p>
-<p>AS 之间的路由选择很困难，主要是由于：</p>
-<p>互联网规模很大；</p>
-<ul>
-<li>各个 AS 内部使用不同的路由选择协议，无法准确定义路径的度量；</li>
-<li>AS 之间的路由选择必须考虑有关的策略，比如有些 AS 不愿意让其它 AS 经过。</li>
-<li>BGP 只能寻找一条比较好的路由，而不是最佳路由。</li>
-</ul>
-<p>每个 AS 都必须配置 BGP 发言人，通过在两个相邻 BGP 发言人之间建立 TCP 连接来交换路由信息。</p>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/BGP.png"></div><br>
+<p>拥塞控制流程图：<br>其中ssthresh为慢开始门限</p>
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E6%B5%81%E7%A8%8B.png"></div><br>
 
 <hr>
-<h2 id="网际控制报文协议ICMP"><a href="#网际控制报文协议ICMP" class="headerlink" title="网际控制报文协议ICMP"></a>网际控制报文协议ICMP</h2><p>ICMP协议是为了能够更有效地转发IP数据报和提高交付成功的机会。但ICMP不是高层协议(虽然ICMP数据报文作为IP层数据)，而是IP层协议。</p>
-<p>ICMP报文：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png"></div><br>
+<h2 id="TCP连接管理"><a href="#TCP连接管理" class="headerlink" title="TCP连接管理"></a>TCP连接管理</h2><h3 id="TCP连接建立-3次握手"><a href="#TCP连接建立-3次握手" class="headerlink" title="TCP连接建立(3次握手)"></a>TCP连接建立(3次握手)</h3><div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png"></div><br>
 
-<p>ICMP报文种类有两种：</p>
-<ul>
-<li><strong>ICMP差错报告报文</strong></li>
-<li><strong>ICMP询问报文</strong></li>
-</ul>
-<p>常见ICMP报文类型</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E6%8A%A5%E6%96%87%E7%A7%8D%E7%B1%BB.png"></div><br>
-
-<p>ICMP差错报告报文具有相同的格式：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E5%B7%AE%E9%94%99%E6%8A%A5%E5%91%8A%E6%8A%A5%E6%96%87.png"></div><br>
-其中取需要进行差错报告的IP数据报数据字段前8个字节是为了得到运输层端口号(对于TCP和UDP)以及运输层报文的发送序号(对于TCP)。
-
-<p>ICMP常见的应用就是ping和traceroute</p>
-<h3 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h3><ul>
-<li><p>ping是分组网间嗅探，<strong>用来测试两台主机的连通性</strong>。</p>
+<ol>
+<li><p>客户端A向服务器端B发出连接请求报文段，这时首部中的<strong>同步位SYN=1，同时选择一个初始序号seq=x</strong>。TCP规定，SYN报文段不能携带数据，但要消耗掉一个序号。这时，TCP客户进程进入<strong>SYN-SENT</strong>（同步已发送）状态。</p>
 </li>
-<li><p><strong>ping是应用层直接使用网络层，没有经过传输层的TCP或UDP</strong></p>
+<li><p>B收到连接请求报文段后，如同意建立连接，则向A发送确认。在确认报文段中应把<strong>SYN位和确认ACK为都置1</strong>，<strong>确认号是ack=x+1，同时也为自己选择一个初始序号seq=y</strong>。这个报文段也不能携带数据，但同样要消耗一个序号。这时TCP服务器进程进入<strong>SYN-RCVD</strong>（同步收到）状态。</p>
 </li>
-</ul>
-<p>ping百度的抓包分析：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ping%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png"></div><br>
+<li><p>TCP客户进程收到B的确认后，还要向B给出确认。<strong>确认报文段的ACK置1.确认号ack=y+1，而自己的序号seq=x+1</strong>。TCP的标准规定，ACK报文段可以携带数据，但如果不携带数据则不消耗序号。这时，TCP连接已建立，A进入<strong>ESTABLISHEN</strong>（已建立连接）状态。</p>
+</li>
+</ol>
+<blockquote>
+<p>三次握手的理解<br>第一次握手：Client 什么都不能确认；Server 确认了对方发送正常，自己接收正常<br>第二次握手：Client 确认了：自己发送、接收正常，对方发送、接收正常；Server 确认了：对方发送正常，自己接收正常<br>第三次握手：Client 确认了：自己发送、接收正常，对方发送、接收正常；Server 确认了：自己发送、接收正常，对方发送、接收正常<br>所以三次握手就能确认双发收发功能都正常，缺一不可。</p>
+</blockquote>
+<p>理解清楚了之后,我们就知道为什么不能连接建立不能两次或者四次了</p>
+<p>两次：如果没有第三次握手，服务器端无法知道自己发送和对方接收是否正常。例如，如果A发出的第一个连接请求报文没有丢失而是滞留在网络结点上，之后A再次发出请求与B建立连接，传送完数据后释放连接。这时A第一次发送的请求（失效报文）才到达B，B会误认为是A的又一个请求报文，就向A发送确认报文，同意建立连接。这时如果没有第三次握手，只要B发出确认，新的连接就直接建立，但是A没有发送建立连接请求，就会造成B一直等待A发送数据，造成B的资源浪费。</p>
+<p>四次：没有必要，因为三次握手已经能够确保双方的收发功能正常。</p>
+<p>抓包验证下吧<br>第一次握手</p>
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E6%8A%93%E5%8C%851.png"></div><br>
+第二次握手
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E6%8A%93%E5%8C%852.png"></div><br>
+第三次握手
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E6%8A%93%E5%8C%853.png"></div><br>
 
-<p>可以看到执行ping命令后，直接进行了4次request和reply。在下面的请求报文中可以看到和上面的ICMP报文格式一一对应。这里的 Type=8,code=0, 校验是正确，且这是一个Echo请求报文。我们再点击Responseframe:8，这里说明响应报文在序号8。详情如下：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ping%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87.png"></div><br>
-同样的Type=8,code=0校验正确，且最下面根据请求和响应的时间戳计算出来的响应延迟。 
+<h3 id="TCP连接释放-4次挥手"><a href="#TCP连接释放-4次挥手" class="headerlink" title="TCP连接释放(4次挥手)"></a>TCP连接释放(4次挥手)</h3><div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/TCP%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B.png"></div><br>
 
-<h3 id="traceroute"><a href="#traceroute" class="headerlink" title="traceroute"></a>traceroute</h3><p>Traceroute是ICMP的另一个应用，<strong>用来跟踪一个分组从源点到终点的路径</strong>。traceroute是UNIX系统中的名字，在windows系统中是tracert。</p>
-<p><strong>traceroute发送的IP数据报封装的是无法交付的UDP用户数据报（使用了非法端口号），并由目的主机发送终点不可达差错报告报文。</strong></p>
-<ul>
-<li>源主机向目的主机发送一连串的IP数据报。第一个数据报P1的生存时间TTL设置为1，当P1到达路径上的第一个路由器R1时，R1收下它并把TTL减 1，此时TTL等于0，R1就把P1丢弃，并向源主机发送一个ICMP时间超过差错报告报文；</li>
-<li>源主机接着发送第二个数据报P2，并把TTL设置为2。P2先到达 R1，R1收下后把TTL减 1 再转发给R2，R2收下后也把TTL减1，由于此时TTL等于0，R2就丢弃P2，并向源主机发送一个ICMP时间超过差错报文。</li>
-<li>不断执行这样的步骤，直到最后一个数据报刚刚到达目的主机，主机不转发数据报，也不把TTL值减1。但是因为数据报封装的是无法交付的UDP，因此目的主机要向源主机发送ICMP终点不可达差错报告报文。</li>
-<li>之后源主机知道了到达目的主机所经过的路由器IP地址以及到达每个路由器的往返时间。</li>
-</ul>
-<p><a href="https://blog.csdn.net/qq_17308321/article/details/62443817">UDP抓包(traceroute和tracert的不同)</a></p>
+<ol>
+<li><p>数据传输结束后，A和B处于<strong>ESTABLISHEN</strong>状态。A的应用进程先向其TCP发出连接释放报文段，并停止再发送数据，主动关闭TCP连接。<strong>A把连接释放报文段首部的FIN置1，其序号seq=u，等于前面已经传送过的数据的最后一个字节的加1</strong>.这时A进入<strong>FIN-WAIT-1</strong>（终止等待1）状态，等待B的确认。</p>
+</li>
+<li><p>B收到连接释放报文段后即发出确认，<strong>确认号是ack=u+1，而这个报文段自己的序号是v。等于B前面已经传送过的数据的最后一个字节的序号加1</strong>。然后B进入<strong>CLOSE-WAIT</strong>（关闭等待）状态。TCP服务器进程这时应通知高层应用进程，因而从A到B这个方向的连接就释放了，这时的TCP连接处于半关闭状态。即A已经没有数据要发送了，但B若发送数据，A仍要接受。<br>A收到来自B的确认后，就进入<strong>FIN-WAIT-2</strong>（终止等待2）状态，等待B发出的连接释放报文段。</p>
+</li>
+<li><p>若B已经没有要向A发送的数据，其应用进程就通知TCP释放链接。这时B发出的报文段必须使FIN=1。现假定B的序号为w（在半关闭状态B可能由发送了一些数据）。B还必须重复上次已经发送过的确认号ack=u+1。这时B就进入<strong>LAST-ACK</strong>（最后确认）状态，等待A的确认。</p>
+</li>
+<li><p>A在收到B的连接释放报文段后，必须对此发出确认。在确认报文段中把ACK置1，确认号ack=w+1，而自己的序号是seq=u+1。然后进入到<strong>TIME-WAIT</strong>（时间等待）状态。<br>请注意，现在TCP连接还没有释放掉。必须经过<strong>时间等待计时器设置的时间2MSL（最长报文段寿命）后</strong>，A才进入到<strong>CLOSED</strong>状态。时间MSL叫做最长报文段寿命（Maximum Segment Lifetime）。</p>
+</li>
+</ol>
+<p>这里抓包就不仔细分析了</p>
+<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png"></div><br>
+
+
+<p><strong>A 必须等待 2MSL 的时间</strong>：</p>
+<ol>
+<li><p><strong>为了保证 A 发送的最后一个 ACK 报文段能够到达 B</strong>。（因为A最后发送的ACK报文段有可能丢失，因而B收不到A发送的FIN+ACK报文段的确认。B会超时重传FIN+ACK报文段，而A就能在2MSL内收到这个重传的FIN+ACK报文段，接着A重传一次确认，重新启动2MSL计时器。最后正常释放连接。如果A不等待2MSL而是在发送完ACK确认报文后立即释放连接，就无法收到B重传的FIN+ACK报文，因而也就不会发送确认报文，这样B就无法进入CLOSED状态）</p>
+</li>
+<li><p><strong>防止 “已失效的连接请求报文段”出现在本连接中</strong>。A 在发送完最后一个 ACK 报文段后，再经过时间 2MSL，就可以使本连接持续的时间内所产生的所有报文段，都从网络中消失。这样就可以使下一个新的连接中不会出现这种旧的连接请求报文段。</p>
+</li>
+</ol>
+<p>此外，TCP还设有一个<strong>保活计时器</strong>。服务器每收到一次客户数据，就重新设置保活计时器(时间通常为2小时)。若两小时没有收到客户的数据，则服务器发送一个探测报文段，以后每隔75s发送一次。若一连发送10个探测报文段后仍无客户的响应，服务器就认为客户端出现了故障，接着就关闭这个连接。</p>
 
         </div>
         
@@ -395,17 +460,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/09/%E4%BC%A0%E8%BE%93%E5%B1%82/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">传输层</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/07/%E7%BD%91%E7%BB%9C%E5%B1%82/">
-                <span class="level-item">网络层(一)</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/09/%E7%BD%91%E7%BB%9C%E5%B1%822/">
+                <span class="level-item">网络层(二)</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -527,57 +585,89 @@
                     目录
                 </h3>
                 <ul class="menu-list"><li>
-        <a class="is-flex" href="#IP数据报的格式">
+        <a class="is-flex" href="#传输层">
         <span class="has-mr-6">1</span>
-        <span>IP数据报的格式</span>
+        <span>传输层</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#端口">
+        <span class="has-mr-6">1.1</span>
+        <span>端口</span>
         </a></li><li>
-        <a class="is-flex" href="#分组转发算法">
+        <a class="is-flex" href="#套接字">
+        <span class="has-mr-6">1.2</span>
+        <span>套接字</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#用户数据报协议UDP">
         <span class="has-mr-6">2</span>
-        <span>分组转发算法</span>
+        <span>用户数据报协议UDP</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#使用分类IP的分组转发算">
+        <a class="is-flex" href="#UDP特点">
         <span class="has-mr-6">2.1</span>
-        <span>使用分类IP的分组转发算</span>
+        <span>UDP特点</span>
         </a></li><li>
-        <a class="is-flex" href="#使用子网的分组转发算法">
+        <a class="is-flex" href="#UDP首部">
         <span class="has-mr-6">2.2</span>
-        <span>使用子网的分组转发算法</span>
-        </a></li><li>
-        <a class="is-flex" href="#使用CIDR的分组转发算法">
-        <span class="has-mr-6">2.3</span>
-        <span>使用CIDR的分组转发算法</span>
+        <span>UDP首部</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#路由选择协议">
+        <a class="is-flex" href="#传输控制协议TCP">
         <span class="has-mr-6">3</span>
-        <span>路由选择协议</span>
+        <span>传输控制协议TCP</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#内部网关协议">
+        <a class="is-flex" href="#TCP特点">
         <span class="has-mr-6">3.1</span>
-        <span>内部网关协议</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#undefined">
-        <span class="has-mr-6">3.1.1</span>
-        <span> 内部网关协议RIP</span>
+        <span>TCP特点</span>
         </a></li><li>
-        <a class="is-flex" href="#undefined">
-        <span class="has-mr-6">3.1.2</span>
-        <span> 内部网关协议 OSPF</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#外部网关协议-BGP">
+        <a class="is-flex" href="#TCP首部">
         <span class="has-mr-6">3.2</span>
-        <span>外部网关协议 BGP</span>
+        <span>TCP首部</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#网际控制报文协议ICMP">
+        <a class="is-flex" href="#可靠传输原理">
         <span class="has-mr-6">4</span>
-        <span>网际控制报文协议ICMP</span>
+        <span>可靠传输原理</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#ping">
+        <a class="is-flex" href="#停止等待协议">
         <span class="has-mr-6">4.1</span>
-        <span>ping</span>
+        <span>停止等待协议</span>
         </a></li><li>
-        <a class="is-flex" href="#traceroute">
+        <a class="is-flex" href="#连续ARQ协议">
         <span class="has-mr-6">4.2</span>
-        <span>traceroute</span>
+        <span>连续ARQ协议</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#TCP可靠传输的实现">
+        <span class="has-mr-6">5</span>
+        <span>TCP可靠传输的实现</span>
+        </a></li><li>
+        <a class="is-flex" href="#TCP的流量控制">
+        <span class="has-mr-6">6</span>
+        <span>TCP的流量控制</span>
+        </a></li><li>
+        <a class="is-flex" href="#TCP的拥塞控制">
+        <span class="has-mr-6">7</span>
+        <span>TCP的拥塞控制</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#拥塞控制原理">
+        <span class="has-mr-6">7.1</span>
+        <span>拥塞控制原理</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">7.1.1</span>
+        <span>拥塞控制和流量控制的区别</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#TCP拥塞控制方法">
+        <span class="has-mr-6">7.2</span>
+        <span>TCP拥塞控制方法</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#TCP连接管理">
+        <span class="has-mr-6">8</span>
+        <span>TCP连接管理</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#TCP连接建立-3次握手">
+        <span class="has-mr-6">8.1</span>
+        <span>TCP连接建立(3次握手)</span>
+        </a></li><li>
+        <a class="is-flex" href="#TCP连接释放-4次挥手">
+        <span class="has-mr-6">8.2</span>
+        <span>TCP连接释放(4次挥手)</span>
         </a></li></ul></li></ul>
             </div>
         </div>
@@ -904,7 +994,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="网络层(二)" height="28">
+                    <img src="/images/logo.png" alt="传输层" height="28">
                 
                 </a>
                 <p class="is-size-7">
