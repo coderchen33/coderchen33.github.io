@@ -7,21 +7,19 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>网络层(二) - chen33的个人博客</title>
+<title>多线程 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容  IP数据报格式 IP层分组转发算法 路由选择协议 ICMP协议、ping、traceroute">
-<meta property="og:type" content="article">
-<meta property="og:title" content="网络层(二)">
-<meta property="og:url" content="http://yoursite.com/2020/03/09/%E7%BD%91%E7%BB%9C%E5%B1%822/index.html">
+    <meta property="og:type" content="article">
+<meta property="og:title" content="多线程">
+<meta property="og:url" content="http://yoursite.com/2020/03/10/%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容  IP数据报格式 IP层分组转发算法 路由选择协议 ICMP协议、ping、traceroute">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="article:published_time" content="2020-03-08T22:49:26.000Z">
-<meta property="article:modified_time" content="2020-03-09T07:35:00.206Z">
+<meta property="article:published_time" content="2020-03-10T07:13:10.000Z">
+<meta property="article:modified_time" content="2020-03-10T07:13:10.350Z">
 <meta property="article:author" content="coderchen33">
-<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="技术博客">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
 
@@ -81,7 +79,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="网络层(二)" height="28">
+                <img src="/images/logo.png" alt="多线程" height="28">
             
             </a>
         </div>
@@ -144,17 +142,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-08T22:49:26.000Z">2020-03-09</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2020-03-10T07:13:10.000Z">2020-03-10</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    30 分钟 读完 (大约 4529 个字)
+                    几秒 读完 (大约 1 个字)
                 </span>
                 
                 
@@ -163,191 +157,11 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                网络层(二)
+                多线程
             
         </h1>
         <div class="content">
-            <p><strong>主要内容</strong></p>
-<ul>
-<li>IP数据报格式</li>
-<li>IP层分组转发算法</li>
-<li>路由选择协议</li>
-<li>ICMP协议、ping、traceroute<a id="more"></a>
-
-</li>
-</ul>
-<p><strong>路由器的功能就是进行分组转发和路由选择</strong>，路由器是如何在知道IP地址时进行分组转发或者路由选择呢？</p>
-<p>为此，我们需要先了解下IP数据报的格式。</p>
-<h2 id="IP数据报的格式"><a href="#IP数据报的格式" class="headerlink" title="IP数据报的格式"></a>IP数据报的格式</h2><div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/ip%E6%95%B0%E6%8D%AE%E6%8A%A5.jpg"></div><br>
-
-<ul>
-<li><strong>版本</strong> : 有 4（IPv4）和 6（IPv6）两个值；</li>
-<li><strong>首部长度</strong> : 占4位，因此最大值为15。值为1表示的是1个32位字的长度，也就是4字节（即单位是4个字节，最多表示60个字节）。因为<strong>IP首部固定部分长度为20字节</strong>，因此该值最小为5。如果可选字段的长度不是4字节的整数倍，就用尾部的填充部分来填充。最常用的首部长度是20字节，这时不适用任何选项。</li>
-<li><strong>区分服务</strong> : 占8位，用来获得更好的服务，一般情况下不使用。</li>
-<li><strong>总长度</strong> : <strong>包括首部长度和数据部分长度</strong>。单位为字节。因此数据报最大长度为2^16-1=65535字节。但我们知道数据链路层中规定了<strong>数据帧中的数据字段的最大长度即最大传送单元MTU（通常为1500字节）</strong>。当数据报总长度超过MTU时，就必须把过长的数据报进行<strong>分片处理</strong>。<br>在进行<strong>分片</strong>时，数据报首部中的总长度字段指分片后的每一个分片的首部长度与该分片的数据长度的总和。</li>
-<li><strong>标识</strong> : 在数据报长度过长从而发生分片的情况下，相同数据报的不同分片具有相同的标识符。</li>
-<li><strong>标志</strong> ： 占3位，但目前只有两位有意义。<br>其中最低位记为MF。MF=1即表示后面还有分片的数据报，MF=0表示这是若干数据报中的最后一个。<br>中间位记为DF，意思是不能分片，只有当DF=0时才允许分片。</li>
-<li><strong>片偏移</strong> : 和标识符一起，用于发生分片的情况。表明较长的分组在分片后，某片在原分组中的相对位置，也就是说相对于用户数据字段的起点。片偏移的单位为8字节。 </li>
-<li><strong>生存时间</strong> ：TTL，它的存在是为了防止无法交付的数据报在互联网中不断兜圈子。以路由器跳数为单位，当 TTL为0时就丢弃数据报。</li>
-<li><strong>协议</strong> ：指出携带的数据应该上交给哪个协议进行处理，例如 ICMP、TCP、UDP 等。</li>
-<li><strong>首部检验和</strong> ：因为数据报每经过一个路由器，都要重新计算检验和，因此检验和不包含数据部分可以减少计算的工作量。</li>
-<li><strong>源地址</strong>：32位</li>
-<li><strong>目的地址</strong>：32位</li>
-</ul>
-<p>分片：</p>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%88%86%E7%89%87.png"></div><br>
-
-<h2 id="分组转发算法"><a href="#分组转发算法" class="headerlink" title="分组转发算法"></a>分组转发算法</h2><h3 id="使用分类IP的分组转发算"><a href="#使用分类IP的分组转发算" class="headerlink" title="使用分类IP的分组转发算"></a>使用分类IP的分组转发算</h3><p>使用分类的IP地址的转发，可以看到路由表中主要是以下两个信息：</p>
-<p><strong>（目的网络地址， 下一跳地址）</strong></p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E5%88%86%E7%B1%BBIP%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91.png"></div><br>
-
-<p>以路由器R2的路由表为例，由于R2同时连接在网络2和3上，因此只要目的主机在网络2或3上，都可以通过接口0或1有路由器R2直接进行交付（当然还要利用地址解析协议ARP才能找到这些主机的硬件地址）。若目的主机在网络1中，则下一跳路由应为R1，其IP地址为20.0.0.7。路由器R1和R2由于同时连接在网络2上，因此从路由器R2把分组转发给路由器R1是很容易的。</p>
-<p><strong>使用分类IP的分组转发算法过程</strong></p>
-<ol>
-<li><p>从数据报的首部提取目的主机的 IP 地址 D, 得出目的网络地址为 N。</p>
-</li>
-<li><p>若网络 N 与此路由器直接相连，则把数据报直接交付目的主机 D；否则是间接交付，执行步骤3。</p>
-</li>
-<li><p>若路由表中有目的地址为 D 的特定主机路由，则把数据报传送给路由表中所指明的下一跳路由器；否则，执行步骤4。</p>
-</li>
-<li><p>若路由表中有到达网络 N 的路由，则把数据报传送给路由表指明的下一跳路由器；否则，执行步骤5。</p>
-</li>
-<li><p>若路由表中有一个默认路由，则把数据报传送给路由表中所指明的默认路由器；否则，执行步骤6。</p>
-</li>
-<li><p>报告转发分组出错。</p>
-</li>
-</ol>
-<p>上面步骤5中提到的默认路由对于连接在小网络上的主机发送IP数据报时是十分有用的。如下图中连接在网络N1上的任何一个主机中的路由表只需要三个项目即可。</p>
-<ol>
-<li>本网络主机路由，其目的网络就是本网络N1,因而不需要路由转发。</li>
-<li>到网络N2的路由，对应的下一条路由器是R2</li>
-<li>默认路由，只要目的网络是其他网络(不是N1或N2),就一律选择默认路由，把数据报先交付路由器R1,让R1再转发给互联网中的下一个路由，一直转发到目的网络上的路由器，最后进行直接交付。</li>
-</ol>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95.jpg"></div><br>
-
-<h3 id="使用子网的分组转发算法"><a href="#使用子网的分组转发算法" class="headerlink" title="使用子网的分组转发算法"></a>使用子网的分组转发算法</h3><p>在划分子网的情况下，分组转发算法必须做相应改动，路由表中必须包含以下三项内容:<br><strong>目的网络地址、子网掩码、下一跳地址</strong></p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E4%BD%BF%E7%94%A8%E5%AD%90%E7%BD%91%E7%9A%84IP%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95.png"></div><br>
-
-<p><strong>使用子网的分组转发算法</strong></p>
-<ol>
-<li>从收到的数据报的首部提取目的IP地址D。</li>
-<li>先判断是否为直接交付。对路由器直接相连的网络逐个进行检查：用各网络的子网掩码和D逐位“与”，看结果是否和相应的网络地址匹配，若匹配，则把分组进行直接交付（当然还需要把D转换成物理地址，把数据报封装成帧发送出去），转发任务结束。否则是间接交付，执行步骤3。</li>
-<li>若路由表中有目的地址为D的特定主机路由，则把数据报传送给路由表中所指明的下一跳路由。否则执行步骤4</li>
-<li>对路由表中的每一行（目的网络地址、子网掩码、下一跳地址），用其中的子网掩码和D逐位相“与”，其结果为N。若N与该行的目的网络地址匹配，则把数据报传动给该行指明的下一跳路由。否则执行步骤5.</li>
-<li>若路由表中有一个默认路由，则把数据报传送给路由表中所指明的默认路由器；否则，执行步骤6。</li>
-<li>报告转发分组出错。</li>
-</ol>
-<p>比如对于上面的图中H1与主机H2之间进行通信，首先H1会将H2的IP地址128.30.33.128和本子网的网络地址128.30.33.0相与，得到128.30.33.0，与自己本子网的网络地址不同，则判断为间接交付，将数据报交付给路由器R1，由R1进行转发。</p>
-<p>路由器收到数据报后，根据路由表中的记录，将IP地址与子网掩码进行逐位相与，如先看R1路由表的第一行。将子网掩码和目的IP逐位相与后得到128.30.33.128，与这一行的目的网路地址128.30.33.0比较不匹配。   则继续寻找下一行。  可以看到在第二行中匹配成功，则不再继续找下去而是R1把分组从接口1直接交付主机H2。</p>
-<h3 id="使用CIDR的分组转发算法"><a href="#使用CIDR的分组转发算法" class="headerlink" title="使用CIDR的分组转发算法"></a>使用CIDR的分组转发算法</h3><p>在使用CIDR时，由于采用了网络前缀的这种方法，因此在路由表中的项目也要有相应改变。这时，每个项目由两个内容构成：<br><strong>网络前缀、下一跳地址</strong></p>
-<p>但是在查找时可能会得到不止一个匹配结果，此时应当采用<strong>最长前缀匹配</strong>来确定应该匹配哪一个。这是因为网络前缀越长，其地址块越小，因而路由选择就越具体。</p>
-<p>具体转发流程和使用子网的分组转发方法类似，只不过中间是用掩码相与后，再使用最长前缀匹配进行选择，不在赘述。</p>
-<p>比如，大学下属四系希望ISP把转发给四系的数据报直接发送到四系而不经过大学路由器，则在ISP路由器的路由表中至少有以下两个项目，即206.0.68.0/22(大学) 和206.0.71.128/25。假定目的IP地址为D=206.0.171.130,则按照下图进行掩码逐位与后都匹配，根据最长匹配前缀原理，应当选择后者。</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E6%9C%80%E9%95%BF%E5%89%8D%E7%BC%80%E5%8C%B9%E9%85%8D.png"></div><br>
-
-
-<p>注意：</p>
-<ul>
-<li><p>CIDR使用32位的<strong>地址掩码</strong>，其中<strong>1的长度为网络前缀的长度</strong>，例如/20的地址掩码为11111111 11111111 11110000 0000。</p>
-</li>
-<li><p>虽然CIDR不使用子网了，但是<strong>仍然可将地址掩码称为子网掩码</strong>。注意这个不使用子网的意思是说没有在32位地址中指明若干位作为子网字段，但分配到一个CIDR地址块后，仍然可以在本单位继续划分子网。 并且<strong>这些子网的网络前缀比整个单位网路的网络前缀长</strong>。</p>
-</li>
-<li><p>由于CIDR使用的是地址块，因此在路由表中可以直接利用CIDR地址块来查找目的网络，使得路由表中的一个项目可以表示原来传统分类地址的多个路由。这种路由聚合也称为<strong>构成超网</strong></p>
-</li>
-</ul>
-<hr>
-<h2 id="路由选择协议"><a href="#路由选择协议" class="headerlink" title="路由选择协议"></a>路由选择协议</h2><p>路由选择协议就是用来解决路由器中的路由表是如何获得的。</p>
-<p>互联网采用的路由选择协议主要是自适应的(即动态的)，分布式路由选择协议。</p>
-<p>互联网可以划分为许多较小的自治系统 AS，<strong>一个 AS 可以使用一种和别的 AS 不同的路由选择协议。在目前的互联网中，一个大的ISP就是一个自治系统</strong>。这样互联网就把路由选择协议划分为两大类：</p>
-<p>-<strong>内部网关协议IGP</strong> ： 即在一个自治系统内部使用的路由选择协议。主要有RIP 和 OSPF协议<br>-<strong>外部网关协议EGP</strong>： 若源主机和目的主机处在不同的自治系统中，当数据报传送到一个自治系统边界时，就需要使用一种协议将路由选择信息传递到另一个自治系统中。这样的协议就是外部网关协议。主要有BGP协议。</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE.png"></div><br>
-
-
-<h3 id="内部网关协议"><a href="#内部网关协议" class="headerlink" title="内部网关协议"></a>内部网关协议</h3><h4> 内部网关协议RIP</h4>
-
-<p><strong>RIP 是一种基于距离向量的路由选择协议</strong>。距离是指跳数，直接相连的路由器跳数为 1。跳数最多为 15，超过 15 表示不可达。</p>
-<p><strong>RIP 按固定的时间间隔仅和相邻路由器交换自己的路由表</strong>，经过若干次交换之后，所有路由器最终会知道到达本自治系统中任何一个网络的最短距离和下一跳路由器地址。</p>
-<p>距离向量算法：</p>
-<ul>
-<li>对地址为 X 的相邻路由器发来的 RIP 报文，先修改报文中的所有项目，把下一跳字段中的地址改为 X，并把所有的距离字段加 1；</li>
-<li>对修改后的 RIP 报文中的每一个项目，进行以下步骤：</li>
-<li>若原来的路由表中没有目的网络 N，则把该项目添加到路由表中；</li>
-<li>否则：若下一跳路由器地址是 X，则把收到的项目替换原来路由表中的项目；否则：若收到的项目中的距离 d 小于路由表中的距离，则进行更新（例如原始路由表项为 Net2, 5, P，新表项为 Net2, 4, X，则更新）；否则什么也不做。</li>
-<li>若 3 分钟还没有收到相邻路由器的更新路由表，则把该相邻路由器标为不可达，即把距离置为 16。</li>
-</ul>
-<p>RIP 协议实现简单，开销小。但是 RIP 能使用的最大距离为 15，限制了网络的规模。并且当网络出现故障时，要经过比较长的时间才能将此消息传送到所有路由器。</p>
-<h4> 内部网关协议 OSPF</h4>
-开放最短路径优先 OSPF，是为了克服 RIP 的缺点而开发出来的。
-
-<p>开放表示 OSPF 不受某一家厂商控制，而是公开发表的；最短路径优先表示使用了 Dijkstra 提出的最短路径算法 SPF。</p>
-<p>OSPF 具有以下特点：</p>
-<ul>
-<li>向本自治系统中的所有路由器发送信息，这种方法是<strong>洪泛法</strong>。</li>
-<li>发送的信息就是与相邻路由器的链路状态，链路状态包括与哪些路由器相连以及链路的度量，度量用费用、距离、时延、带宽等来表示。</li>
-<li>只有当链路状态发生变化时，路由器才会发送信息。</li>
-</ul>
-<p>所有路由器都具有全网的拓扑结构图，并且是一致的。相比于 RIP，OSPF 的更新过程收敛的很快。</p>
-<h3 id="外部网关协议-BGP"><a href="#外部网关协议-BGP" class="headerlink" title="外部网关协议 BGP"></a>外部网关协议 BGP</h3><p>BGP（Border Gateway Protocol，边界网关协议）</p>
-<p>AS 之间的路由选择很困难，主要是由于：</p>
-<p>互联网规模很大；</p>
-<ul>
-<li>各个 AS 内部使用不同的路由选择协议，无法准确定义路径的度量；</li>
-<li>AS 之间的路由选择必须考虑有关的策略，比如有些 AS 不愿意让其它 AS 经过。</li>
-<li>BGP 只能寻找一条比较好的路由，而不是最佳路由。</li>
-</ul>
-<p>每个 AS 都必须配置 BGP 发言人，通过在两个相邻 BGP 发言人之间建立 TCP 连接来交换路由信息。</p>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/BGP.png"></div><br>
-
-<hr>
-<h2 id="网际控制报文协议ICMP"><a href="#网际控制报文协议ICMP" class="headerlink" title="网际控制报文协议ICMP"></a>网际控制报文协议ICMP</h2><p>ICMP协议是为了能够更有效地转发IP数据报和提高交付成功的机会。但ICMP不是高层协议(虽然ICMP数据报文作为IP层数据)，而是IP层协议。</p>
-<p>ICMP报文：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png"></div><br>
-
-<p>ICMP报文种类有两种：</p>
-<ul>
-<li><strong>ICMP差错报告报文</strong></li>
-<li><strong>ICMP询问报文</strong></li>
-</ul>
-<p>常见ICMP报文类型</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E6%8A%A5%E6%96%87%E7%A7%8D%E7%B1%BB.png"></div><br>
-
-<p>ICMP差错报告报文具有相同的格式：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E5%B7%AE%E9%94%99%E6%8A%A5%E5%91%8A%E6%8A%A5%E6%96%87.png"></div><br>
-其中取需要进行差错报告的IP数据报数据字段前8个字节是为了得到运输层端口号(对于TCP和UDP)以及运输层报文的发送序号(对于TCP)。
-
-<p>ICMP常见的应用就是ping和traceroute</p>
-<h3 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h3><ul>
-<li><p>ping是分组网间嗅探，<strong>用来测试两台主机的连通性</strong>。</p>
-</li>
-<li><p><strong>ping是应用层直接使用网络层，没有经过传输层的TCP或UDP</strong></p>
-</li>
-</ul>
-<p>ping百度的抓包分析：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ping%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png"></div><br>
-
-<p>可以看到执行ping命令后，直接进行了4次request和reply。在下面的请求报文中可以看到和上面的ICMP报文格式一一对应。这里的 Type=8,code=0, 校验是正确，且这是一个Echo请求报文。我们再点击Responseframe:8，这里说明响应报文在序号8。详情如下：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ping%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87.png"></div><br>
-同样的Type=8,code=0校验正确，且最下面根据请求和响应的时间戳计算出来的响应延迟。 
-
-<h3 id="traceroute"><a href="#traceroute" class="headerlink" title="traceroute"></a>traceroute</h3><p>Traceroute是ICMP的另一个应用，<strong>用来跟踪一个分组从源点到终点的路径</strong>。traceroute是UNIX系统中的名字，在windows系统中是tracert。</p>
-<p><strong>traceroute发送的IP数据报封装的是无法交付的UDP用户数据报（使用了非法端口号），并由目的主机发送终点不可达差错报告报文。</strong></p>
-<ul>
-<li>源主机向目的主机发送一连串的IP数据报。第一个数据报P1的生存时间TTL设置为1，当P1到达路径上的第一个路由器R1时，R1收下它并把TTL减 1，此时TTL等于0，R1就把P1丢弃，并向源主机发送一个ICMP时间超过差错报告报文；</li>
-<li>源主机接着发送第二个数据报P2，并把TTL设置为2。P2先到达 R1，R1收下后把TTL减 1 再转发给R2，R2收下后也把TTL减1，由于此时TTL等于0，R2就丢弃P2，并向源主机发送一个ICMP时间超过差错报文。</li>
-<li>不断执行这样的步骤，直到最后一个数据报刚刚到达目的主机，主机不转发数据报，也不把TTL值减1。但是因为数据报封装的是无法交付的UDP，因此目的主机要向源主机发送ICMP终点不可达差错报告报文。</li>
-<li>之后源主机知道了到达目的主机所经过的路由器IP地址以及到达每个路由器的往返时间。</li>
-</ul>
-<p><a href="https://blog.csdn.net/qq_17308321/article/details/62443817">UDP抓包(traceroute和tracert的不同)</a></p>
-
-        </div>
-        
-        <div class="level is-size-7 is-uppercase">
-            <div class="level-start">
-                <div class="level-item">
-                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a>
-                </div>
-            </div>
+            <a id="more"></a>
         </div>
         
         
@@ -395,17 +209,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/09/%E4%BC%A0%E8%BE%93%E5%B1%82/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">传输层</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/07/%E7%BD%91%E7%BB%9C%E5%B1%82/">
-                <span class="level-item">网络层(一)</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/10/Java%E5%B8%B8%E7%94%A8%E7%B1%BB/">
+                <span class="level-item">Java常用类</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -519,69 +326,6 @@
 </div>
     
         
-
-    <div class="card widget" id="toc">
-        <div class="card-content">
-            <div class="menu">
-                <h3 class="menu-label">
-                    目录
-                </h3>
-                <ul class="menu-list"><li>
-        <a class="is-flex" href="#IP数据报的格式">
-        <span class="has-mr-6">1</span>
-        <span>IP数据报的格式</span>
-        </a></li><li>
-        <a class="is-flex" href="#分组转发算法">
-        <span class="has-mr-6">2</span>
-        <span>分组转发算法</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#使用分类IP的分组转发算">
-        <span class="has-mr-6">2.1</span>
-        <span>使用分类IP的分组转发算</span>
-        </a></li><li>
-        <a class="is-flex" href="#使用子网的分组转发算法">
-        <span class="has-mr-6">2.2</span>
-        <span>使用子网的分组转发算法</span>
-        </a></li><li>
-        <a class="is-flex" href="#使用CIDR的分组转发算法">
-        <span class="has-mr-6">2.3</span>
-        <span>使用CIDR的分组转发算法</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#路由选择协议">
-        <span class="has-mr-6">3</span>
-        <span>路由选择协议</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#内部网关协议">
-        <span class="has-mr-6">3.1</span>
-        <span>内部网关协议</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#undefined">
-        <span class="has-mr-6">3.1.1</span>
-        <span> 内部网关协议RIP</span>
-        </a></li><li>
-        <a class="is-flex" href="#undefined">
-        <span class="has-mr-6">3.1.2</span>
-        <span> 内部网关协议 OSPF</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#外部网关协议-BGP">
-        <span class="has-mr-6">3.2</span>
-        <span>外部网关协议 BGP</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#网际控制报文协议ICMP">
-        <span class="has-mr-6">4</span>
-        <span>网际控制报文协议ICMP</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#ping">
-        <span class="has-mr-6">4.1</span>
-        <span>ping</span>
-        </a></li><li>
-        <a class="is-flex" href="#traceroute">
-        <span class="has-mr-6">4.2</span>
-        <span>traceroute</span>
-        </a></li></ul></li></ul>
-            </div>
-        </div>
-    </div>
 
     
         
@@ -904,7 +648,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="网络层(二)" height="28">
+                    <img src="/images/logo.png" alt="多线程" height="28">
                 
                 </a>
                 <p class="is-size-7">
