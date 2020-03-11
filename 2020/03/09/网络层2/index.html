@@ -13,17 +13,17 @@
     <meta name="description" content="主要内容  IP数据报格式 IP层分组转发算法 路由选择协议 ICMP协议、ping、traceroute">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网络层(二)">
-<meta property="og:url" content="http://yoursite.coms/2020/03/09/%E7%BD%91%E7%BB%9C%E5%B1%822/index.html">
+<meta property="og:url" content="http://coderchen33.life/2020/03/09/%E7%BD%91%E7%BB%9C%E5%B1%822/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
 <meta property="og:description" content="主要内容  IP数据报格式 IP层分组转发算法 路由选择协议 ICMP协议、ping、traceroute">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.coms/images/og_image.png">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-08T22:49:26.000Z">
-<meta property="article:modified_time" content="2020-03-09T07:35:00.206Z">
+<meta property="article:modified_time" content="2020-03-11T04:44:12.624Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.coms/images/og_image.png">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
 
 
 
@@ -183,7 +183,7 @@
 </ul>
 <p><strong>路由器的功能就是进行分组转发和路由选择</strong>，路由器是如何在知道IP地址时进行分组转发或者路由选择呢？</p>
 <p>为此，我们需要先了解下IP数据报的格式。</p>
-<h2 id="IP数据报的格式"><a href="#IP数据报的格式" class="headerlink" title="IP数据报的格式"></a>IP数据报的格式</h2><div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/ip%E6%95%B0%E6%8D%AE%E6%8A%A5.jpg"></div><br>
+<h2 id="IP数据报的格式"><a href="#IP数据报的格式" class="headerlink" title="IP数据报的格式"></a>IP数据报的格式</h2><div align="center"> <img src="http://coderchen33.life/ip%E6%95%B0%E6%8D%AE%E6%8A%A5.png"></div><br>
 
 <ul>
 <li><strong>版本</strong> : 有 4（IPv4）和 6（IPv6）两个值；</li>
@@ -200,11 +200,11 @@
 <li><strong>目的地址</strong>：32位</li>
 </ul>
 <p>分片：</p>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%88%86%E7%89%87.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/%E5%88%86%E7%89%87.png"></div><br>
 
 <h2 id="分组转发算法"><a href="#分组转发算法" class="headerlink" title="分组转发算法"></a>分组转发算法</h2><h3 id="使用分类IP的分组转发算"><a href="#使用分类IP的分组转发算" class="headerlink" title="使用分类IP的分组转发算"></a>使用分类IP的分组转发算</h3><p>使用分类的IP地址的转发，可以看到路由表中主要是以下两个信息：</p>
 <p><strong>（目的网络地址， 下一跳地址）</strong></p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E5%88%86%E7%B1%BBIP%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/%E5%88%86%E7%B1%BBIP%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91.png"></div><br>
 
 <p>以路由器R2的路由表为例，由于R2同时连接在网络2和3上，因此只要目的主机在网络2或3上，都可以通过接口0或1有路由器R2直接进行交付（当然还要利用地址解析协议ARP才能找到这些主机的硬件地址）。若目的主机在网络1中，则下一跳路由应为R1，其IP地址为20.0.0.7。路由器R1和R2由于同时连接在网络2上，因此从路由器R2把分组转发给路由器R1是很容易的。</p>
 <p><strong>使用分类IP的分组转发算法过程</strong></p>
@@ -228,10 +228,10 @@
 <li>到网络N2的路由，对应的下一条路由器是R2</li>
 <li>默认路由，只要目的网络是其他网络(不是N1或N2),就一律选择默认路由，把数据报先交付路由器R1,让R1再转发给互联网中的下一个路由，一直转发到目的网络上的路由器，最后进行直接交付。</li>
 </ol>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95.jpg"></div><br>
+<div align="center"> <img src="http://coderchen33.life/%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95.jpg"></div><br>
 
 <h3 id="使用子网的分组转发算法"><a href="#使用子网的分组转发算法" class="headerlink" title="使用子网的分组转发算法"></a>使用子网的分组转发算法</h3><p>在划分子网的情况下，分组转发算法必须做相应改动，路由表中必须包含以下三项内容:<br><strong>目的网络地址、子网掩码、下一跳地址</strong></p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E4%BD%BF%E7%94%A8%E5%AD%90%E7%BD%91%E7%9A%84IP%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/%E4%BD%BF%E7%94%A8%E5%AD%90%E7%BD%91%E7%9A%84IP%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95.png"></div><br>
 
 <p><strong>使用子网的分组转发算法</strong></p>
 <ol>
@@ -248,7 +248,7 @@
 <p>但是在查找时可能会得到不止一个匹配结果，此时应当采用<strong>最长前缀匹配</strong>来确定应该匹配哪一个。这是因为网络前缀越长，其地址块越小，因而路由选择就越具体。</p>
 <p>具体转发流程和使用子网的分组转发方法类似，只不过中间是用掩码相与后，再使用最长前缀匹配进行选择，不在赘述。</p>
 <p>比如，大学下属四系希望ISP把转发给四系的数据报直接发送到四系而不经过大学路由器，则在ISP路由器的路由表中至少有以下两个项目，即206.0.68.0/22(大学) 和206.0.71.128/25。假定目的IP地址为D=206.0.171.130,则按照下图进行掩码逐位与后都匹配，根据最长匹配前缀原理，应当选择后者。</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E6%9C%80%E9%95%BF%E5%89%8D%E7%BC%80%E5%8C%B9%E9%85%8D.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/%E6%9C%80%E9%95%BF%E5%89%8D%E7%BC%80%E5%8C%B9%E9%85%8D.png"></div><br>
 
 
 <p>注意：</p>
@@ -265,7 +265,7 @@
 <p>互联网采用的路由选择协议主要是自适应的(即动态的)，分布式路由选择协议。</p>
 <p>互联网可以划分为许多较小的自治系统 AS，<strong>一个 AS 可以使用一种和别的 AS 不同的路由选择协议。在目前的互联网中，一个大的ISP就是一个自治系统</strong>。这样互联网就把路由选择协议划分为两大类：</p>
 <p>-<strong>内部网关协议IGP</strong> ： 即在一个自治系统内部使用的路由选择协议。主要有RIP 和 OSPF协议<br>-<strong>外部网关协议EGP</strong>： 若源主机和目的主机处在不同的自治系统中，当数据报传送到一个自治系统边界时，就需要使用一种协议将路由选择信息传递到另一个自治系统中。这样的协议就是外部网关协议。主要有BGP协议。</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE.png"></div><br>
 
 
 <h3 id="内部网关协议"><a href="#内部网关协议" class="headerlink" title="内部网关协议"></a>内部网关协议</h3><h4> 内部网关协议RIP</h4>
@@ -301,12 +301,12 @@
 <li>BGP 只能寻找一条比较好的路由，而不是最佳路由。</li>
 </ul>
 <p>每个 AS 都必须配置 BGP 发言人，通过在两个相邻 BGP 发言人之间建立 TCP 连接来交换路由信息。</p>
-<div align="center"> <img src="https://github.com/ChenLiang-Vic/Personal-notes/blob/master/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/img/BGP.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/BGP.png"></div><br>
 
 <hr>
 <h2 id="网际控制报文协议ICMP"><a href="#网际控制报文协议ICMP" class="headerlink" title="网际控制报文协议ICMP"></a>网际控制报文协议ICMP</h2><p>ICMP协议是为了能够更有效地转发IP数据报和提高交付成功的机会。但ICMP不是高层协议(虽然ICMP数据报文作为IP层数据)，而是IP层协议。</p>
 <p>ICMP报文：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/ICMP%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png"></div><br>
 
 <p>ICMP报文种类有两种：</p>
 <ul>
@@ -314,10 +314,10 @@
 <li><strong>ICMP询问报文</strong></li>
 </ul>
 <p>常见ICMP报文类型</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E6%8A%A5%E6%96%87%E7%A7%8D%E7%B1%BB.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/ICMP%E6%8A%A5%E6%96%87%E7%A7%8D%E7%B1%BB.png"></div><br>
 
 <p>ICMP差错报告报文具有相同的格式：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ICMP%E5%B7%AE%E9%94%99%E6%8A%A5%E5%91%8A%E6%8A%A5%E6%96%87.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/ICMP%E5%B7%AE%E9%94%99%E6%8A%A5%E5%91%8A%E6%8A%A5%E6%96%87.png"></div><br>
 其中取需要进行差错报告的IP数据报数据字段前8个字节是为了得到运输层端口号(对于TCP和UDP)以及运输层报文的发送序号(对于TCP)。
 
 <p>ICMP常见的应用就是ping和traceroute</p>
@@ -328,10 +328,10 @@
 </li>
 </ul>
 <p>ping百度的抓包分析：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ping%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/ping%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png"></div><br>
 
 <p>可以看到执行ping命令后，直接进行了4次request和reply。在下面的请求报文中可以看到和上面的ICMP报文格式一一对应。这里的 Type=8,code=0, 校验是正确，且这是一个Echo请求报文。我们再点击Responseframe:8，这里说明响应报文在序号8。详情如下：</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/ping%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87.png"></div><br>
+<div align="center"> <img src="http://coderchen33.life/ping%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87.png"></div><br>
 同样的Type=8,code=0校验正确，且最下面根据请求和响应的时间戳计算出来的响应延迟。 
 
 <h3 id="traceroute"><a href="#traceroute" class="headerlink" title="traceroute"></a>traceroute</h3><p>Traceroute是ICMP的另一个应用，<strong>用来跟踪一个分组从源点到终点的路径</strong>。traceroute是UNIX系统中的名字，在windows系统中是tracert。</p>
@@ -967,7 +967,7 @@
 <script>
 var IcarusThemeSettings = {
     site: {
-        url: 'http://yoursite.comS',
+        url: 'http://coderchen33.life',
         external_link: {"enable":true,"exclude":[]}
     },
     article: {
