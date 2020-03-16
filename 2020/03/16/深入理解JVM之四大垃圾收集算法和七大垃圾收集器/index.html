@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>深入理解JVM之四大垃圾收集算法和七大垃圾收集器 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容  判断对象是否存活 四大垃圾收集算法 七大垃圾收集器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解JVM之四大垃圾收集算法和七大垃圾收集器">
+<meta property="og:url" content="http://coderchen33.life/2020/03/16/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM%E4%B9%8B%E5%9B%9B%E5%A4%A7%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%83%E5%A4%A7%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容  判断对象是否存活 四大垃圾收集算法 七大垃圾收集器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-03-16T09:54:25.000Z">
+<meta property="article:modified_time" content="2020-03-16T09:55:30.814Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="深入理解JVM之四大垃圾收集算法和七大垃圾收集器" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-16T09:54:25.000Z">2020-03-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/JVM/">JVM</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    21 分钟 读完 (大约 3148 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                深入理解JVM之四大垃圾收集算法和七大垃圾收集器
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>判断对象是否存活</li>
+<li>四大垃圾收集算法</li>
+<li>七大垃圾收集器<a id="more"></a>
+
+</li>
+</ol>
+<p>上一节我们在介绍Java堆中简单提了下说Java堆是垃圾收集管理的主要区域，那么</p>
+<ul>
+<li>如何判断Java堆内存中的对象是否是垃圾？(判断对象是否存活)</li>
+<li>如果是垃圾，如何对垃圾进行收集？(四大垃圾收集算法)</li>
+<li>收集时使用的垃圾收集器一共有几种？(七大垃圾收集器)</li>
+<li>以及最终完整的讨论下Java堆中进行的垃圾回收过程</li>
+</ul>
+<h2 id="判断对象是否存活"><a href="#判断对象是否存活" class="headerlink" title="判断对象是否存活"></a>判断对象是否存活</h2><h4><strong>引用计数算法</strong></h4>
+为对象添加一个引用计数器，当对象增加一个引用时计数器加 1，引用失效时计数器减 1。引用计数为 0 的对象可被回收。
+
+<ul>
+<li>优点：实现简单、判定效率高</li>
+<li>缺点：无法解决循环引用的问题。</li>
+</ul>
+<p>demo</p>
+<h4><strong>可达性分析算法</strong></h4>
+
+<p>以一系列GC Roots 为起始点进行搜索，可达的对象都是存活的，不可达的对象可被回收。</p>
+<p><strong>Java 虚拟机使用该算法来判断对象是否可被回收</strong>，GC Roots 一般包含以下内容：</p>
+<ul>
+<li>虚拟机栈中局部变量表中引用的对象</li>
+<li>方法区中的常量引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>本地方法栈中 JNI 中引用的对象</li>
+</ul>
+<p>下图中的Object4就处于可被回收状态</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-14-31-53"></div><br>
+
+
+<h4><strong>引用类型</strong></h4>
+
+<p>上面两种算法中判定对象是否可被回收都与引用有关。Java 提供了四种强度不同的引用类型。<strong>下面四种类型的引用强度依次减弱</strong></p>
+<h5><strong>强引用</strong></h5>
+
+<p>我们平时用的new 对象创建的就是一个强引用。<strong>被强引用关联的对象不会被回收</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="keyword">new</span> Object();</span><br><span class="line">obj = <span class="keyword">null</span>  <span class="comment">//通过手动将将栈中obj置为null，就可以被回收</span></span><br></pre></td></tr></table></figure>
+<h5><strong>软引用</strong></h5>
+
+<p>软引用用来描述一些有用但非必须的对象。<strong>被软引用关联的对象只有在内存不够的情况下才会被回收</strong>，如果这次回收内存仍然不够，则会出现OOM异常。这种特性常常被用来实现缓存技术</p>
+<p>在 JDK1.2 之后，用java.lang.ref.SoftReference类来表示软引用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="keyword">new</span> Object();</span><br><span class="line">SoftReference&lt;Object&gt; sf = <span class="keyword">new</span> SoftReference&lt;Object&gt;(obj);</span><br><span class="line">obj = <span class="keyword">null</span>;  <span class="comment">// 使对象只被软引用关联</span></span><br></pre></td></tr></table></figure>
+<h5><strong>弱引用</strong></h5>
+
+<p>被弱引用关联的对象一定会被回收，也就是说<strong>弱引用只能存活到下一次垃圾回收发生之前</strong>。</p>
+<p>使用 WeakReference 类来创建弱引用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="keyword">new</span> Object();</span><br><span class="line">WeakReference&lt;Object&gt; wf = <span class="keyword">new</span> WeakReference&lt;Object&gt;(obj);</span><br><span class="line">obj = <span class="keyword">null</span>;<span class="comment">// 使对象只被弱引用关联</span></span><br></pre></td></tr></table></figure>
+<h5><strong>虚引用</strong></h5>
+虚引用并不会决定对象的生命周期。在任何时候都可能被垃圾回收器回收。虚引用主要用来跟踪对象被垃圾回收器回收的活动。
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="keyword">new</span> Object();</span><br><span class="line">PhantomReference&lt;Object&gt; pf = <span class="keyword">new</span> PhantomReference&lt;Object&gt;(obj, <span class="keyword">null</span>);</span><br><span class="line">obj = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四大垃圾收集算法"><a href="#四大垃圾收集算法" class="headerlink" title="四大垃圾收集算法"></a>四大垃圾收集算法</h2><h4><strong>1. 标记 - 清除算法</strong></h4>
+
+<p>首先标记出所有需要回收的对象，在标记后统一回收所有被标记的对象。</p>
+<p>回收对象就是把对象作为分块，连接到被称为 “空闲链表” 的单向链表，之后进行分配时只需要遍历这个空闲链表，就可以找到分块。</p>
+<p>在分配时，程序会搜索空闲链表寻找空间大于等于新对象大小 size 的块 block。如果它找到的块等于 size，会直接返回这个分块；如果找到的块大于 size，会将块分割成大小为 size 与 (block - size) 的两部分，返回大小为 size 的分块，并把大小为 (block - size) 的块返回给空闲链表。</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-15-20-46"></div><br>
+
+<p>不足：</p>
+<ul>
+<li>标记和清除过程效率都不高；</li>
+<li>会产生大量不连续的内存碎片，导致无法给大对象分配内存。</li>
+</ul>
+<h4><strong>2.复制算法</strong></h4>
+
+<p>将内存划分为大小相等的两块，每次只使用其中一块，当这一块内存用完了就将还存活的对象复制到另一块上面，然后再把使用过的内存空间进行一次清理。</p>
+<p>主要不足是只使用了内存的一半。</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-15-29-3"></div><br>
+
+<p><strong>下面两段话注意，之后在说明这个垃圾回收过程中会用到。</strong><br>现在的商业虚拟机都采用复制算法回收新生代。经研究发现98%的对象都是“朝生夕死”的，所以并不需要划分为大小相等的两块，而是一块较大的 Eden 空间和两块较小的 Survivor 空间。在回收时，将 Eden 和 Survivor 中还存活着的对象全部复制到另一块 Survivor 上，最后清理 Eden 和使用过的那一块 Survivor。</p>
+<p>HotSpot 虚拟机的 Eden 和 Survivor0 和 Survivor1大小比例默认为 8:1:1，保证了内存的利用率达到 90%。如果每次回收有多于 10% 的对象存活，那么一块 Survivor 就不够用了，此时需要依赖于老年代进行空间分配担保，也就是借用老年代的空间存储放不下的对象。</p>
+<h4><strong>3. 标记 - 整理算法</strong></h4>
+与标记-清除算法类似，只不过不是直接对对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。
+
+
+<div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-15-41-0"></div><br>
+
+<h4><strong>4. 分代收集算法</strong></h4>
+现在的商业虚拟机采用分代收集算法，它根据对象存活周期将内存划分为几块，不同块采用适当的收集算法。
+
+<p>一般将堆分为新生代和老年代。</p>
+<ul>
+<li><strong>新生代使用：复制算法</strong></li>
+<li><strong>老年代使用：标记 - 清除 或者 标记 - 整理 算法</strong></li>
+</ul>
+<hr>
+<h2 id="七大垃圾收集器"><a href="#七大垃圾收集器" class="headerlink" title="七大垃圾收集器"></a>七大垃圾收集器</h2><p>上面我们介绍的是垃圾收集的算法，具体实现则是通过垃圾收集器来实现的。</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-17-2-32"></div><br>
+
+<p>以上是 HotSpot 虚拟机中的 7 个垃圾收集器，连线表示垃圾收集器可以配合使用。</p>
+<ul>
+<li><p>单线程与多线程：单线程指的是垃圾收集器只使用一个线程，而多线程使用多个线程；</p>
+</li>
+<li><p>串行与并行：串行指的是垃圾收集器与用户程序交替执行，这意味着在执行垃圾收集的时候需要停顿用户程序；并行指的是垃圾收集器和用户程序同时执行。除了 CMS 和 G1 之外，其它垃圾收集器都是以串行的方式执行。</p>
+</li>
+</ul>
+<p>这里我们重点关注CMS垃圾收集器和G1垃圾收集器，其他的简单了解即可。</p>
+<ul>
+<li><strong>Serial 收集器</strong>   单线程收集器、Client场景下默认新生代收集器</li>
+<li><strong>ParNew 收集器</strong> Serial 收集器的多线程版本、 Server 场景下默认的新生代收集器</li>
+<li><strong>Parallel Scavenge 收集器</strong> 多线程收集器、<strong>“吞吐量优先”收集器</strong>。这里的吞吐量指 CPU 用于运行用户程序的时间占总时间的比值。</li>
+<li><strong>Serial Old 收集器</strong> Serial 收集器的老年代版本、给 Client 场景下的虚拟机使用</li>
+<li><strong>Parallel Old 收集器</strong> Parallel Scavenge 收集器的老年代版本。在注重吞吐量以及 CPU 资源敏感的场合，都可以优先考虑 Parallel Scavenge 加 Parallel Old 收集器</li>
+</ul>
+<p>接下来重点解释下CMS收集器和G1收集器</p>
+<h4><strong>CMS收集器</strong></h4>
+
+<ul>
+<li>CMS收集器是一种以<strong>获得最短回收停顿时间</strong>为目标的收集器。</li>
+<li>CMS收集器是<strong>基于标记-清除算法</strong>实现的。</li>
+<li>收集器线程都可以与用户线程一起工作，不需要进行停顿</li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-17-25-43"></div><br>
+
+
+<p>工作过程分为以下四个流程：</p>
+<ol>
+<li>初始标记：仅仅只是标记一下 GC Roots 能直接关联到的对象，速度很快，需要停顿。</li>
+<li>并发标记：进行 GC Roots Tracing 的过程，它在整个回收过程中耗时最长，不需要停顿。</li>
+<li>重新标记：为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，需要停顿。</li>
+<li>并发清除：不需要停顿。</li>
+</ol>
+<p>在整个过程中耗时最长的并发标记和并发清除过程中，收集器线程都可以与用户线程一起工作，不需要进行停顿。</p>
+<p>缺点：</p>
+<ol>
+<li>吞吐量低：低停顿时间是以牺牲吞吐量为代价的，导致 CPU 利用率不够高。</li>
+<li>无法处理浮动垃圾，可能出现 Concurrent Mode Failure。浮动垃圾是指并发清除阶段由于用户线程继续运行而产生的垃圾，这部分垃圾只能到下一次 GC 时才能进行回收。由于浮动垃圾的存在，因此需要预留出一部分内存，意味着 CMS 收集不能像其它收集器那样等待老年代快满的时候再回收。如果预留的内存不够存放浮动垃圾，就会出现 Concurrent Mode Failure，这时虚拟机将临时启用 Serial Old 来替代 CMS。</li>
+<li>标记 - 清除算法导致的空间碎片，往往出现老年代空间剩余，但无法找到足够大连续空间来分配当前对象，不得不提前触发一次 Full GC。</li>
+</ol>
+<h4><strong>G1收集器</strong></h4>
+
+<p>我们知道堆被分为新生代和老年代，其它收集器进行收集的范围都是整个新生代或者老年代，而 <strong>G1 可以直接对新生代和老年代一起回收</strong>。</p>
+<p>G1 把堆划分成多个大小相等的独立区域（Region），新生代和老年代不再物理隔离。从而将原来的一整块内存空间划分成多个的小空间，使得<strong>每个小Region可以单独进行垃圾回收</strong>。</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-17-37-11"></div><br>
+
+<p>每个 Region 都有一个 Remembered Set，用来记录该 Region 对象的引用对象所在的 Region。通过使用 Remembered Set，在做可达性分析的时候就可以避免全堆扫描</p>
+<p><strong>G1垃圾收集器的优点</strong></p>
+<ul>
+<li><strong>并行与并发</strong>  通过并发方式让Java程序在垃圾收集时期继续执行</li>
+<li><strong>分代收集</strong> 虽然可以将新生代和老年代一同收集，但是分代的概念依然在G1中保留。仍然能够采用不同的方式去处理新创建的对象和已经存活一段时间的旧对象</li>
+<li><strong>空间整合</strong> G1从<strong>整体来看是基于标记-整理算法</strong>，<strong>局部(两个Region间)是基于复制算法</strong>实现的。两种算法都意味着G1运行期间不会昌盛内存空间碎片</li>
+<li><strong>可预测停顿</strong> 能让使用者明确指定在一个长度为 M 毫秒的时间片段内，消耗在 GC 上的时间不得超过 N 毫秒。</li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-17-39-55"></div><br>
+如果不计算维护 Remembered Set 的操作，G1 收集器的
+
+<p>运作大致可划分为以下几个步骤：</p>
+<ol>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>最终标记：为了修正在并发标记期间因用户程序继续运作而导致标记产生变动的那一部分标记记录，虚拟机将这段时间对象变化记录在线程的 Remembered Set Logs 里面，最终标记阶段需要把 Remembered Set Logs 的数据合并到 Remembered Set 中。这阶段需要停顿线程，但是可并行执行。</li>
+<li>筛选回收：首先对各个 Region 中的回收价值和成本进行排序，根据用户所期望的 GC 停顿时间来制定回收计划。此阶段其实也可以做到与用户程序一起并发执行，但是因为只回收一部分 Region，时间是用户可控制的，而且停顿用户线程将大幅度提高收集效率。</li>
+</ol>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/JVM/" rel="tag">JVM</a>, <a class="has-link-grey -link" href="/tags/Java/" rel="tag">Java</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/16/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM%E4%B9%8BJava%E5%A0%86%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E8%BF%87%E7%A8%8B/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">深入理解JVM之Java堆垃圾回收过程</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/16/synchronized%E9%94%81%E5%92%8C%E6%98%BE%E5%BC%8FLock%E9%94%81/">
+                <span class="level-item">synchronized锁和显式Lock锁</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            19
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            7
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#判断对象是否存活">
+        <span class="has-mr-6">1</span>
+        <span>判断对象是否存活</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.1</span>
+        <span>引用计数算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.2</span>
+        <span>可达性分析算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.3</span>
+        <span>引用类型</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.3.1</span>
+        <span>强引用</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.3.2</span>
+        <span>软引用</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.3.3</span>
+        <span>弱引用</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.3.4</span>
+        <span>虚引用</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#四大垃圾收集算法">
+        <span class="has-mr-6">2</span>
+        <span>四大垃圾收集算法</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.1</span>
+        <span>1. 标记 - 清除算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.2</span>
+        <span>2.复制算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.3</span>
+        <span>3. 标记 - 整理算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.4</span>
+        <span>4. 分代收集算法</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#七大垃圾收集器">
+        <span class="has-mr-6">3</span>
+        <span>七大垃圾收集器</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">3.1</span>
+        <span>CMS收集器</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">3.2</span>
+        <span>G1收集器</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="深入理解JVM之四大垃圾收集算法和七大垃圾收集器" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
