@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-12T12:43:32.000Z">
-<meta property="article:modified_time" content="2020-03-17T12:17:30.140Z">
+<meta property="article:modified_time" content="2020-03-19T09:14:08.277Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="多线程">
@@ -157,7 +157,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    20 分钟 读完 (大约 2964 个字)
+                    20 分钟 读完 (大约 2966 个字)
                 </span>
                 
                 
@@ -340,7 +340,7 @@ sleep方法有个重载方法，可以设置纳秒数。但两个方法都是直
 <p>其实很容易理解，因为interrupted调用时是使用静态方法调用，所以是作用于当前线程，而isInterrupted方法通过对象调用，所以作用于调用此方法的对象。</p>
 <hr>
 <h2 id="安全的终止一个线程"><a href="#安全的终止一个线程" class="headerlink" title="安全的终止一个线程"></a>安全的终止一个线程</h2><p>对于一个线程，可以有暂停，恢复和终止操作，对应的就是Thread类中的suspend()、rusume()和stop()方法。但是看源码知道这些方法因为某些原因(容易死锁、不能正常释放资源等)已经不建议使用了。</p>
-<p><strong>对于线程的暂停和恢复，可以使用等待通知机制来替代</strong>(下篇文章讲)</p>
+<p><strong>对于线程的暂停和恢复，可以使用等待唤醒机制来替代</strong>(之后再补上链接)</p>
 <p>对于线程的终止，我们有两种方法：</p>
 <ul>
 <li>使用上面提到的中断</li>
