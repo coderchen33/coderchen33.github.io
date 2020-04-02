@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Java多线程之线程池 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容  线程池的概念 线程池的基本使用 线程池的7大参数 线程池工作原理 使用自定义线程池">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java多线程之线程池">
+<meta property="og:url" content="http://coderchen33.life/2020/03/31/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E6%B1%A0/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容  线程池的概念 线程池的基本使用 线程池的7大参数 线程池工作原理 使用自定义线程池">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-03-31T13:43:01.000Z">
+<meta property="article:modified_time" content="2020-04-02T10:33:00.558Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="技术博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Java多线程之线程池" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-31T13:43:01.000Z">2020-03-31</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1311 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Java多线程之线程池
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>线程池的概念</li>
+<li>线程池的基本使用</li>
+<li>线程池的7大参数</li>
+<li>线程池工作原理</li>
+<li>使用自定义线程池<a id="more"></a>
+
+</li>
+</ol>
+<h2 id="线程池基本概念"><a href="#线程池基本概念" class="headerlink" title="线程池基本概念"></a>线程池基本概念</h2><ol>
+<li><strong>降低资源消耗</strong>。通过<strong>重复利用</strong>已创建的线程降低线程创建和销毁造成的消耗。</li>
+<li><strong>提高响应速度</strong>。当任务到达时，任务可以<strong>不需要等到线程创建</strong>就能立即执行。</li>
+<li><strong>提高线程的可管理性</strong>。线程是稀缺资源，如果无限制地创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行<strong>统一分配、调优和监控</strong>。</li>
+</ol>
+<h2 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h2><div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-1-21-14-59"></div><br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.company.MultiThread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//新建线程池</span></span><br><span class="line">        ExecutorService threadPool = Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line">        <span class="comment">//ExecutorService threadPool = Executors.newSingleThreadExecutor();</span></span><br><span class="line">        <span class="comment">//ExecutorService threadPool = Executors.newCachedThreadPool();</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">                <span class="comment">//向线程池提交任务</span></span><br><span class="line">                threadPool.execute(()-&gt;&#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName()+<span class="string">"办理业务"</span>);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">//关闭线程池</span></span><br><span class="line">            threadPool.shutdown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="线程池七大参数"><a href="#线程池七大参数" class="headerlink" title="线程池七大参数"></a>线程池七大参数</h2><div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-2-49"></div><br>
+
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-4-1"></div><br>
+
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-5-29"></div><br>
+
+
+<p>从上面的源码中我们知道，创建3种线程池时，实际上返回的是一个<code>ThreadPoolExecutor</code>,另外我们也看到，虽然3种不同类型线程池传递的参数值不同，但都是传递了<code>5</code>个参数。</p>
+<p>那为什么我们会说7大参数呢？我们看下上面使用的ThreadPool的构造方法：</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-6-50"></div><br>
+
+<p>从源码可以看到实际上是通过<code>this</code>调用了另一个构造方法，并且传递了7个参数。</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-8-18"></div><br>
+
+
+<p>接下来我们就好好聊聊这7个参数的意义。为什么new ThreadPoolExecutor只用传这5个参数，另外2个参数是什么，有什么用。</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>corePoolSize</strong></td>
+<td align="center">线程池中的<strong>常驻核心数</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>maximumPoolSize</strong></td>
+<td align="center"><strong>线程池允许的最大线程数</strong>。此值必须大于等于1</td>
+</tr>
+<tr>
+<td align="center"><strong>keepAliveTime</strong></td>
+<td align="center"><strong>多余的空闲线程的存活时间</strong>。当前线程池数量超过corePoolSize时，并且空闲时间达到keepAliveTime时，多余空闲线程会被销毁直至只剩下corePoolSize个线程为止</td>
+</tr>
+<tr>
+<td align="center"><strong>unit</strong></td>
+<td align="center">keepAliveTime的单位</td>
+</tr>
+<tr>
+<td align="center"><strong>workQueue</strong></td>
+<td align="center"><strong>被提交但尚未被执行的任务会被分配到任务队列</strong>任务队列，就是我们前面学习的阻塞队列。</td>
+</tr>
+<tr>
+<td align="center"><strong>threadFactory</strong></td>
+<td align="center">生成线程池中工作线程的<strong>线程工厂</strong>，用于创建线程，<strong>一般用默认的即可</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>RejectedExecutionHandler</strong></td>
+<td align="center"><strong>拒绝策略(共4种)，当队列满了并且工作线程大于等于线程池的最大线程数时,</strong></td>
+</tr>
+</tbody></table>
+<p>四种拒绝策略：</p>
+<ul>
+<li><strong>AbortPolicy</strong>：<strong>(系统默认拒绝策略)</strong>。直接抛出<code>RejectedExecutionException</code>异常阻止系统正常运行。</li>
+<li><strong>CallerRunsPolicy</strong>：”调用者运行”一种调节机制，该策略既不会抛弃任务，也不会抛出异常，而是<strong>将某些任务回退到调用者</strong>，从而降低新的任务流量。</li>
+<li><strong>DiscardOldestPolicy</strong>：<strong>丢弃队列里等待最久的一个任务，然后把当前任务加入到队列中尝试再次提交当前任务</strong>。</li>
+<li><strong>DiscardPolicy</strong>：<strong>直接丢弃任务，不处理也不抛出异常</strong>。如果允许任务丢失，这是最好的一种方案</li>
+</ul>
+<h2 id="线程池的工作原理"><a href="#线程池的工作原理" class="headerlink" title="线程池的工作原理"></a>线程池的工作原理</h2><p>当提交一个新任务到线程池时，线程池的处理流程如下</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-16-43-14"></div><br>
+
+
+<p>再结合上面的参数，ThreadPoolExecutor执行execute方法可以分下面4种情况</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-16-28-2"></div><br>
+
+<p>1）如果当前运行的线程少于<code>corePoolSize</code>，则创建新线程来执行任务（注意，执行这一步骤需要获取全局锁）<br>2）如果运行的线程等于或多于<code>corePoolSize</code>，则将任务加入<code>BlockingQueue</code>。<br>3）如果无法将任务加入<code>BlockingQueue</code>（队列已满），则扩展新的线程来处理任务（注意，执行这一步骤需要获取全局锁）<br>4）如果创建新线程将使当前运行的线程超出<code>maximumPoolSize</code>，任务将通过拒绝策略被拒绝</p>
+<h2 id="使用自定义线程池"><a href="#使用自定义线程池" class="headerlink" title="使用自定义线程池"></a>使用自定义线程池</h2><p><strong>注意 注意</strong><br><strong>注意 注意</strong><br><strong>注意 注意</strong></p>
+<p>阿里巴巴Java开发手册中明确规定：<strong>不能使用Executors方法创建线程池，应该使用自定义线程池</strong></p>
+<blockquote>
+<p>图片来自《阿里巴巴Java开发手册1.4.0》</p>
+</blockquote>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-16-46-45"></div><br>
+
+<p>原因：</p>
+<p>接下来我们使用自定义线程池，并且验证下上面提到的4种拒绝策略</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.company.MultiThread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.LinkedBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//新建线程池</span></span><br><span class="line">        ThreadPoolExecutor threadPool = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">                <span class="number">3</span>,  <span class="comment">//核心线程数3</span></span><br><span class="line">                <span class="number">6</span>, <span class="comment">//最大线程数6</span></span><br><span class="line">                <span class="number">2L</span>,  <span class="comment">//扩展线程保持时间2ms</span></span><br><span class="line">                TimeUnit.MILLISECONDS,</span><br><span class="line">                <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(<span class="number">3</span>), <span class="comment">//任务队列容量3</span></span><br><span class="line">                Executors.defaultThreadFactory(),  <span class="comment">//</span></span><br><span class="line">                <span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy());  <span class="comment">//AbortPolicy拒绝策略抛异常</span></span><br><span class="line">                <span class="comment">//new ThreadPoolExecutor.CallerRunsPolicy()</span></span><br><span class="line">                <span class="comment">//new ThreadPoolExecutor.DiscardOldestPolicy()</span></span><br><span class="line">                <span class="comment">//new ThreadPoolExecutor.DiscardPolicy()</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;  <span class="comment">//i&lt;8  i&lt;9  i&lt;10</span></span><br><span class="line">                threadPool.execute(()-&gt;&#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName()+<span class="string">"办理业务"</span>);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            threadPool.shutdown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-18-15-22"></div><br>
+
+<p>剩下的3个我们只看拒绝策略的效果(即使用10个线程i&lt;10)时的效果</p>
+<p>CallerRunsPolicy 任务回退拒绝策略</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-18-22-20"></div><br>
+
+<p>DiscardOldestPolicy  丢弃最久拒绝策略</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-18-26-44"></div><br>
+
+<p>DiscardPolicy  直接丢弃拒绝策略</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-18-27-52"></div><br>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/31/Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E3%80%81CyclicBarrier%E3%80%81Semaphore/">
+                <span class="level-item">Java并发工具类CountDownLatch、CyclicBarrier、Semaphore</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            26
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            5
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            7
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#线程池基本概念">
+        <span class="has-mr-6">1</span>
+        <span>线程池基本概念</span>
+        </a></li><li>
+        <a class="is-flex" href="#线程池的使用">
+        <span class="has-mr-6">2</span>
+        <span>线程池的使用</span>
+        </a></li><li>
+        <a class="is-flex" href="#线程池七大参数">
+        <span class="has-mr-6">3</span>
+        <span>线程池七大参数</span>
+        </a></li><li>
+        <a class="is-flex" href="#线程池的工作原理">
+        <span class="has-mr-6">4</span>
+        <span>线程池的工作原理</span>
+        </a></li><li>
+        <a class="is-flex" href="#使用自定义线程池">
+        <span class="has-mr-6">5</span>
+        <span>使用自定义线程池</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Java多线程之线程池" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

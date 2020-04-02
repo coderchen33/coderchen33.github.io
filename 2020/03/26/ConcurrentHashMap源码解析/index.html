@@ -7,21 +7,23 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>HTTP和HTTPS - chen33的个人博客</title>
+<title>ConcurrentHashMap源码解析 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容  HTTPS &#x3D; HTTP + SSL&#x2F;TSL  HTTPS之混合加密 HTTPS之数字证书 HTTPS之摘要算法 HTTPS连接建立过程">
+    <meta name="description" content="Node结点JDK1.8中，和HashMap一样，也是使用Node节点存储键值对。不过与HashMap不同的是value值和next指针使用volatile修饰，保证线程之间的可见性。 1234567891011121314static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; &amp;#123;        final int h">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTP和HTTPS">
-<meta property="og:url" content="http://coderchen33.life/2020/03/10/HTTP%E5%92%8CHTTPS/index.html">
+<meta property="og:title" content="ConcurrentHashMap源码解析">
+<meta property="og:url" content="http://coderchen33.life/2020/03/26/ConcurrentHashMap%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容  HTTPS &#x3D; HTTP + SSL&#x2F;TSL  HTTPS之混合加密 HTTPS之数字证书 HTTPS之摘要算法 HTTPS连接建立过程">
+<meta property="og:description" content="Node结点JDK1.8中，和HashMap一样，也是使用Node节点存储键值对。不过与HashMap不同的是value值和next指针使用volatile修饰，保证线程之间的可见性。 1234567891011121314static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; &amp;#123;        final int h">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
-<meta property="article:published_time" content="2020-03-10T14:14:22.000Z">
-<meta property="article:modified_time" content="2020-03-11T04:03:55.717Z">
+<meta property="article:published_time" content="2020-03-26T13:01:04.000Z">
+<meta property="article:modified_time" content="2020-03-31T12:26:55.192Z">
 <meta property="article:author" content="coderchen33">
-<meta property="article:tag" content="HTTPS">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="多线程">
+<meta property="article:tag" content="并发">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
 
@@ -82,7 +84,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="HTTP和HTTPS" height="28">
+                <img src="/images/logo.png" alt="ConcurrentHashMap源码解析" height="28">
             
             </a>
         </div>
@@ -145,17 +147,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-10T14:14:22.000Z">2020-03-10</time>
+                <time class="level-item has-text-grey" datetime="2020-03-26T13:01:04.000Z">2020-03-26</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    14 分钟 读完 (大约 2040 个字)
+                    几秒 读完 (大约 108 个字)
                 </span>
                 
                 
@@ -169,126 +171,24 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                HTTP和HTTPS
+                ConcurrentHashMap源码解析
             
         </h1>
         <div class="content">
-            <p><strong>主要内容</strong></p>
-<ol>
-<li>HTTPS = HTTP + SSL/TSL </li>
-<li>HTTPS之混合加密</li>
-<li>HTTPS之数字证书</li>
-<li>HTTPS之摘要算法</li>
-<li>HTTPS连接建立过程<a id="more"></a>
+            <a id="more"></a>
 
-</li>
-</ol>
-<h2 id="HTTP的不足以及HTTPS的改进"><a href="#HTTP的不足以及HTTPS的改进" class="headerlink" title="HTTP的不足以及HTTPS的改进"></a>HTTP的不足以及HTTPS的改进</h2><p>我们之前提到HTTP协议是不安全的，主要原因在于：</p>
-<ol>
-<li><strong>窃听风险</strong>  通信使用明文（不加密），内容可能会被窃听。比如，账号信息容易泄漏。</li>
-<li><strong>冒充风险</strong> 不验证通信方的身份，因此有可能遭遇伪装。比如，访问假的淘宝、拼多多。</li>
-<li><strong>篡改风险</strong>  无法证明报文的完整性，所以有可能已遭篡改。比如，网页上植入垃圾广告。</li>
-</ol>
-<p>HTTPS在HTTP和TCP层加入了<strong>SSL/TLS</strong>协议来解决上述风险。</p>
-<p>SSL(Secure Socket Layer)指安全套接层，发展到SSL3.0之后IETF对SSL3.0进行了标准化并添加了少数机制，之后更名为TLS1.0(Transport Layer Security 安全传输层协议)。</p>
-<div align="center"> <img src="http://coderchen33.life/HTTPS.png"></div><br>
-
-<p><strong>HTTP+加密+认证+完整性保护=HTTPS</strong></p>
-<p>HTTPS解决方式：</p>
-<ol>
-<li><p><strong>混合加密</strong>的方式实现信息的机密性，<strong>解决了窃听的风险</strong>。  （加密）</p>
-</li>
-<li><p>将服务器公钥放入到<strong>数字证书</strong>中，解决了<strong>冒充的风险</strong>。 （认证）</p>
-</li>
-<li><p><strong>摘要算法</strong>的方式来实现<strong>完整性</strong>，<strong>摘要算法用于校验数据的完整性</strong>，解决了篡改的风险。（完整性保护）</p>
-</li>
-</ol>
-<hr>
-<h2 id="混合加密算法"><a href="#混合加密算法" class="headerlink" title="混合加密算法"></a>混合加密算法</h2><h3 id="对称密钥加密"><a href="#对称密钥加密" class="headerlink" title="对称密钥加密"></a>对称密钥加密</h3><p><strong>对称密钥加密（Symmetric-Key Encryption），加密和解密使用同一密钥</strong>。<br>优点：运算速度快；<br>缺点：无法安全地将密钥传输给通信方。</p>
-<div align="center"> <img src="http://coderchen33.life/%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86.png"></div><br>
-
-<h3 id="非对称密钥加密-公开密钥加密"><a href="#非对称密钥加密-公开密钥加密" class="headerlink" title="非对称密钥加密(公开密钥加密)"></a>非对称密钥加密(公开密钥加密)</h3><p><strong>非对称密钥加密，又称公开密钥加密（Public-Key Encryption），加密和解密使用不同的密钥</strong>。</p>
-<p>公开密钥所有人都可以获得，通信发送方获得接收方的公开密钥之后，就可以使用公开密钥进行加密，接收方收到通信内容后使用私有密钥解密。</p>
-<p>非对称密钥除了用来加密，还可以用来进行签名。因为私有密钥无法被其他人获取，因此通信发送方使用其私有密钥进行签名，通信接收方使用发送方的公开密钥对签名进行解密，就能判断这个签名是否正确。</p>
-<p>优点：可以更安全地将公开密钥传输给通信发送方；<br>缺点：运算速度慢。</p>
-<div align="center"> <img src="http://coderchen33.life/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86.png"></div><br>
-
-<h3 id="混合加密"><a href="#混合加密" class="headerlink" title="混合加密"></a>混合加密</h3><p>HTTPS结合了公开密钥安全和对称密钥运算速度快的优点，使用<strong>混合加密</strong>方式。</p>
-<div align="center"> <img src="http://coderchen33.life/%E6%B7%B7%E5%90%88%E5%8A%A0%E5%AF%86.jpg"></div><br>
-
-<ol>
-<li><p>在通信建立前采用 <strong>非对称加密</strong> 的方式交换会话秘钥，后续就不再使用非对称加密。</p>
-</li>
-<li><p>在通信过程中全部使用<strong>对称加密</strong>的会话秘钥的方式加密明文数据</p>
-</li>
-</ol>
-<hr>
-<h2 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h2><p>我们从上面知道客户端先向服务器端索要公钥，然后用公钥加密信息，服务器收到密文后，用自己的私钥解密。这里存在一个问题，如何保证公钥不被篡改和信任度？即<strong>无法证明公开密钥本身就是货真价实的公开密钥</strong>。</p>
-<p>所以这里就需要借助第三方权威机构 <strong>CA</strong> （数字证书认证机构），将<strong>服务器公钥放在数字证书</strong>（由数字证书认证机构颁发）中，<strong>只要证书是可信的，公钥就是可信的</strong>。</p>
-<div align="center"> <img src="http://coderchen33.life/CA%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6.png"></div><br>
-
-<hr>
-<h2 id="摘要算法"><a href="#摘要算法" class="headerlink" title="摘要算法"></a>摘要算法</h2><blockquote>
-<p>这部分参考文章<a href="https://mp.weixin.qq.com/s/FJGKObVnU61ve_ioejLrtw">硬核！30 张图解 HTTP 常见的面试题</a></p>
-</blockquote>
-<p><strong>摘要算法</strong>用来实现<strong>完整性</strong>，能够为数据生成独一无二的「指纹」，用于校验数据的完整性，解决了篡改的风险。</p>
-<div align="center"> <img src="http://coderchen33.life/%E6%91%98%E8%A6%81%E7%AE%97%E6%B3%95.png"></div><br>
-
-<p>客户端在发送明文之前会通过摘要算法算出明文的「指纹」，发送的时候把「指纹 + 明文」一同加密成密文后，发送给服务器，服务器解密后，用相同的摘要算法算出发送过来的明文，通过比较客户端携带的「指纹」和当前算出的「指纹」做比较，若「指纹」相同，说明数据是完整的。</p>
-<hr>
-<h2 id="HTTPS连接建立过程"><a href="#HTTPS连接建立过程" class="headerlink" title="HTTPS连接建立过程"></a>HTTPS连接建立过程</h2><p>SSL/TLS 协议基本流程：</p>
-<ol>
-<li><p>客户端向服务器索要并验证服务器的公钥。</p>
-</li>
-<li><p>双方协商生产「会话秘钥」。</p>
-</li>
-<li><p>双方采用「会话秘钥」进行加密通信。</p>
-</li>
-</ol>
-<p>前两步也就是 SSL/TLS 的建立过程，也就是握手阶段。</p>
-<p>SSL/TLS 的「握手阶段」涉及四次通信，可见下图：</p>
-<div align="center"> <img src="http://coderchen33.life/SSL%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B.png"></div><br>
+<h2 id="Node结点"><a href="#Node结点" class="headerlink" title="Node结点"></a>Node结点</h2><p>JDK1.8中，和HashMap一样，也是使用Node节点存储键值对。不过与HashMap不同的是<code>value</code>值和<code>next</code>指针使用<code>volatile</code>修饰，保证线程之间的可见性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> hash;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        <span class="keyword">volatile</span> V val;</span><br><span class="line">        <span class="keyword">volatile</span> Node&lt;K,V&gt; next;</span><br><span class="line"></span><br><span class="line">        Node(<span class="keyword">int</span> hash, K key, V val, Node&lt;K,V&gt; next) &#123;</span><br><span class="line">            <span class="keyword">this</span>.hash = hash;</span><br><span class="line">            <span class="keyword">this</span>.key = key;</span><br><span class="line">            <span class="keyword">this</span>.val = val;</span><br><span class="line">            <span class="keyword">this</span>.next = next;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
-<p>SSL/TLS 协议建立的详细流程：</p>
-<ol>
-<li><strong>ClientHello</strong></li>
-</ol>
-<p>首先，由客户端向服务器发起加密通信请求，也就是 ClientHello 请求。</p>
-<p>在这一步，客户端主要向服务器发送以下信息：</p>
-<p>（1）客户端支持的 SSL/TLS 协议版本，如 TLS 1.2 版本。</p>
-<p>（2）客户端生产的随机数（Client Random），后面用于生产「会话秘钥」。</p>
-<p>（3）客户端支持的密码套件列表，如 RSA 加密算法。</p>
-<ol start="2">
-<li><strong>SeverHello</strong></li>
-</ol>
-<p>服务器收到客户端请求后，向客户端发出响应，也就是 SeverHello。服务器回应的内容有如下内容：</p>
-<p>（1）确认 SSL/ TLS 协议版本，如果浏览器不支持，则关闭加密通信。</p>
-<p>（2）服务器生产的随机数（Server Random），后面用于生产「会话秘钥」。</p>
-<p>（3）确认的密码套件列表，如 RSA 加密算法。</p>
-<p>（4）服务器的数字证书。</p>
-<p>3.<strong>客户端回应</strong></p>
-<p>客户端收到服务器的回应之后，首先通过浏览器或者操作系统中的 CA 公钥，确认服务器的数字证书的真实性。</p>
-<p>如果证书没有问题，客户端会从数字证书中取出服务器的公钥，然后使用它加密报文，向服务器发送如下信息：</p>
-<p>（1）一个随机数（pre-master key）。该随机数会被服务器公钥加密。</p>
-<p>（2）加密通信算法改变通知，表示随后的信息都将用「会话秘钥」加密通信。</p>
-<p>（3）客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时把之前所有内容的发生的数据做个摘要，用来供服务端校验。</p>
-<p>上面第一项的随机数是整个握手阶段的第三个随机数，这样服务器和客户端就同时有三个随机数，接着就用双方协商的加密算法，各自生成本次通信的「会话秘钥」。</p>
-<ol start="4">
-<li><strong>服务器的最后回应</strong></li>
-</ol>
-<p>服务器收到客户端的第三个随机数（pre-master key）之后，通过协商的加密算法，计算出本次通信的「会话秘钥」。然后，向客户端发生最后的信息：</p>
-<p>（1）加密通信算法改变通知，表示随后的信息都将用「会话秘钥」加密通信。</p>
-<p>（2）服务器握手结束通知，表示服务器的握手阶段已经结束。这一项同时把之前所有内容的发生的数据做个摘要，用来供客户端校验。</p>
-<p>至此，整个 SSL/TLS 的握手阶段全部结束。接下来，客户端与服务器进入加密通信，就完全是使用普通的 HTTP 协议，只不过用「会话秘钥」加密内容。</p>
-
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">spread</span><span class="params">(<span class="keyword">int</span> h)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (h ^ (h &gt;&gt;&gt; <span class="number">16</span>)) &amp; HASH_BITS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         </div>
         
         <div class="level is-size-7 is-uppercase">
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/HTTPS/" rel="tag">HTTPS</a>
+                    <a class="has-link-grey -link" href="/tags/Java/" rel="tag">Java</a>, <a class="has-link-grey -link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a>, <a class="has-link-grey -link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a>
                 </div>
             </div>
         </div>
@@ -339,16 +239,16 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/10/HTTP-1-1%E3%80%81HTTP2%E5%92%8CHTTP3/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/31/Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E3%80%81CyclicBarrier%E3%80%81Semaphore/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">HTTP/1.1、HTTP2和HTTP3</span>
+                <span class="level-item">Java并发工具类CountDownLatch、CyclicBarrier、Semaphore</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/10/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
-                <span class="level-item">多线程开篇</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/26/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8B%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">
+                <span class="level-item">Java多线程之并发容器</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -470,37 +370,9 @@
                     目录
                 </h3>
                 <ul class="menu-list"><li>
-        <a class="is-flex" href="#HTTP的不足以及HTTPS的改进">
+        <a class="is-flex" href="#Node结点">
         <span class="has-mr-6">1</span>
-        <span>HTTP的不足以及HTTPS的改进</span>
-        </a></li><li>
-        <a class="is-flex" href="#混合加密算法">
-        <span class="has-mr-6">2</span>
-        <span>混合加密算法</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#对称密钥加密">
-        <span class="has-mr-6">2.1</span>
-        <span>对称密钥加密</span>
-        </a></li><li>
-        <a class="is-flex" href="#非对称密钥加密-公开密钥加密">
-        <span class="has-mr-6">2.2</span>
-        <span>非对称密钥加密(公开密钥加密)</span>
-        </a></li><li>
-        <a class="is-flex" href="#混合加密">
-        <span class="has-mr-6">2.3</span>
-        <span>混合加密</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#数字证书">
-        <span class="has-mr-6">3</span>
-        <span>数字证书</span>
-        </a></li><li>
-        <a class="is-flex" href="#摘要算法">
-        <span class="has-mr-6">4</span>
-        <span>摘要算法</span>
-        </a></li><li>
-        <a class="is-flex" href="#HTTPS连接建立过程">
-        <span class="has-mr-6">5</span>
-        <span>HTTPS连接建立过程</span>
+        <span>Node结点</span>
         </a></li></ul>
             </div>
         </div>
@@ -524,7 +396,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="HTTP和HTTPS" height="28">
+                    <img src="/images/logo.png" alt="ConcurrentHashMap源码解析" height="28">
                 
                 </a>
                 <p class="is-size-7">

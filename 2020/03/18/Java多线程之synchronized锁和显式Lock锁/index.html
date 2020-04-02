@@ -10,16 +10,16 @@
 <title>Java多线程之synchronized锁和显式Lock锁 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容  synchronized锁 volatile关键字 显式Lock锁">
+    <meta name="description" content="主要内容  synchronized锁 volatile关键字 显式Lock锁 synchronized和显式Lock的区别">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java多线程之synchronized锁和显式Lock锁">
 <meta property="og:url" content="http://coderchen33.life/2020/03/18/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8Bsynchronized%E9%94%81%E5%92%8C%E6%98%BE%E5%BC%8FLock%E9%94%81/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容  synchronized锁 volatile关键字 显式Lock锁">
+<meta property="og:description" content="主要内容  synchronized锁 volatile关键字 显式Lock锁 synchronized和显式Lock的区别">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-17T22:36:28.000Z">
-<meta property="article:modified_time" content="2020-03-20T08:19:45.346Z">
+<meta property="article:modified_time" content="2020-04-01T07:59:07.756Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="多线程">
@@ -157,7 +157,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    26 分钟 读完 (大约 3899 个字)
+                    28 分钟 读完 (大约 4168 个字)
                 </span>
                 
                 
@@ -179,7 +179,8 @@
 <ol>
 <li>synchronized锁</li>
 <li>volatile关键字</li>
-<li>显式Lock锁<a id="more"></a>
+<li>显式Lock锁</li>
+<li>synchronized和显式Lock的区别<a id="more"></a>
 
 </li>
 </ol>
@@ -350,6 +351,37 @@
 
 
 <p>这里对于lock锁只是简单介绍，之后会详细讲解同步器AQS以及Lock接口常用的实现类ReentrantLock。</p>
+<hr>
+<h2 id="synchronized和显式Lock的区别"><a href="#synchronized和显式Lock的区别" class="headerlink" title="synchronized和显式Lock的区别"></a>synchronized和显式Lock的区别</h2><h4><strong>原始构成</strong></h4>
+
+<ul>
+<li>synchronized是关键字属于JVM层面，底层通过monitor对象来完成</li>
+<li>Lock是J.U.C包中的类，是API层面的锁</li>
+</ul>
+<h4><strong>使用方法</strong></h4>
+
+<ul>
+<li>synchronized不需要用户去手动释放锁，当synchronized代码执行完后系统会自动让线程释放对锁的占用。</li>
+<li>ReentrantLock需要用户去手动释放锁，若没有主动释放锁，则有可能产生死锁现象。</li>
+</ul>
+<h4><strong>等待是否可中断</strong></h4>
+
+<ul>
+<li>synchronizd不可中断，除非抛出异常或者正常执行完成。</li>
+<li>ReentrantLock可中断，1.设置超时方法<code>tryLock(long timeout,TimeUnit unit)</code>2. lockInterruptibly()放代码块中，调用interrupt()方法可中断</li>
+</ul>
+<h4><strong>加锁是否公平</strong></h4>
+
+<ul>
+<li>synchronized是非公平锁</li>
+<li>ReentrantLock是公平锁和非公平锁都支持。默认是非公平锁</li>
+</ul>
+<h4><strong>锁绑定多个condition</strong></h4>
+
+<ul>
+<li>synchronized没有，只能随机唤醒一个线程或者唤醒全部线程</li>
+<li>ReentrantLock可以绑定多个condition对象，可以实现精准唤醒</li>
+</ul>
 
         </div>
         
@@ -471,7 +503,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            21
+                            26
                         </p>
                     </a>
                 </div>
@@ -586,7 +618,31 @@
         <a class="is-flex" href="#显式Lock锁">
         <span class="has-mr-6">3</span>
         <span>显式Lock锁</span>
-        </a></li></ul>
+        </a></li><li>
+        <a class="is-flex" href="#synchronized和显式Lock的区别">
+        <span class="has-mr-6">4</span>
+        <span>synchronized和显式Lock的区别</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">4.1</span>
+        <span>原始构成</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">4.2</span>
+        <span>使用方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">4.3</span>
+        <span>等待是否可中断</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">4.4</span>
+        <span>加锁是否公平</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">4.5</span>
+        <span>锁绑定多个condition</span>
+        </a></li></ul></li></ul>
             </div>
         </div>
     </div>

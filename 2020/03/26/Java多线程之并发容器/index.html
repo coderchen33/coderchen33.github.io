@@ -7,21 +7,23 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>HTTP和HTTPS - chen33的个人博客</title>
+<title>Java多线程之并发容器 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容  HTTPS &#x3D; HTTP + SSL&#x2F;TSL  HTTPS之混合加密 HTTPS之数字证书 HTTPS之摘要算法 HTTPS连接建立过程">
+    <meta name="description" content="主要内容  集合容器的安全性问题 并发容器分类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTP和HTTPS">
-<meta property="og:url" content="http://coderchen33.life/2020/03/10/HTTP%E5%92%8CHTTPS/index.html">
+<meta property="og:title" content="Java多线程之并发容器">
+<meta property="og:url" content="http://coderchen33.life/2020/03/26/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8B%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容  HTTPS &#x3D; HTTP + SSL&#x2F;TSL  HTTPS之混合加密 HTTPS之数字证书 HTTPS之摘要算法 HTTPS连接建立过程">
+<meta property="og:description" content="主要内容  集合容器的安全性问题 并发容器分类">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
-<meta property="article:published_time" content="2020-03-10T14:14:22.000Z">
-<meta property="article:modified_time" content="2020-03-11T04:03:55.717Z">
+<meta property="article:published_time" content="2020-03-26T13:00:44.000Z">
+<meta property="article:modified_time" content="2020-03-27T10:24:06.491Z">
 <meta property="article:author" content="coderchen33">
-<meta property="article:tag" content="HTTPS">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="多线程">
+<meta property="article:tag" content="并发">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
 
@@ -82,7 +84,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="HTTP和HTTPS" height="28">
+                <img src="/images/logo.png" alt="Java多线程之并发容器" height="28">
             
             </a>
         </div>
@@ -145,17 +147,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-10T14:14:22.000Z">2020-03-10</time>
+                <time class="level-item has-text-grey" datetime="2020-03-26T13:00:44.000Z">2020-03-26</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    14 分钟 读完 (大约 2040 个字)
+                    5 分钟 读完 (大约 796 个字)
                 </span>
                 
                 
@@ -169,126 +171,79 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                HTTP和HTTPS
+                Java多线程之并发容器
             
         </h1>
         <div class="content">
             <p><strong>主要内容</strong></p>
 <ol>
-<li>HTTPS = HTTP + SSL/TSL </li>
-<li>HTTPS之混合加密</li>
-<li>HTTPS之数字证书</li>
-<li>HTTPS之摘要算法</li>
-<li>HTTPS连接建立过程<a id="more"></a>
-
-</li>
+<li>集合容器的安全性问题</li>
+<li>并发容器分类</li>
 </ol>
-<h2 id="HTTP的不足以及HTTPS的改进"><a href="#HTTP的不足以及HTTPS的改进" class="headerlink" title="HTTP的不足以及HTTPS的改进"></a>HTTP的不足以及HTTPS的改进</h2><p>我们之前提到HTTP协议是不安全的，主要原因在于：</p>
+<a id="more"></a>
+
+<h2 id="集合容器的安全问题"><a href="#集合容器的安全问题" class="headerlink" title="集合容器的安全问题"></a>集合容器的安全问题</h2><p>Java的集合容器框架中，主要有四大类别：List、Set、Queue、Map，大家熟知的这些集合类ArrayList、LinkedList、HashMap这些容器都是非线程安全的。如果有多个线程并发地访问这些容器时，就会出现问题。比如下面这个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.company.MultiThread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.UUID;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUnsafeDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">           <span class="keyword">new</span> Thread(()-&gt; &#123;</span><br><span class="line">                list.add(UUID.randomUUID().toString().substring(<span class="number">0</span>,<span class="number">6</span>));</span><br><span class="line">               System.out.println(list);</span><br><span class="line">            &#125;,<span class="string">"t"</span>+i).start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果中会抛出<strong>并发修改异常</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.util.ConcurrentModificationException</span><br></pre></td></tr></table></figure>
+
+<p>set、Map、Queue同理,这里就不演示了。</p>
+<h3 id="如何解决并发修改异常"><a href="#如何解决并发修改异常" class="headerlink" title="如何解决并发修改异常"></a>如何解决并发修改异常</h3><p>以ArrayList为例(set、Map、Queue同理，具体参照下面的表格),解决方法如下</p>
+<ul>
+<li>1.使用同步容器Vector <code>List&lt;String&gt; list = new Vector&lt;&gt;();</code></li>
+<li>2.使用Collections.synchronizedArrayList <code>List&lt;String&gt; list = Collections.synchronizedList(new ArrayList&lt;&gt;());</code></li>
+<li><strong>3.使用JUC包中的并发容器CopyOnWriteArrayList</strong> <code>List&lt;String&gt; list = new CopyOnWriteArrayList&lt;&gt;();</code></li>
+</ul>
+<p>我们先看下Vector和Collections.synchronizedArrayList的源码：</p>
+<p>Vector中的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>Collections.synchronizedArrayList去翻一下源码，也可以知道：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (mutex) &#123;<span class="keyword">return</span> c.add(e);&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (mutex) &#123;<span class="keyword">return</span> list.get(index);&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到无论是Vector还是Collections.synchronizedArrayList都是通过<strong>synchronized</strong>关键字加锁来保证多线程下的集合安全。但是这样做的代价是<strong>降低了并发性，当多个线程共同竞争容器级的锁时，吞吐量就会降低</strong></p>
+<h2 id="并发容器的分类"><a href="#并发容器的分类" class="headerlink" title="并发容器的分类"></a>并发容器的分类</h2><p>为了解决同步容器的性能问题，所以在JDK1.5之后有了并发容器，这些并发容器位于J.U.C包中。</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-26-Java多线程之并发容器-2020-3-27-17-50-6"></div><br>
+
+<p>我们对上面的并发容器做个简单的说明：</p>
+<h4><strong>CopyOnWriteArrayList</strong></h4>
+
+<p>底层是一个volatile修饰的数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Object[] array;</span><br></pre></td></tr></table></figure>
+<p>add操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Object[] elements = getArray();</span><br><span class="line">            <span class="keyword">int</span> len = elements.length;</span><br><span class="line">            Object[] newElements = Arrays.copyOf(elements, len + <span class="number">1</span>);</span><br><span class="line">            newElements[len] = e;</span><br><span class="line">            setArray(newElements);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>get操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> get(getArray(), index);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总结：</p>
 <ol>
-<li><strong>窃听风险</strong>  通信使用明文（不加密），内容可能会被窃听。比如，账号信息容易泄漏。</li>
-<li><strong>冒充风险</strong> 不验证通信方的身份，因此有可能遭遇伪装。比如，访问假的淘宝、拼多多。</li>
-<li><strong>篡改风险</strong>  无法证明报文的完整性，所以有可能已遭篡改。比如，网页上植入垃圾广告。</li>
+<li>底层是volatile修饰的数组</li>
+<li>写操作加锁，读操作不加锁。</li>
+<li>写操作过程：先复制一份新的数组，在新的集合上面修改，然后将新数组赋值给旧的引用。</li>
 </ol>
-<p>HTTPS在HTTP和TCP层加入了<strong>SSL/TLS</strong>协议来解决上述风险。</p>
-<p>SSL(Secure Socket Layer)指安全套接层，发展到SSL3.0之后IETF对SSL3.0进行了标准化并添加了少数机制，之后更名为TLS1.0(Transport Layer Security 安全传输层协议)。</p>
-<div align="center"> <img src="http://coderchen33.life/HTTPS.png"></div><br>
+<h4><strong>CopyOnWriteArraySet</strong></h4>
 
-<p><strong>HTTP+加密+认证+完整性保护=HTTPS</strong></p>
-<p>HTTPS解决方式：</p>
-<ol>
-<li><p><strong>混合加密</strong>的方式实现信息的机密性，<strong>解决了窃听的风险</strong>。  （加密）</p>
-</li>
-<li><p>将服务器公钥放入到<strong>数字证书</strong>中，解决了<strong>冒充的风险</strong>。 （认证）</p>
-</li>
-<li><p><strong>摘要算法</strong>的方式来实现<strong>完整性</strong>，<strong>摘要算法用于校验数据的完整性</strong>，解决了篡改的风险。（完整性保护）</p>
-</li>
-</ol>
-<hr>
-<h2 id="混合加密算法"><a href="#混合加密算法" class="headerlink" title="混合加密算法"></a>混合加密算法</h2><h3 id="对称密钥加密"><a href="#对称密钥加密" class="headerlink" title="对称密钥加密"></a>对称密钥加密</h3><p><strong>对称密钥加密（Symmetric-Key Encryption），加密和解密使用同一密钥</strong>。<br>优点：运算速度快；<br>缺点：无法安全地将密钥传输给通信方。</p>
-<div align="center"> <img src="http://coderchen33.life/%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86.png"></div><br>
+<p>底层基于CopyOnWriteArrayList实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> CopyOnWriteArrayList&lt;E&gt; al;</span><br></pre></td></tr></table></figure>
+<p>add操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> al.addIfAbsent(e);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addIfAbsent</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    Object[] snapshot = getArray();</span><br><span class="line">    <span class="keyword">return</span> indexOf(e, snapshot, <span class="number">0</span>, snapshot.length) &gt;= <span class="number">0</span> ? <span class="keyword">false</span> : addIfAbsent(e, snapshot);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>add时调用的是CopyOnWriteArrayList的addIfAbsent方法，其遍历当前Object数组，如Object数组中已有了当前元素，则直接返回，如果没有则放入Object数组的尾部，并返回。</p>
+<h4><strong>ConcurrentHashMap、ConcurrentSkipListMap、ConcurrentSkipListSet</strong></h4>
 
-<h3 id="非对称密钥加密-公开密钥加密"><a href="#非对称密钥加密-公开密钥加密" class="headerlink" title="非对称密钥加密(公开密钥加密)"></a>非对称密钥加密(公开密钥加密)</h3><p><strong>非对称密钥加密，又称公开密钥加密（Public-Key Encryption），加密和解密使用不同的密钥</strong>。</p>
-<p>公开密钥所有人都可以获得，通信发送方获得接收方的公开密钥之后，就可以使用公开密钥进行加密，接收方收到通信内容后使用私有密钥解密。</p>
-<p>非对称密钥除了用来加密，还可以用来进行签名。因为私有密钥无法被其他人获取，因此通信发送方使用其私有密钥进行签名，通信接收方使用发送方的公开密钥对签名进行解密，就能判断这个签名是否正确。</p>
-<p>优点：可以更安全地将公开密钥传输给通信发送方；<br>缺点：运算速度慢。</p>
-<div align="center"> <img src="http://coderchen33.life/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86.png"></div><br>
+<p>因为比较重要，所以放在下篇文章讲。</p>
+<h4><strong>ConcurrentLinkedQueue和ConcurrentLinkedDeque</strong></h4>
 
-<h3 id="混合加密"><a href="#混合加密" class="headerlink" title="混合加密"></a>混合加密</h3><p>HTTPS结合了公开密钥安全和对称密钥运算速度快的优点，使用<strong>混合加密</strong>方式。</p>
-<div align="center"> <img src="http://coderchen33.life/%E6%B7%B7%E5%90%88%E5%8A%A0%E5%AF%86.jpg"></div><br>
-
-<ol>
-<li><p>在通信建立前采用 <strong>非对称加密</strong> 的方式交换会话秘钥，后续就不再使用非对称加密。</p>
-</li>
-<li><p>在通信过程中全部使用<strong>对称加密</strong>的会话秘钥的方式加密明文数据</p>
-</li>
-</ol>
-<hr>
-<h2 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h2><p>我们从上面知道客户端先向服务器端索要公钥，然后用公钥加密信息，服务器收到密文后，用自己的私钥解密。这里存在一个问题，如何保证公钥不被篡改和信任度？即<strong>无法证明公开密钥本身就是货真价实的公开密钥</strong>。</p>
-<p>所以这里就需要借助第三方权威机构 <strong>CA</strong> （数字证书认证机构），将<strong>服务器公钥放在数字证书</strong>（由数字证书认证机构颁发）中，<strong>只要证书是可信的，公钥就是可信的</strong>。</p>
-<div align="center"> <img src="http://coderchen33.life/CA%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6.png"></div><br>
-
-<hr>
-<h2 id="摘要算法"><a href="#摘要算法" class="headerlink" title="摘要算法"></a>摘要算法</h2><blockquote>
-<p>这部分参考文章<a href="https://mp.weixin.qq.com/s/FJGKObVnU61ve_ioejLrtw">硬核！30 张图解 HTTP 常见的面试题</a></p>
-</blockquote>
-<p><strong>摘要算法</strong>用来实现<strong>完整性</strong>，能够为数据生成独一无二的「指纹」，用于校验数据的完整性，解决了篡改的风险。</p>
-<div align="center"> <img src="http://coderchen33.life/%E6%91%98%E8%A6%81%E7%AE%97%E6%B3%95.png"></div><br>
-
-<p>客户端在发送明文之前会通过摘要算法算出明文的「指纹」，发送的时候把「指纹 + 明文」一同加密成密文后，发送给服务器，服务器解密后，用相同的摘要算法算出发送过来的明文，通过比较客户端携带的「指纹」和当前算出的「指纹」做比较，若「指纹」相同，说明数据是完整的。</p>
-<hr>
-<h2 id="HTTPS连接建立过程"><a href="#HTTPS连接建立过程" class="headerlink" title="HTTPS连接建立过程"></a>HTTPS连接建立过程</h2><p>SSL/TLS 协议基本流程：</p>
-<ol>
-<li><p>客户端向服务器索要并验证服务器的公钥。</p>
-</li>
-<li><p>双方协商生产「会话秘钥」。</p>
-</li>
-<li><p>双方采用「会话秘钥」进行加密通信。</p>
-</li>
-</ol>
-<p>前两步也就是 SSL/TLS 的建立过程，也就是握手阶段。</p>
-<p>SSL/TLS 的「握手阶段」涉及四次通信，可见下图：</p>
-<div align="center"> <img src="http://coderchen33.life/SSL%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B.png"></div><br>
-
-
-<p>SSL/TLS 协议建立的详细流程：</p>
-<ol>
-<li><strong>ClientHello</strong></li>
-</ol>
-<p>首先，由客户端向服务器发起加密通信请求，也就是 ClientHello 请求。</p>
-<p>在这一步，客户端主要向服务器发送以下信息：</p>
-<p>（1）客户端支持的 SSL/TLS 协议版本，如 TLS 1.2 版本。</p>
-<p>（2）客户端生产的随机数（Client Random），后面用于生产「会话秘钥」。</p>
-<p>（3）客户端支持的密码套件列表，如 RSA 加密算法。</p>
-<ol start="2">
-<li><strong>SeverHello</strong></li>
-</ol>
-<p>服务器收到客户端请求后，向客户端发出响应，也就是 SeverHello。服务器回应的内容有如下内容：</p>
-<p>（1）确认 SSL/ TLS 协议版本，如果浏览器不支持，则关闭加密通信。</p>
-<p>（2）服务器生产的随机数（Server Random），后面用于生产「会话秘钥」。</p>
-<p>（3）确认的密码套件列表，如 RSA 加密算法。</p>
-<p>（4）服务器的数字证书。</p>
-<p>3.<strong>客户端回应</strong></p>
-<p>客户端收到服务器的回应之后，首先通过浏览器或者操作系统中的 CA 公钥，确认服务器的数字证书的真实性。</p>
-<p>如果证书没有问题，客户端会从数字证书中取出服务器的公钥，然后使用它加密报文，向服务器发送如下信息：</p>
-<p>（1）一个随机数（pre-master key）。该随机数会被服务器公钥加密。</p>
-<p>（2）加密通信算法改变通知，表示随后的信息都将用「会话秘钥」加密通信。</p>
-<p>（3）客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时把之前所有内容的发生的数据做个摘要，用来供服务端校验。</p>
-<p>上面第一项的随机数是整个握手阶段的第三个随机数，这样服务器和客户端就同时有三个随机数，接着就用双方协商的加密算法，各自生成本次通信的「会话秘钥」。</p>
-<ol start="4">
-<li><strong>服务器的最后回应</strong></li>
-</ol>
-<p>服务器收到客户端的第三个随机数（pre-master key）之后，通过协商的加密算法，计算出本次通信的「会话秘钥」。然后，向客户端发生最后的信息：</p>
-<p>（1）加密通信算法改变通知，表示随后的信息都将用「会话秘钥」加密通信。</p>
-<p>（2）服务器握手结束通知，表示服务器的握手阶段已经结束。这一项同时把之前所有内容的发生的数据做个摘要，用来供客户端校验。</p>
-<p>至此，整个 SSL/TLS 的握手阶段全部结束。接下来，客户端与服务器进入加密通信，就完全是使用普通的 HTTP 协议，只不过用「会话秘钥」加密内容。</p>
-
+<p>ConcurrentLinkedQueue底层是基于链表实现的FIFO队列<br>ConcurrentLinkedDeque底层是基于链表实现的双端队列</p>
+<h4><strong>BlockingQueue</strong></h4>
+因为线程池中用到了，比较重要，也会新开一篇
         </div>
         
         <div class="level is-size-7 is-uppercase">
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/HTTPS/" rel="tag">HTTPS</a>
+                    <a class="has-link-grey -link" href="/tags/Java/" rel="tag">Java</a>, <a class="has-link-grey -link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a>, <a class="has-link-grey -link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a>
                 </div>
             </div>
         </div>
@@ -339,16 +294,16 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/10/HTTP-1-1%E3%80%81HTTP2%E5%92%8CHTTP3/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/26/ConcurrentHashMap%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">HTTP/1.1、HTTP2和HTTP3</span>
+                <span class="level-item">ConcurrentHashMap源码解析</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/10/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
-                <span class="level-item">多线程开篇</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/26/Lock%E9%94%81%E7%9A%84%E5%AD%90%E7%B1%BBReentrantLock%E5%92%8CReadWriteLock/">
+                <span class="level-item">Lock锁的子类ReentrantLock和ReadWriteLock</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -470,38 +425,38 @@
                     目录
                 </h3>
                 <ul class="menu-list"><li>
-        <a class="is-flex" href="#HTTP的不足以及HTTPS的改进">
+        <a class="is-flex" href="#集合容器的安全问题">
         <span class="has-mr-6">1</span>
-        <span>HTTP的不足以及HTTPS的改进</span>
-        </a></li><li>
-        <a class="is-flex" href="#混合加密算法">
-        <span class="has-mr-6">2</span>
-        <span>混合加密算法</span>
+        <span>集合容器的安全问题</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#对称密钥加密">
-        <span class="has-mr-6">2.1</span>
-        <span>对称密钥加密</span>
-        </a></li><li>
-        <a class="is-flex" href="#非对称密钥加密-公开密钥加密">
-        <span class="has-mr-6">2.2</span>
-        <span>非对称密钥加密(公开密钥加密)</span>
-        </a></li><li>
-        <a class="is-flex" href="#混合加密">
-        <span class="has-mr-6">2.3</span>
-        <span>混合加密</span>
+        <a class="is-flex" href="#如何解决并发修改异常">
+        <span class="has-mr-6">1.1</span>
+        <span>如何解决并发修改异常</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#数字证书">
-        <span class="has-mr-6">3</span>
-        <span>数字证书</span>
+        <a class="is-flex" href="#并发容器的分类">
+        <span class="has-mr-6">2</span>
+        <span>并发容器的分类</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.1.1</span>
+        <span>CopyOnWriteArrayList</span>
         </a></li><li>
-        <a class="is-flex" href="#摘要算法">
-        <span class="has-mr-6">4</span>
-        <span>摘要算法</span>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.1.2</span>
+        <span>CopyOnWriteArraySet</span>
         </a></li><li>
-        <a class="is-flex" href="#HTTPS连接建立过程">
-        <span class="has-mr-6">5</span>
-        <span>HTTPS连接建立过程</span>
-        </a></li></ul>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.1.3</span>
+        <span>ConcurrentHashMap、ConcurrentSkipListMap、ConcurrentSkipListSet</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.1.4</span>
+        <span>ConcurrentLinkedQueue和ConcurrentLinkedDeque</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.1.5</span>
+        <span>BlockingQueue</span>
+        </a></li></ul></ul></li></ul>
             </div>
         </div>
     </div>
@@ -524,7 +479,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="HTTP和HTTPS" height="28">
+                    <img src="/images/logo.png" alt="Java多线程之并发容器" height="28">
                 
                 </a>
                 <p class="is-size-7">
