@@ -10,16 +10,16 @@
 <title>SQL基本语法之增删改查 - chen33的个人博客</title>
 
 
-    <meta name="description" content="sdfaj解放军阿里">
+    <meta name="description" content="查询数据SELECT基本查询1234# select基本使用SELECT prod_name FROM products  -- 查询单列SELECT prod_id,prod_name,prod_price FROM products -- 查询多列SELECT * FROM products -- 查询所有列，由于速度较慢一般不使用 DISTINCT去重和LIMIT分页123456789#">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SQL基本语法之增删改查">
 <meta property="og:url" content="http://coderchen33.life/2020/04/06/SQL%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B9%8B%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="sdfaj解放军阿里">
+<meta property="og:description" content="查询数据SELECT基本查询1234# select基本使用SELECT prod_name FROM products  -- 查询单列SELECT prod_id,prod_name,prod_price FROM products -- 查询多列SELECT * FROM products -- 查询所有列，由于速度较慢一般不使用 DISTINCT去重和LIMIT分页123456789#">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-04-06T07:40:43.000Z">
-<meta property="article:modified_time" content="2020-04-06T13:38:47.247Z">
+<meta property="article:modified_time" content="2020-04-06T13:42:57.956Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 80 个字)
+                    1 分钟 读完 (大约 158 个字)
                 </span>
                 
                 
@@ -173,10 +173,10 @@
             
         </h1>
         <div class="content">
-            <p>sdfa<br>j解放军阿里</p>
-<a id="more"></a>
+            <a id="more"></a>
 
 <h2 id="查询数据SELECT"><a href="#查询数据SELECT" class="headerlink" title="查询数据SELECT"></a>查询数据SELECT</h2><h4 id="基本查询"><a href="#基本查询" class="headerlink" title="基本查询"></a>基本查询</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># select基本使用</span></span><br><span class="line"><span class="keyword">SELECT</span> prod_name <span class="keyword">FROM</span> products  <span class="comment">-- 查询单列</span></span><br><span class="line"><span class="keyword">SELECT</span> prod_id,prod_name,prod_price <span class="keyword">FROM</span> products <span class="comment">-- 查询多列</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="comment">-- 查询所有列，由于速度较慢一般不使用</span></span><br></pre></td></tr></table></figure>
+<h4 id="DISTINCT去重和LIMIT分页"><a href="#DISTINCT去重和LIMIT分页" class="headerlink" title="DISTINCT去重和LIMIT分页"></a><code>DISTINCT</code>去重和<code>LIMIT</code>分页</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">######### DISTINCT去重</span></span><br><span class="line"><span class="keyword">SELECT</span> vend_id <span class="keyword">FROM</span> products </span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> vend_id <span class="keyword">FROM</span> products</span><br><span class="line"></span><br><span class="line"><span class="comment">######### LIMIT分页</span></span><br><span class="line"><span class="keyword">SELECT</span> prod_name <span class="keyword">FROM</span> products <span class="keyword">LIMIT</span> <span class="number">5</span>  <span class="comment">-- 查询表的前5行(开始是0行)</span></span><br><span class="line"><span class="keyword">SELECT</span> prod_name <span class="keyword">FROM</span> products <span class="keyword">LIMIT</span> <span class="number">5</span>,<span class="number">5</span>  <span class="comment">-- 第5行开始,返回5行数据</span></span><br><span class="line"><span class="keyword">SELECT</span> prod_name <span class="keyword">FROM</span> products <span class="keyword">LIMIT</span> <span class="number">3</span>,<span class="number">4</span>  <span class="comment">#第3行开始,返回4行数据</span></span><br><span class="line"><span class="keyword">SELECT</span> prod_name <span class="keyword">FROM</span> products <span class="keyword">LIMIT</span> <span class="number">4</span> <span class="keyword">OFFSET</span> <span class="number">3</span>  <span class="comment">#第3行开始,4行数据</span></span><br></pre></td></tr></table></figure>
 <h2 id="插入数据INSERT"><a href="#插入数据INSERT" class="headerlink" title="插入数据INSERT"></a>插入数据INSERT</h2><h2 id="修改数据UPDATE"><a href="#修改数据UPDATE" class="headerlink" title="修改数据UPDATE"></a>修改数据UPDATE</h2><h2 id="删除数据DELETE"><a href="#删除数据DELETE" class="headerlink" title="删除数据DELETE"></a>删除数据DELETE</h2>
         </div>
         
@@ -373,6 +373,10 @@
         <a class="is-flex" href="#基本查询">
         <span class="has-mr-6">1.1</span>
         <span>基本查询</span>
+        </a></li><li>
+        <a class="is-flex" href="#DISTINCT去重和LIMIT分页">
+        <span class="has-mr-6">1.2</span>
+        <span>DISTINCT去重和LIMIT分页</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#插入数据INSERT">
         <span class="has-mr-6">2</span>
