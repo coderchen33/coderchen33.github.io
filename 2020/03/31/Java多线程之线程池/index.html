@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-31T13:43:01.000Z">
-<meta property="article:modified_time" content="2020-04-02T10:33:00.558Z">
+<meta property="article:modified_time" content="2020-04-02T13:44:36.544Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="技术博客">
 <meta name="twitter:card" content="summary">
@@ -151,7 +151,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分钟 读完 (大约 1311 个字)
+                    21 分钟 读完 (大约 3094 个字)
                 </span>
                 
                 
@@ -179,18 +179,66 @@
 
 </li>
 </ol>
-<h2 id="线程池基本概念"><a href="#线程池基本概念" class="headerlink" title="线程池基本概念"></a>线程池基本概念</h2><ol>
+<h2 id="线程池基本概念"><a href="#线程池基本概念" class="headerlink" title="线程池基本概念"></a>线程池基本概念</h2><h4><strong>什么是线程池</strong></h4>
+
+<p>线程池可以看做是一个<strong>线程的集合</strong>。它的工作主要是控制运行的线程数量，<strong>处理过程中将任务放入队列</strong>，然后在线程创建后启动这些任务，如果线程数量超过了最大数量超出数量的线程排队等候，等其它线程执行完毕，再从队列中取出任务来执行。</p>
+<p>主要特点：<strong>线程复用</strong>、<strong>控制最大并发数</strong>、<strong>管理线程</strong></p>
+<h4><strong>为什么使用线程池</strong></h4>
+
+<ol>
 <li><strong>降低资源消耗</strong>。通过<strong>重复利用</strong>已创建的线程降低线程创建和销毁造成的消耗。</li>
 <li><strong>提高响应速度</strong>。当任务到达时，任务可以<strong>不需要等到线程创建</strong>就能立即执行。</li>
 <li><strong>提高线程的可管理性</strong>。线程是稀缺资源，如果无限制地创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行<strong>统一分配、调优和监控</strong>。</li>
 </ol>
-<h2 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h2><div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-1-21-14-59"></div><br>
+<h2 id="线程池的基本使用"><a href="#线程池的基本使用" class="headerlink" title="线程池的基本使用"></a>线程池的基本使用</h2><p>这里，我们先对这张图有点印象，只需要知道<code>ThreadPoolExecutor</code>是线程池的核心即可。剩下的放到Executor框架来讲。</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-1-21-14-59"></div><br>
 
+<p>使用线程池基本上有3步:</p>
+<ol>
+<li>新建线程池</li>
+<li>向线程池提交任务</li>
+<li>关闭线程池</li>
+</ol>
+<p>这里我们先写个demo感受一下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.company.MultiThread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//新建线程池</span></span><br><span class="line">        ExecutorService threadPool = Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line">        <span class="comment">//ExecutorService threadPool = Executors.newSingleThreadExecutor();</span></span><br><span class="line">        <span class="comment">//ExecutorService threadPool = Executors.newCachedThreadPool();</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">                <span class="comment">//向线程池提交任务</span></span><br><span class="line">                threadPool.execute(()-&gt;&#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName()+<span class="string">"办理业务"</span>);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">//关闭线程池</span></span><br><span class="line">            threadPool.shutdown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h4><strong>1. 新建线程池</strong></h4>
 
+<p>我们可以通过两种方式新建线程池：</p>
+<ul>
+<li>JDK提供的线程池</li>
+<li>使用自定义线程池</li>
+</ul>
+<p>JDK提供的线程池主要有以下3个：</p>
+<ul>
+<li><strong>newFixedThreadPool()</strong>  固定线程数线程数</li>
+<li><strong>newSingleThreadExecutor()</strong>  单个线程的线程池</li>
+<li><strong>newCachedThreadPool()</strong>  根据需求创建线程的线程池</li>
+</ul>
+<p>我们用上面的代码验证下这3个线程池有什么不同：</p>
+<p>从左到右依次为newFixedThreadPool、newSingleThreadExecutor、newCachedThreadPool()。所有线程池都是添加了10个任务。其中newFixedThreadPool()中设置线程数为5,从最左边的图可以看到5个线程处理完10个任务;newSingleThreadExecutor()只有1个线程处理10个任务;而newCachedThreadPool()中则是直接创建了10个线程完成了10个任务</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-20-33-41"></div><br>
 
-<h2 id="线程池七大参数"><a href="#线程池七大参数" class="headerlink" title="线程池七大参数"></a>线程池七大参数</h2><div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-2-49"></div><br>
+<p><strong>注意 注意</strong><br><strong>注意 注意</strong><br><strong>注意 注意</strong></p>
+<p>虽然上面使用的是JDK给我们提供的线程池，但是阿里巴巴Java开发手册中明确要求<strong>实际使用时我们应该使用自定义线程池</strong>。原因和示例代码参考下面的使用自定义线程池章节。</p>
+<h4><strong>2. 向线程池提交任务</strong></h4>
+
+<p>可以使用两个方法向线程池提交任务：</p>
+<ul>
+<li><strong>execute()</strong> 用于提交不需要返回值的任务</li>
+<li><strong>submit()</strong> 用于提交需要返回值的任务。线程池会返回一个<code>future</code>类型的对象，通过这个<code>future</code>对象的<code>get()</code>方法来获取返回值。</li>
+</ul>
+<h4><strong>3. 关闭线程池</strong></h4>
+
+<p>关闭线程池有两种方法：</p>
+<ul>
+<li><strong>shutdown</strong> </li>
+<li><strong>shutdownNow</strong></li>
+</ul>
+<p>区别:<code>shutdownNow</code>首先将线程池的状态设置成<code>STOP</code>，然后尝试停止所有的正在执行或暂停任务的线程，并返回等待执行任务的列表。<code>shutdown</code>只是将线程池的状态设置成<code>SHUTDOWN</code>状态，然后中断所有没有正在执行任务的线程。</p>
+<p>它们的原理都是遍历线程池中的工作线程，然后逐个调用线程的interrupt方法来中断线程，所以无法响应中断的任务可能永远无法终止。</p>
+<h2 id="线程池七大参数"><a href="#线程池七大参数" class="headerlink" title="线程池七大参数"></a>线程池七大参数</h2><p>上面我们讲到了JDK提供的3种线程池，我们看下他们的源码：</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-2-49"></div><br>
 
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-4-1"></div><br>
 
@@ -205,7 +253,7 @@
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-8-18"></div><br>
 
 
-<p>接下来我们就好好聊聊这7个参数的意义。为什么new ThreadPoolExecutor只用传这5个参数，另外2个参数是什么，有什么用。</p>
+<p>接下来我们就好好聊聊这7个参数的意义：</p>
 <table>
 <thead>
 <tr>
@@ -249,7 +297,9 @@
 <li><strong>DiscardOldestPolicy</strong>：<strong>丢弃队列里等待最久的一个任务，然后把当前任务加入到队列中尝试再次提交当前任务</strong>。</li>
 <li><strong>DiscardPolicy</strong>：<strong>直接丢弃任务，不处理也不抛出异常</strong>。如果允许任务丢失，这是最好的一种方案</li>
 </ul>
-<h2 id="线程池的工作原理"><a href="#线程池的工作原理" class="headerlink" title="线程池的工作原理"></a>线程池的工作原理</h2><p>当提交一个新任务到线程池时，线程池的处理流程如下</p>
+<p>代码验证见下面的自定义线程池部分。</p>
+<h2 id="线程池的工作原理"><a href="#线程池的工作原理" class="headerlink" title="线程池的工作原理"></a>线程池的工作原理</h2><p>只是这几个参数可能还不能很好的理解，我们接下来结合线程池的工作原理来看看这几个参数的意义。</p>
+<p>当提交一个新任务到线程池时，线程池的处理流程如下</p>
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-16-43-14"></div><br>
 
 
@@ -257,6 +307,7 @@
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-16-28-2"></div><br>
 
 <p>1）如果当前运行的线程少于<code>corePoolSize</code>，则创建新线程来执行任务（注意，执行这一步骤需要获取全局锁）<br>2）如果运行的线程等于或多于<code>corePoolSize</code>，则将任务加入<code>BlockingQueue</code>。<br>3）如果无法将任务加入<code>BlockingQueue</code>（队列已满），则扩展新的线程来处理任务（注意，执行这一步骤需要获取全局锁）<br>4）如果创建新线程将使当前运行的线程超出<code>maximumPoolSize</code>，任务将通过拒绝策略被拒绝</p>
+<p>另外对于keepAliveTime这时候我们也就清楚了，就是我们的核心线程池和阻塞队列都已经满了之后，线程池会新建线程执行任务，这些新建的线程执行完任务后处于空闲状态，经过keepAliveTime后会被销毁，直到只剩下corePoolSize个线程。</p>
 <h2 id="使用自定义线程池"><a href="#使用自定义线程池" class="headerlink" title="使用自定义线程池"></a>使用自定义线程池</h2><p><strong>注意 注意</strong><br><strong>注意 注意</strong><br><strong>注意 注意</strong></p>
 <p>阿里巴巴Java开发手册中明确规定：<strong>不能使用Executors方法创建线程池，应该使用自定义线程池</strong></p>
 <blockquote>
@@ -264,21 +315,67 @@
 </blockquote>
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-16-46-45"></div><br>
 
-<p>原因：</p>
+<h4><strong>自定义线程池原因</strong></h4>
+
+<p>原因上面也提到了，我们再贴一下JDK提供的3种线程的代码</p>
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-2-49"></div><br>
+
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-4-1"></div><br>
+
+<div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-17-5-29"></div><br>
+
+<p>可以看到newFixedThreadPool和newSingleThreadExecutor中使用的是没有指明参数的<code>LinkedBlockingQueue&lt;&gt;()</code>，它是一个无界阻塞队列，即最大可以存放<code>Integer.Max_VALUE</code>的任务队列，导致产生<code>OOM</code>异常。这也是为什么我们使用自定义线程池时不能使用无界阻塞队列的原因。而newCachedThreadPool中，虽然使用的是SynchronousQueue(),但是它的最大线程数设置的同样是Integer.MAX_VALUE,所以当线程过多时同样会产生<code>OOM</code>异常。</p>
+<h4><strong>使用自定义线程池</strong></h4>
+
 <p>接下来我们使用自定义线程池，并且验证下上面提到的4种拒绝策略</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.company.MultiThread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.LinkedBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//新建线程池</span></span><br><span class="line">        ThreadPoolExecutor threadPool = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">                <span class="number">3</span>,  <span class="comment">//核心线程数3</span></span><br><span class="line">                <span class="number">6</span>, <span class="comment">//最大线程数6</span></span><br><span class="line">                <span class="number">2L</span>,  <span class="comment">//扩展线程保持时间2ms</span></span><br><span class="line">                TimeUnit.MILLISECONDS,</span><br><span class="line">                <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(<span class="number">3</span>), <span class="comment">//任务队列容量3</span></span><br><span class="line">                Executors.defaultThreadFactory(),  <span class="comment">//</span></span><br><span class="line">                <span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy());  <span class="comment">//AbortPolicy拒绝策略抛异常</span></span><br><span class="line">                <span class="comment">//new ThreadPoolExecutor.CallerRunsPolicy()</span></span><br><span class="line">                <span class="comment">//new ThreadPoolExecutor.DiscardOldestPolicy()</span></span><br><span class="line">                <span class="comment">//new ThreadPoolExecutor.DiscardPolicy()</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;  <span class="comment">//i&lt;8  i&lt;9  i&lt;10</span></span><br><span class="line">                threadPool.execute(()-&gt;&#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName()+<span class="string">"办理业务"</span>);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            threadPool.shutdown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>从上面设置的参数我们知道，我们这个自定义的线程池最大容量为6+3=9。</p>
+<p>AbortPolocy策略</p>
+<p>当提交8个任务时，线程池正常处理完8个任务。当提交9个任务时，线程池也正常处理完9个任务。当提交10个任务，超过最大容量9时AbortPolocy拒绝策略则会直接抛出<code>RejectedExecutionException</code>异常</p>
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-18-15-22"></div><br>
 
 <p>剩下的3个我们只看拒绝策略的效果(即使用10个线程i&lt;10)时的效果</p>
-<p>CallerRunsPolicy 任务回退拒绝策略</p>
+<p>CallerRunsPolicy 任务回退拒绝策略<br>可以看到当提交10个任务超过最大容量9时CallerRunsPolicy拒绝策略则会自己执行9个任务，多出的任务回退给调用者，我们上面的代码中是main线程，所以是main线程执行多出的任务。</p>
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-18-22-20"></div><br>
 
 <p>DiscardOldestPolicy  丢弃最久拒绝策略</p>
+<p>可以看到当提交10个任务超过最大容量9时DiscardOldestPolicy拒绝策略则会执行9个任务，丢弃掉等待最久的任务。</p>
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-18-26-44"></div><br>
 
 <p>DiscardPolicy  直接丢弃拒绝策略</p>
+<p>可以看到当提交10个任务超过最大容量9时DiscardPolicy拒绝策略则会执行9个任务，直接丢弃新的任务。</p>
 <div align="center"><img src="http://coderchen33.life/2020-03-31-Java多线程之线程池-2020-4-2-18-27-52"></div><br>
+
+<h4><strong>自定义线程池参数设置</strong></h4>
+
+
+<p>上面我们写的自定义线程池中的参数都是自己随便设置的，实际生产中对于参数的设置是有要求的，那么如何设置一个合理的参数呢？(这里<strong>最重要的也是最大线程数即maximumPoolSize</strong>)，这里就先讲下这个参数怎么配</p>
+<ol>
+<li><p>首先通过<code>Runtime.getRuntime().availableProcessors()</code>获得设备的CPU数。</p>
+</li>
+<li><p>其次分析任务特性，可以从以下几个角度来分析。</p>
+</li>
+</ol>
+<ul>
+<li>任务的性质：<strong>CPU密集型任务</strong>、<strong>IO密集型任务</strong>和<strong>混合型任务</strong>。</li>
+<li>任务的优先级：高、中和低。</li>
+<li>任务的执行时间：长、中和短。</li>
+<li>任务的依赖性：是否依赖其他系统资源，如数据库连接。</li>
+</ul>
+<p>CPU密集型任务:指的是该任务需要大量的运算，而没有阻塞，CPU一直全速运行</p>
+<p>IO密集型任务:该任务需要大量IO，即大量的阻塞。IO密集型任务并不是一直在执行任务，则应配置尽可能多的线程</p>
+<p>混合密集型任务：可以拆分成一个CPU密集型任务和一个IO密集型任务，只要这两个任务执行的时间相差不是太大。如果这两个任务执行时间相差太大，则没必要进行分解。</p>
+<ol start="3">
+<li>配置合理参数</li>
+</ol>
+<ul>
+<li><p><strong>CPU密集型任务配置为CPU核数+1</strong>，比如8核CPU则应配置最大线程数为8+1=9个</p>
+</li>
+<li><p><strong>IO密集型任务配置为2*CPU核数  或 CPU核数/(1-阻塞因子) 阻塞因子为0.8~0.9</strong>。 比如对于8核CPU则应配置最大线程数为2*8=16个或者8/(1-0.9)=80个。</p>
+</li>
+</ul>
+
         </div>
         
         
@@ -325,6 +422,13 @@
 
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/04/06/SQL%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B9%8B%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">SQL基本语法之增删改查</span>
+            </a>
+        </div>
         
         
         <div class="level-end">
@@ -383,7 +487,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            26
+                            28
                         </p>
                     </a>
                 </div>
@@ -395,7 +499,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            5
+                            6
                         </p>
                     </a>
                 </div>
@@ -407,7 +511,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            7
+                            10
                         </p>
                     </a>
                 </div>
@@ -454,11 +558,31 @@
         <a class="is-flex" href="#线程池基本概念">
         <span class="has-mr-6">1</span>
         <span>线程池基本概念</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.1</span>
+        <span>什么是线程池</span>
         </a></li><li>
-        <a class="is-flex" href="#线程池的使用">
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.2</span>
+        <span>为什么使用线程池</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#线程池的基本使用">
         <span class="has-mr-6">2</span>
-        <span>线程池的使用</span>
+        <span>线程池的基本使用</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.1</span>
+        <span>1. 新建线程池</span>
         </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.2</span>
+        <span>2. 向线程池提交任务</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">2.3</span>
+        <span>3. 关闭线程池</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#线程池七大参数">
         <span class="has-mr-6">3</span>
         <span>线程池七大参数</span>
@@ -470,7 +594,19 @@
         <a class="is-flex" href="#使用自定义线程池">
         <span class="has-mr-6">5</span>
         <span>使用自定义线程池</span>
-        </a></li></ul>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">5.1</span>
+        <span>自定义线程池原因</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">5.2</span>
+        <span>使用自定义线程池</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">5.3</span>
+        <span>自定义线程池参数设置</span>
+        </a></li></ul></li></ul>
             </div>
         </div>
     </div>
