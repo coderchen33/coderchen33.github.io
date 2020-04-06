@@ -10,16 +10,16 @@
 <title>ConcurrentHashMap源码解析 - chen33的个人博客</title>
 
 
-    <meta name="description" content="Node结点JDK1.8中，和HashMap一样，也是使用Node节点存储键值对。不过与HashMap不同的是由于是并发容器，所以value值和next指针使用volatile修饰，保证线程之间的可见性。 1234567891011121314static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; &amp;#123;        f">
+    <meta name="description" content="主要内容 逐行分析下面5部分的源码解析  Node节点 hash方法spread() 构造方法 put方法 rehash方法tryPresize()">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ConcurrentHashMap源码解析">
 <meta property="og:url" content="http://coderchen33.life/2020/03/26/ConcurrentHashMap%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="Node结点JDK1.8中，和HashMap一样，也是使用Node节点存储键值对。不过与HashMap不同的是由于是并发容器，所以value值和next指针使用volatile修饰，保证线程之间的可见性。 1234567891011121314static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; &amp;#123;        f">
+<meta property="og:description" content="主要内容 逐行分析下面5部分的源码解析  Node节点 hash方法spread() 构造方法 put方法 rehash方法tryPresize()">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-26T13:01:04.000Z">
-<meta property="article:modified_time" content="2020-04-06T02:06:00.323Z">
+<meta property="article:modified_time" content="2020-04-06T07:59:22.979Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="多线程">
@@ -158,7 +158,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2295 个字)
+                    16 分钟 读完 (大约 2330 个字)
                 </span>
                 
                 
@@ -176,8 +176,17 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
+            <p><strong>主要内容</strong></p>
+<p>逐行分析下面5部分的源码解析</p>
+<ol>
+<li>Node节点</li>
+<li>hash方法spread()</li>
+<li>构造方法</li>
+<li>put方法</li>
+<li>rehash方法tryPresize()<a id="more"></a>
 
+</li>
+</ol>
 <h2 id="Node结点"><a href="#Node结点" class="headerlink" title="Node结点"></a>Node结点</h2><p>JDK1.8中，和HashMap一样，也是使用Node节点存储键值对。不过与HashMap不同的是由于是并发容器，所以<code>value</code>值和<code>next</code>指针使用<code>volatile</code>修饰，保证线程之间的可见性。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> hash;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        <span class="keyword">volatile</span> V val;</span><br><span class="line">        <span class="keyword">volatile</span> Node&lt;K,V&gt; next;</span><br><span class="line"></span><br><span class="line">        Node(<span class="keyword">int</span> hash, K key, V val, Node&lt;K,V&gt; next) &#123;</span><br><span class="line">            <span class="keyword">this</span>.hash = hash;</span><br><span class="line">            <span class="keyword">this</span>.key = key;</span><br><span class="line">            <span class="keyword">this</span>.val = val;</span><br><span class="line">            <span class="keyword">this</span>.next = next;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="hash方法"><a href="#hash方法" class="headerlink" title="hash方法"></a>hash方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">spread</span><span class="params">(<span class="keyword">int</span> h)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (h ^ (h &gt;&gt;&gt; <span class="number">16</span>)) &amp; HASH_BITS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
