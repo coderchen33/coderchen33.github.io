@@ -7,21 +7,21 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>计算机网络开篇 - chen33的个人博客</title>
+<title>深入理解MySQL - chen33的个人博客</title>
 
 
-    <meta name="description" content="计算机网络  搞起来  哇咔咔">
+    <meta name="description" content="主要内容  MySQL系统架构图 MyISAM引擎和InnoDB引擎">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计算机网络开篇">
-<meta property="og:url" content="http://coderchen33.life/2020/03/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%BC%80%E7%AF%87/index.html">
+<meta property="og:title" content="深入理解MySQL">
+<meta property="og:url" content="http://coderchen33.life/2020/04/08/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3MySQL/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="计算机网络  搞起来  哇咔咔">
+<meta property="og:description" content="主要内容  MySQL系统架构图 MyISAM引擎和InnoDB引擎">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
-<meta property="article:published_time" content="2020-03-06T03:59:12.000Z">
-<meta property="article:modified_time" content="2020-03-11T03:32:31.254Z">
+<meta property="article:published_time" content="2020-04-08T13:13:17.000Z">
+<meta property="article:modified_time" content="2020-04-09T12:14:17.694Z">
 <meta property="article:author" content="coderchen33">
-<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
 
@@ -82,7 +82,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="计算机网络开篇" height="28">
+                <img src="/images/logo.png" alt="深入理解MySQL" height="28">
             
             </a>
         </div>
@@ -145,17 +145,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-06T03:59:12.000Z">2020-03-06</time>
+                <time class="level-item has-text-grey" datetime="2020-04-08T13:13:17.000Z">2020-04-08</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3123 个字)
+                    8 分钟 读完 (大约 1221 个字)
                 </span>
                 
                 
@@ -169,116 +169,57 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                计算机网络开篇
+                深入理解MySQL
             
         </h1>
         <div class="content">
-            <p>计算机网络  搞起来  哇咔咔</p>
-<a id="more"></a>
-<!-- TOC -->
-
-<ul>
-<li><a href="#互联网因特网与万维网">互联网、因特网与万维网</a></li>
-<li><a href="#互联网的组成">互联网的组成</a></li>
-<li><a href="#计算机网络类别">计算机网络类别</a></li>
-<li><a href="#计算机网络的性能">计算机网络的性能</a></li>
-<li><a href="#计算机网络体系结构">计算机网络体系结构</a></li>
-</ul>
-<!-- /TOC -->
-<h2 id="互联网、因特网与万维网"><a href="#互联网、因特网与万维网" class="headerlink" title="互联网、因特网与万维网"></a>互联网、因特网与万维网</h2><ul>
-<li><strong>互联网</strong>：网络把主机连接起来，而互联网是通过某种协议将多种不同的网络连接起来，  因此<strong>互联网是网络的网络</strong>。  国际标准的互联网写法是<strong>internet</strong>，字母i小写！  </li>
-<li><strong>因特网</strong>：<strong>采用TCP/IP协议族作为通信的规则的互联网</strong>。国际标准的因特网写法是<strong>Internet</strong>，字母I大写！ TCP/IP协议由很多协议组成，不同类型的协议又被放在不同的层，其中，位于应用层的协议就有很多，比如FTP、SMTP、HTTP。所以，因特网提供的服务一般包括有：www（万维网）服务、电子邮件服务（outlook）、远程登录（QQ）服务、文件传输（FTP）服务、网络电话等等  </li>
-<li><strong>万维网(www)</strong>：<strong>只要应用层使用的是HTTP协议，就称为万维网</strong>。<br>万维网又称环球网，是一种建立在Internet上的全球性的、交互的、动态、多平台、分布式、图形信息系统。它只是建立在Internet上的一种网络服务。  之所以在浏览器里输入百度网址时，能看见百度网提供的网页，就是因为你的个人浏览器和百度网的服务器之间使用的是HTTP协议在交流。  </li>
-</ul>
-<p>三者关系：<strong>互联网包含因特网，因特网包含万维网</strong>  </p>
-<p>目前，围绕互联网发展的业务主要有两类，分别是<strong>ISP（因特网服务提供商）</strong>与<strong>ICP（因特网网内容提供商）</strong></p>
-<ul>
-<li><strong>ISP(Internet Service Provider)</strong>:指向广大用户综合提供互联网接入业务、信息业务和增值业务的电信运营商（比如中国电信、移动、联通提供的宽度服务）<br>ISP拥有从因特网管理机构申请到的多个IP地址，同时拥有通信线路以及路由器等连网设备。中国的电信、网通等都是ISP，我们通常所说的上网就是指通过某个ISP接入到因特网，IP地址的管理机构不会把一个单个的IP地址分配给单个用户，而是把一批IP地址有偿地分配给经审查合格的ISP。现在的因特网是由全世界无数个大大小小的ISP所共同拥有的。  </li>
-<li><strong>ICP(Internet Content Provider)</strong>:向广大用户综合提供互联网信息和增值业务的企业（比如：新浪、搜狐、腾讯）。其实，我们说的ICP域名备案就是指互联网内容提供商向工信部提交经营审核。</li>
-</ul>
-<h2 id="互联网的组成"><a href="#互联网的组成" class="headerlink" title="互联网的组成"></a>互联网的组成</h2><p>因特网的拓扑结构虽然非常复杂，并且在地理上覆盖全球，单从工作方式上看，可以划分为以下两大块：  </p>
+            <p><strong>主要内容</strong></p>
 <ol>
-<li><strong>网络边缘</strong>：由所连接在因特网上的<strong>主机</strong>组成。这部分是用户直接使用的，用来进行通信和资源共享。<strong>主机也称为端系统</strong></li>
-<li><strong>网络核心</strong>：由大量网络和连接这些网络的路由器组成。这部分是为边缘部分提供服务的 </li>
+<li>MySQL系统架构图</li>
+<li>MyISAM引擎和InnoDB引擎<a id="more"></a>
+
+</li>
 </ol>
-<p>在互联网边缘的端系统之间的通信方式通常可划分为两类：</p>
+<h2 id="MySQL系统架构图"><a href="#MySQL系统架构图" class="headerlink" title="MySQL系统架构图"></a>MySQL系统架构图</h2><p>和其他数据库相比，MySQL有点与众不同，它的架构可以在多种不同的场景中应用并发挥良好作用。主要体现在存储引擎的架构上。<strong>插件式的存储引擎架构将查询处理和其它的系统任务以及数据的存储提取相分离</strong>。这种架构可以根据业务的需求和实际需要选择合适的存储引擎。</p>
+<p>下图为MySQL的逻辑架构图：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-08-深入理解MySQL-2020-4-8-21-17-17"></div><br>
+
+
+<p>我们简要分析下每层的作用：<br>支持接口是第三方语言对数据库的操作接口，比如Java的JDBC等，这里不再赘述。</p>
+<p><strong>(1)连接层</strong></p>
+<p><strong>最上层的连接池是提供一些连接服务</strong>，包含本地socket通信和大多数基于C/S工具实现的类似于TCP/IP的通信。我们常用的c3p0和druid连接池就是这一层的。连接池主要完成一些类似于连接处理、授权认证及相关的安全方案。在该层上引入了线程池的概念，为通过认证安全接入的客户端提供线程。同样在该层上可以实现基于SSL的安全连接。服务器也会为安全接入的每个客户端验证它所具有的操作权限。</p>
+<p><strong>(2)服务层</strong></p>
+<p><strong>第二层架构主要完成大多数的核心服务功能</strong>，如SQL接口、缓存的查询、SQL的分析和优化、内置函数等。<strong>所有跨存储引擎的功能也在这一层实现</strong>，如存储过程、触发器、视图等。在该层，服务器会解析查询并创建相应的内部解析树，并对其完成相应的优化如确定查询表的顺序，是否利用索引等，最后生成相应的执行操作。如果是select语句，服务器还会查询内部的缓存，如果缓存空间足够大，这样在频繁读操作的环境中能够很好的提升系统的性能。</p>
+<p><strong>(3)引擎层</strong></p>
+<p><strong>存储引擎真正的负责MySQL中数据的存储和提取</strong>，服务器通过API与存储引擎进行通信，不同的存储引擎具有的特性不同，我们可以根据实际需进行选取。MySQL中支持10多种的存储引擎，比较常用的就是MyISAM和InnoDB。下文会做具体介绍。</p>
+<p><strong>(4)存储层</strong><br>数据存储层，主要是将数据存储在物理机的文件系统，并完成与存储引擎的交互。</p>
+<h2 id="MySQL存储引擎"><a href="#MySQL存储引擎" class="headerlink" title="MySQL存储引擎"></a>MySQL存储引擎</h2><p>MySQL中支持10多种的存储引擎，比较常用的就是MyISAM和InnoDB。MySQL在5.1版本之前默认存储引擎为MyISAM，在此版本之后默认为InnoDB。</p>
+<p>可以使用如下命令查看MySQL中默认安装的存储引擎</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">ENGINES</span>;</span><br></pre></td></tr></table></figure>
+<div align="center"><img src="http://coderchen33.life/2020-04-08-深入理解MySQL-2020-4-9-17-37-18"></div><br>
+
+<p>使用如下命令查看正在使用的存储引擎</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'%storage_engine%'</span>;</span><br></pre></td></tr></table></figure>
+<p>可以看到，我们正在使用的是InnoDB引擎</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-08-深入理解MySQL-2020-4-9-17-42-46"></div><br>
+
+<p>接下来我们就对比下我们常用的两个存储引擎InnoDB引擎和MyISAM引擎。</p>
+<h3 id="InnoDB引擎和MyISAM引擎对比"><a href="#InnoDB引擎和MyISAM引擎对比" class="headerlink" title="InnoDB引擎和MyISAM引擎对比"></a>InnoDB引擎和MyISAM引擎对比</h3><p>这里把两种最常用的存储引擎基本的提点通过表格的形式对比如下:</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-08-深入理解MySQL-2020-4-9-20-0-46"></div><br>
+
+<p>除了上面常用的两种存储引擎外，MySQL中还有一些特殊用途的存储引擎，比如只支持INSERT和SELECT的Archive引擎等，这里就不再赘述，有需要可以去官网查看文档。</p>
+<p>另外MySQL从2007年开始提供了插件式的存储引擎API，所以出现了很多第三方存储引擎，如InnoDB的改进版Percona等。</p>
+<h3 id="如何选择存储引擎"><a href="#如何选择存储引擎" class="headerlink" title="如何选择存储引擎"></a>如何选择存储引擎</h3><p>从上面我们知道，MySQL中的存储引擎有非常多，那么如何选择适合业务需求的存储引擎呢?</p>
+<p>主要从以下几方面考虑:</p>
 <ol>
-<li><strong>客户服务器方式（Client/Server, C/S方式）</strong>：客户和服务器都是指通信中所涉及到的两个应用进程。最主要的特征是：<strong>客户是服务请求方，服务器是服务提供方</strong><br>C/S方式是因特网上最常用的传统方式，我们在网上发送电子邮件或在网站上查找资料时，都是客户服务器方式。</li>
+<li>使用场景是否需要事务支持；</li>
+<li>是否需要支持高并发，InnoDB的并发度远高于MyISAM；</li>
+<li>是否需要支持外键；</li>
+<li>是否需要支持在线热备；</li>
+<li>高效缓冲数据，InnoDB对数据和索引都做了缓冲，而MyISAM只缓冲了索引；</li>
+<li>索引，不同存储引擎的索引并不太一样；</li>
 </ol>
-<div align="center"> <img src="http://coderchen33.life/%E7%BD%91%E7%BB%9C%E8%BE%B9%E7%BC%98%E5%92%8C%E7%BD%91%E7%BB%9C%E6%A0%B8%E5%BF%83.png"> </div><br>
-
-<ol start="2">
-<li><strong>对等方式（Peer-to-Peer, P2P方式）</strong>：两个主机在通信时并不区分哪一个是服务请求者还是服务提供者，这要两个主机都运行了对等连接软件，他们就可以进行平等的、对等连接通信。这时，双方都可以下载对方已经存储在硬盘中的共享文档，因此这种工作方式也称为<strong>P2P文件共享</strong>。</li>
-</ol>
-<div align="center"> <img src="http://coderchen33.life/p2p.png"> </div><br>
-
-<p>还有一种被称为<strong>浏览器服务器的方式（B/S, Browser/Server方式）</strong>，可以看作是客户服务器方式的特例。只不过客户端是浏览器而已。</p>
-<p>互联网核心部分</p>
-<ol>
-<li><p><strong>电路交换</strong> ：电路交换用于电话通信系统，两个用户要通信之前需要建立一条专用的物理链路，并且在整个通信过程中始终占用该链路。由于通信的过程中不可能一直在使用传输线路，因此电路交换对线路的利用率很低，往往不到 10%。</p>
-</li>
-<li><p><strong>分组交换</strong> ：分组交换采用<strong>存储转发技术</strong>。每个分组都有首部和尾部，包含了源地址和目的地址等控制信息，在同一个传输线路上同时传输多个分组互相不会影响，因此在同一条传输线路上允许同时传输多个分组，也就是说分组交换不需要占用传输线路。</p>
-</li>
-</ol>
-<h2 id="计算机网络类别"><a href="#计算机网络类别" class="headerlink" title="计算机网络类别"></a>计算机网络类别</h2><h4>按照网络的作用范围进行分类</h4>
-
-<ol>
-<li><strong>广域网WAN</strong>:通过长距离(例如跨越不同国家)运送主机发送数据。  作用范围通常为几十到几千公里</li>
-<li><strong>城域网MAN</strong>: 一般是一个城市。 作用距离为5~50km</li>
-<li><strong>局域网LAN</strong>: 用计算机或工作站通过高速通信线路相连。作用距离为1km左右。学校或企业大都拥有多个互连的局域网称为校园网或企业网。</li>
-<li><strong>个人局域网PAN</strong>:把属于个人的电子设备用无线技术连接起来的网络，也常称为<strong>无线个人局域网(WPAN)</strong>。 作用距离10m左右。</li>
-</ol>
-<h4>按照网络的使用者进行分类</h4>
-
-<ol>
-<li><strong>公用网</strong>：  指电信公司出资建造的大型网络。需要向电信公司交纳一定的费用</li>
-<li><strong>专用网</strong>： 指某个部门因为特殊业务工作需要而建造的网络。不向本单位以外的人提供服务。如军队、铁路、银行、电力系统等。</li>
-</ol>
-<h4>用来把用户接入到互联网的网络</h4>
-
-<p><strong>接入网AN</strong>： 搭建起用户与互联网连接的”桥梁”。</p>
-<h2 id="计算机网络的性能"><a href="#计算机网络的性能" class="headerlink" title="计算机网络的性能"></a>计算机网络的性能</h2><ul>
-<li><p><strong>比特率</strong>：连接在计算机网络上的主机在数字信道上传送数据的速率。比特率速率的单位是b/s（比特每秒），有时候也写为bps，即bit persecond  </p>
-</li>
-<li><p><strong>带宽</strong>：表示在单位时间内从网络的某一点到另一点所能通过的最高数据率,单位是bit/s。</p>
-</li>
-<li><p><strong>吞吐量</strong>：在单位时间内通过某个网络的实际数据量。是表示实际网络传输是的速率。 受网络带宽或网络的额定速率的限制。</p>
-</li>
-<li><p><strong>时延</strong>：数据从网络一端传送到另一端所需要的时间。<br>(1) 发送时延： 主机或路由器发送数据帧所需要的时间<br>(2) 排队时延： 分组经过路由器后，要先在输入队列中排队等待处理<br>(3) 处理时延： 主机或路由器收到分组时需要花费一定时间进行处理，如分析首部、提取数据部分、差错检测等。<br>(4) 传播时延： 电磁波在信道中传播一定距离花费的时间。约为光速。</p>
-</li>
-</ul>
-<p><strong>总时延 = 发送时延 + 排队时延 + 处理时 + 延传播时延</strong></p>
-<p>另外，在描述数据量大小时，往往使用字节（byte）作为度量单位。一个字节（记为大写的B）代表8个bit即1byte = 8bit在实际上网应用中，下载软件时常常看到诸如下载速度显示为176KB/s，103KB/s等宽带速率大小字样，因为<strong>ISP提供的线路带宽使用的单位是比特（bit），而一般下载软件显示的是字节（Byte）（1Byte=8bit），所以要通过换算，才能得实际值</strong>。<br>我们以1M宽带为例，按照换算公式换算一下：<br>1Mb/s=1024*1024b/s=1024K b/s=1024/8KB/s=128KB/s</p>
-<h2 id="计算机网络体系结构"><a href="#计算机网络体系结构" class="headerlink" title="计算机网络体系结构"></a>计算机网络体系结构</h2><div align="center"> <img src="http://coderchen33.life/%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82.png"> </div><br>
-
-<p>OSI模型是国际标准组织提出过一个标准框架，只要遵循OSI标准，一个系统就可以和世界上任何地方的、也遵循统一标准的其他任何系统进行通信。但它既复杂又不实用。<br>TCP/IP是一个四层的体系结构，包含应用层、传输层、网际层和网际接口层。不过从实质上讲，TCP/IP只有最上面的三层，网际接口层并没有什么具体内容。<br>因此学习计算机网络的原理时往往采取折中的办法，即总和OSI和TCP/IP的优点，采用一种五层协议的体系结构。</p>
-<p>下面看一下每层的具体作用：</p>
-<ul>
-<li><p><strong>应用层</strong> ：为特定应用程序提供数据传输服务，例如 HTTP、DNS 等协议。数据单位为<strong>报文</strong>。</p>
-</li>
-<li><p><strong>传输层</strong> ：为进程提供通用数据传输服务。由于应用层协议很多，定义通用的传输层协议就可以支持不断增多的应用层协议。<br>传输层包括两种协议：</p>
-<ul>
-<li>传输控制协议 TCP，提供面向连接、可靠的数据传输服务，数据单位为<strong>报文段</strong>；用户数据报协议 </li>
-<li>UDP，提供无连接、尽最大努力的数据传输服务，数据单位为<strong>用户数据报</strong>。</li>
-</ul>
-<p>TCP 主要提供完整性服务，UDP 主要提供及时性服务。</p>
-</li>
-<li><p><strong>网络层</strong> ：为主机提供数据传输服务。而传输层协议是为主机中的进程提供数据传输服务。网络层把传输层传递下来的报文段或者用户数据报封装成<strong>分组</strong>。</p>
-</li>
-<li><p><strong>数据链路层</strong> ：网络层针对的还是主机之间的数据传输服务，而主机之间可以有很多链路，链路层协议就是为同一链路的主机提供数据传输服务。数据链路层把网络层传下来的分组封装成<strong>帧</strong>。</p>
-</li>
-<li><p><strong>物理层</strong> ：考虑的是怎样在传输媒体上传输<strong>数据比特流</strong>，而不是指具体的传输媒体。物理层的作用是尽可能屏蔽传输媒体和通信手段的差异，使数据链路层感觉不到这些差异。 </p>
-</li>
-</ul>
-<p>OSI中的剩余两层：</p>
-<ul>
-<li><strong>表示层</strong> ：数据压缩、加密以及数据描述，这使得应用程序不必关心在各台主机中数据内部格式不同的问题。</li>
-<li><strong>会话层</strong> ：建立及管理会话。<br>五层协议没有表示层和会话层，而是将这些功能留给应用程序开发者处理。</li>
-</ul>
-<p>数据传输过程：</p>
-<div align="center"> <img src="http://coderchen33.life/%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93.png"> </div><br>
-
-<p>在向下的过程中，需要添加下层协议所需要的首部或者尾部，而在向上的过程中不断拆开首部和尾部。</p>
+<p>总之可以简单的归纳为一句话:<strong>除非需要用到某些InnoDB不具备的特性，并且没有其他办法可以替代，否则都应该优先选择InnoDB引擎。</strong></p>
 
         </div>
         
@@ -286,7 +227,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a>
+                    <a class="has-link-grey -link" href="/tags/MySQL/" rel="tag">MySQL</a>
                 </div>
             </div>
         </div>
@@ -337,12 +278,19 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/07/%E2%80%9C%E7%89%A9%E7%90%86%E5%B1%82/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/04/10/%E7%B4%A2%E5%BC%95%E4%B8%8E%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">物理层</span>
+                <span class="level-item">索引与查询性能优化</span>
             </a>
         </div>
         
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/08/leetcode-database%E9%A2%98%E8%A7%A3/">
+                <span class="level-item">leetcode-database题解</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
         
     </div>
 </div>
@@ -461,38 +409,22 @@
                     目录
                 </h3>
                 <ul class="menu-list"><li>
-        <a class="is-flex" href="#互联网、因特网与万维网">
+        <a class="is-flex" href="#MySQL系统架构图">
         <span class="has-mr-6">1</span>
-        <span>互联网、因特网与万维网</span>
+        <span>MySQL系统架构图</span>
         </a></li><li>
-        <a class="is-flex" href="#互联网的组成">
+        <a class="is-flex" href="#MySQL存储引擎">
         <span class="has-mr-6">2</span>
-        <span>互联网的组成</span>
-        </a></li><li>
-        <a class="is-flex" href="#计算机网络类别">
-        <span class="has-mr-6">3</span>
-        <span>计算机网络类别</span>
+        <span>MySQL存储引擎</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#undefined">
-        <span class="has-mr-6">3.1</span>
-        <span>按照网络的作用范围进行分类</span>
+        <a class="is-flex" href="#InnoDB引擎和MyISAM引擎对比">
+        <span class="has-mr-6">2.1</span>
+        <span>InnoDB引擎和MyISAM引擎对比</span>
         </a></li><li>
-        <a class="is-flex" href="#undefined">
-        <span class="has-mr-6">3.2</span>
-        <span>按照网络的使用者进行分类</span>
-        </a></li><li>
-        <a class="is-flex" href="#undefined">
-        <span class="has-mr-6">3.3</span>
-        <span>用来把用户接入到互联网的网络</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#计算机网络的性能">
-        <span class="has-mr-6">4</span>
-        <span>计算机网络的性能</span>
-        </a></li><li>
-        <a class="is-flex" href="#计算机网络体系结构">
-        <span class="has-mr-6">5</span>
-        <span>计算机网络体系结构</span>
-        </a></li></ul>
+        <a class="is-flex" href="#如何选择存储引擎">
+        <span class="has-mr-6">2.2</span>
+        <span>如何选择存储引擎</span>
+        </a></li></ul></li></ul>
             </div>
         </div>
     </div>
@@ -515,7 +447,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="计算机网络开篇" height="28">
+                    <img src="/images/logo.png" alt="深入理解MySQL" height="28">
                 
                 </a>
                 <p class="is-size-7">

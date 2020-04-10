@@ -7,21 +7,19 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>物理层 - chen33的个人博客</title>
+<title>索引与查询性能优化 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容  物理层的任务 信道复用技术 宽带接入技术">
-<meta property="og:type" content="article">
-<meta property="og:title" content="物理层">
-<meta property="og:url" content="http://coderchen33.life/2020/03/07/%E2%80%9C%E7%89%A9%E7%90%86%E5%B1%82/index.html">
+    <meta property="og:type" content="article">
+<meta property="og:title" content="索引与查询性能优化">
+<meta property="og:url" content="http://coderchen33.life/2020/04/10/%E7%B4%A2%E5%BC%95%E4%B8%8E%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容  物理层的任务 信道复用技术 宽带接入技术">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
-<meta property="article:published_time" content="2020-03-07T00:44:38.000Z">
-<meta property="article:modified_time" content="2020-03-13T07:17:21.425Z">
+<meta property="article:published_time" content="2020-04-10T00:52:18.000Z">
+<meta property="article:modified_time" content="2020-04-10T00:52:18.727Z">
 <meta property="article:author" content="coderchen33">
-<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="技术博客">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
 
@@ -82,7 +80,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="物理层" height="28">
+                <img src="/images/logo.png" alt="索引与查询性能优化" height="28">
             
             </a>
         </div>
@@ -145,17 +143,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-07T00:44:38.000Z">2020-03-07</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2020-04-10T00:52:18.000Z">2020-04-10</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 812 个字)
+                    几秒 读完 (大约 1 个字)
                 </span>
                 
                 
@@ -169,80 +163,11 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                物理层
+                索引与查询性能优化
             
         </h1>
         <div class="content">
-            <p><strong>主要内容</strong></p>
-<ol>
-<li>物理层的任务</li>
-<li>信道复用技术</li>
-<li>宽带接入技术<a id="more"></a>
-<h2 id="物理层任务"><a href="#物理层任务" class="headerlink" title="物理层任务"></a>物理层任务</h2>主要任务：<strong>确定与传输媒体的接口的一些特性</strong>。</li>
-</ol>
-<ul>
-<li>机械特性 ：指明接口所用接线器的形状和尺寸、引线数目和排列、固定和锁定装置等。</li>
-<li>电气特性：指明在接口电缆的各条线上出现的电压的范围。4V— 6V表示二进制“0”,用-4V—-6V表示二进制“1”</li>
-<li>功能特性：指明某条线上出现的某一电平的电压表示何种意义。</li>
-<li>过程特性 ：指明对于不同功能的各种可能事件的出现顺序。</li>
-</ul>
-<h2 id="信道复用技术"><a href="#信道复用技术" class="headerlink" title="信道复用技术"></a>信道复用技术</h2><ol>
-<li><p>频分复用：所有主机在相同的时间占用不同的频率带宽资源</p>
-<div align="center"><img src="http://coderchen33.life/2020-03-07-“物理层-2020-3-13-15-17-3" alt="2020-03-07-“物理层-2020-3-13-15-17-3"></div><br>
-</li>
-<li><p>时分复用：所有主机在不同的时间占用相同的频率带宽资源</p>
-<div align="center"><img src="http://coderchen33.life/2020-03-07-“物理层-2020-3-13-15-17-12" alt="2020-03-07-“物理层-2020-3-13-15-17-12"></div><br>
-</li>
-<li><p>统计时分复用：是对时分复用的一种改进，不固定每个用户在时分复用帧中的位置，只要有数据就集中起来组成统计时分复用帧然后发送</p>
-<div align="center"><img src="http://coderchen33.life/2020-03-07-“物理层-2020-3-13-15-17-19" alt="2020-03-07-“物理层-2020-3-13-15-17-19"></div><br>
-
-</li>
-</ol>
-<h2 id="宽带接入技术"><a href="#宽带接入技术" class="headerlink" title="宽带接入技术"></a>宽带接入技术</h2><ul>
-<li><strong>ADSL</strong><br>非对称数字用户线ASDL是用数字技术对模拟电话用户线进行改造。</li>
-</ul>
-<p>ADSL把0~4kHZ的低频谱留给传统电话使用，而把原来没有被利用的高端频谱留给用户上网使用。</p>
-<p>由于我们在上网时主要是从互联网上下载各种文档，而向互联网发送的信息量一般都不打。因此ADSL的下行(从ISP到用户)带宽都远大于上行(从用户到ISP)带宽，因此成为非对称的。</p>
-<p>ADSL 的特点：</p>
-<ul>
-<li><p>上行和下行带宽做成不对称的。</p>
-</li>
-<li><p>ADSL 在用户线（铜线）的两端各安装一个 ADSL 调制解调器。</p>
-</li>
-<li><p>我国目前采用的方案是离散多音调 DMT，DMT 调制技术采用频分复用的方法</p>
-</li>
-<li><p>ADSL 采用自适应调制技术使用户线能够传送尽可能高的数据率</p>
-</li>
-<li><p><strong>光纤同轴混合网（HFC网）</strong><br>在有线电视网的基础上开发的一种居民宽带接入网。</p>
-</li>
-</ul>
-<p>用户接口盒 UIB (User Interface Box) 要提供三种连接，即：</p>
-<ul>
-<li><p>使用同轴电缆连接到机顶盒 (set-top box)，然后再连接到用户的电视机。</p>
-</li>
-<li><p>使用双绞线连接到用户的电话机。</p>
-</li>
-<li><p>使用电缆调制解调器连接到用户的计算机。</p>
-</li>
-<li><p><strong>FTTx</strong></p>
-</li>
-</ul>
-<p>FTTx 表示 Fiber To The…（光纤到…），例如：</p>
-<ul>
-<li>光纤到户 FTTH (Fiber To The Home)：光纤一直铺设到用户家庭，可能是居民接入网最后的解决方法。</li>
-<li>光纤到大楼 FTTB (Fiber To The Building)：光纤进入大楼后就转换为电信号，然后用电缆或双绞线分配到各用户。</li>
-<li>光纤到路边 FTTC (Fiber To The Curb)：光纤铺到路边，从路边到各用户可使用星形结构双绞线作为传输媒体。</li>
-</ul>
-
-        </div>
-        
-        <div class="level is-size-7 is-uppercase">
-            <div class="level-start">
-                <div class="level-item">
-                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a>
-                </div>
-            </div>
+            <a id="more"></a>
         </div>
         
         
@@ -290,17 +215,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/07/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">数据链路层</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%BC%80%E7%AF%87/">
-                <span class="level-item">计算机网络开篇</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/08/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3MySQL/">
+                <span class="level-item">深入理解MySQL</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -415,29 +333,6 @@
     
         
 
-    <div class="card widget" id="toc">
-        <div class="card-content">
-            <div class="menu">
-                <h3 class="menu-label">
-                    目录
-                </h3>
-                <ul class="menu-list"><li>
-        <a class="is-flex" href="#物理层任务">
-        <span class="has-mr-6">1</span>
-        <span>物理层任务</span>
-        </a></li><li>
-        <a class="is-flex" href="#信道复用技术">
-        <span class="has-mr-6">2</span>
-        <span>信道复用技术</span>
-        </a></li><li>
-        <a class="is-flex" href="#宽带接入技术">
-        <span class="has-mr-6">3</span>
-        <span>宽带接入技术</span>
-        </a></li></ul>
-            </div>
-        </div>
-    </div>
-
     
     
         <div class="column-right-shadow is-hidden-widescreen is-sticky">
@@ -456,7 +351,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="物理层" height="28">
+                    <img src="/images/logo.png" alt="索引与查询性能优化" height="28">
                 
                 </a>
                 <p class="is-size-7">
