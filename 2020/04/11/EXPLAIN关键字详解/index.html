@@ -7,19 +7,19 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>深入理解MySQL - chen33的个人博客</title>
+<title>EXPLAIN关键字详解 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容  MySQL系统架构图 MyISAM引擎和InnoDB引擎">
+    <meta name="description" content="EXPLAIN作用：  表的读取顺序 数据读取操作的类型 哪些索引可以使用 哪些索引被实际使用 表之间的引用 每张表有多少行被优化器查询  EXPLAIN的用法非常简单 EXPLAIN+SELECT语句 即可。 123456mysql&gt; explain select * from film where id &#x3D; 1;+----+-------------+-------+--------">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解MySQL">
-<meta property="og:url" content="http://coderchen33.life/2020/04/08/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3MySQL/index.html">
+<meta property="og:title" content="EXPLAIN关键字详解">
+<meta property="og:url" content="http://coderchen33.life/2020/04/11/EXPLAIN%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容  MySQL系统架构图 MyISAM引擎和InnoDB引擎">
+<meta property="og:description" content="EXPLAIN作用：  表的读取顺序 数据读取操作的类型 哪些索引可以使用 哪些索引被实际使用 表之间的引用 每张表有多少行被优化器查询  EXPLAIN的用法非常简单 EXPLAIN+SELECT语句 即可。 123456mysql&gt; explain select * from film where id &#x3D; 1;+----+-------------+-------+--------">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
-<meta property="article:published_time" content="2020-04-08T13:13:17.000Z">
-<meta property="article:modified_time" content="2020-04-09T12:14:17.694Z">
+<meta property="article:published_time" content="2020-04-11T13:44:00.000Z">
+<meta property="article:modified_time" content="2020-04-11T23:00:28.093Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
@@ -82,7 +82,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="深入理解MySQL" height="28">
+                <img src="/images/logo.png" alt="EXPLAIN关键字详解" height="28">
             
             </a>
         </div>
@@ -145,7 +145,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-04-08T13:13:17.000Z">2020-04-08</time>
+                <time class="level-item has-text-grey" datetime="2020-04-11T13:44:00.000Z">2020-04-11</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1221 个字)
+                    4 分钟 读完 (大约 597 个字)
                 </span>
                 
                 
@@ -169,58 +169,46 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                深入理解MySQL
+                EXPLAIN关键字详解
             
         </h1>
         <div class="content">
-            <p><strong>主要内容</strong></p>
+            <a id="more"></a>
+
+<h2 id="EXPLAIN"><a href="#EXPLAIN" class="headerlink" title="EXPLAIN"></a>EXPLAIN</h2><p>作用：</p>
 <ol>
-<li>MySQL系统架构图</li>
-<li>MyISAM引擎和InnoDB引擎<a id="more"></a>
-
-</li>
+<li>表的读取顺序</li>
+<li>数据读取操作的类型</li>
+<li>哪些索引可以使用</li>
+<li>哪些索引被实际使用</li>
+<li>表之间的引用</li>
+<li>每张表有多少行被优化器查询</li>
 </ol>
-<h2 id="MySQL系统架构图"><a href="#MySQL系统架构图" class="headerlink" title="MySQL系统架构图"></a>MySQL系统架构图</h2><p>和其他数据库相比，MySQL有点与众不同，它的架构可以在多种不同的场景中应用并发挥良好作用。主要体现在存储引擎的架构上。<strong>插件式的存储引擎架构将查询处理和其它的系统任务以及数据的存储提取相分离</strong>。这种架构可以根据业务的需求和实际需要选择合适的存储引擎。</p>
-<p>下图为MySQL的逻辑架构图：</p>
-<div align="center"><img src="http://coderchen33.life/2020-04-08-深入理解MySQL-2020-4-8-21-17-17"></div><br>
+<p>EXPLAIN的用法非常简单 <strong><code>EXPLAIN+SELECT语句</code></strong> 即可。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from film where id = 1;</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br><span class="line">| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br><span class="line">|  1 | SIMPLE      | film  | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+</span></span><br></pre></td></tr></table></figure>
+
+<p>紧随其后，可以通过<code>show warnings</code>得到优化后的select语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show warnings;</span><br><span class="line">+<span class="comment">-------+------+---------------------------------------------------------------------------------------+</span></span><br><span class="line">| Level | Code | Message                                                                               |</span><br><span class="line">+<span class="comment">-------+------+---------------------------------------------------------------------------------------+</span></span><br><span class="line">| Note  | 1003 | <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">'1'</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">'film1'</span> <span class="keyword">AS</span> <span class="string">`name`</span> <span class="keyword">from</span> <span class="string">`reviewmysql`</span>.<span class="string">`film`</span> <span class="keyword">where</span> <span class="number">1</span> |</span><br><span class="line">+<span class="comment">-------+------+---------------------------------------------------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="EXPLAIN中的列"><a href="#EXPLAIN中的列" class="headerlink" title="EXPLAIN中的列"></a>EXPLAIN中的列</h2><p>我们下面一一解释下上面explain结果中各个列的含义。</p>
+<h3 id="1-id"><a href="#1-id" class="headerlink" title="1. id"></a>1. id</h3><p>SELECT的标识符，包含一组数字，表示查询中SELECT字句或操作表的顺序。</p>
+<h3 id="2-select-type"><a href="#2-select-type" class="headerlink" title="2. select_type"></a>2. select_type</h3><p>1）<strong>simple</strong>：简单查询。查询不包含子查询和union</p>
+<p>2）<strong>primary</strong>：复杂查询中最外层的 select</p>
+<p>3）<strong>subquery</strong>：包含在 select 中的子查询（不在 from 子句中）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from actor where actor.id = (select actor_id from film_actor where film_id =2);</span><br><span class="line">+<span class="comment">----+-------------+------------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------------+</span></span><br><span class="line">| id | select_type | table      | partitions | type  | possible_keys     | key               | key_len | ref   | rows | filtered | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+------------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------------+</span></span><br><span class="line">|  1 | PRIMARY     | actor      | NULL       | const | PRIMARY           | PRIMARY           | 4       | const |    1 |   100.00 | NULL        |</span><br><span class="line">|  2 | SUBQUERY    | film_actor | NULL       | ref   | idx_film_actor_id | idx_film_actor_id | 4       | const |    1 |   100.00 | Using index |</span><br><span class="line">+<span class="comment">----+-------------+------------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------------+</span></span><br></pre></td></tr></table></figure>
 
 
-<p>我们简要分析下每层的作用：<br>支持接口是第三方语言对数据库的操作接口，比如Java的JDBC等，这里不再赘述。</p>
-<p><strong>(1)连接层</strong></p>
-<p><strong>最上层的连接池是提供一些连接服务</strong>，包含本地socket通信和大多数基于C/S工具实现的类似于TCP/IP的通信。我们常用的c3p0和druid连接池就是这一层的。连接池主要完成一些类似于连接处理、授权认证及相关的安全方案。在该层上引入了线程池的概念，为通过认证安全接入的客户端提供线程。同样在该层上可以实现基于SSL的安全连接。服务器也会为安全接入的每个客户端验证它所具有的操作权限。</p>
-<p><strong>(2)服务层</strong></p>
-<p><strong>第二层架构主要完成大多数的核心服务功能</strong>，如SQL接口、缓存的查询、SQL的分析和优化、内置函数等。<strong>所有跨存储引擎的功能也在这一层实现</strong>，如存储过程、触发器、视图等。在该层，服务器会解析查询并创建相应的内部解析树，并对其完成相应的优化如确定查询表的顺序，是否利用索引等，最后生成相应的执行操作。如果是select语句，服务器还会查询内部的缓存，如果缓存空间足够大，这样在频繁读操作的环境中能够很好的提升系统的性能。</p>
-<p><strong>(3)引擎层</strong></p>
-<p><strong>存储引擎真正的负责MySQL中数据的存储和提取</strong>，服务器通过API与存储引擎进行通信，不同的存储引擎具有的特性不同，我们可以根据实际需进行选取。MySQL中支持10多种的存储引擎，比较常用的就是MyISAM和InnoDB。下文会做具体介绍。</p>
-<p><strong>(4)存储层</strong><br>数据存储层，主要是将数据存储在物理机的文件系统，并完成与存储引擎的交互。</p>
-<h2 id="MySQL存储引擎"><a href="#MySQL存储引擎" class="headerlink" title="MySQL存储引擎"></a>MySQL存储引擎</h2><p>MySQL中支持10多种的存储引擎，比较常用的就是MyISAM和InnoDB。MySQL在5.1版本之前默认存储引擎为MyISAM，在此版本之后默认为InnoDB。</p>
-<p>可以使用如下命令查看MySQL中默认安装的存储引擎</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">ENGINES</span>;</span><br></pre></td></tr></table></figure>
-<div align="center"><img src="http://coderchen33.life/2020-04-08-深入理解MySQL-2020-4-9-17-37-18"></div><br>
+<p>4）<strong>derived</strong>：包含在 from 子句中的子查询。MySQL会将结果存放在一个临时表中，也称为派生表（derived的英文含义）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from actor union select * from film_actor;</span><br><span class="line">+<span class="comment">----+--------------+------------+------------+-------+---------------+-------------------+---------+------+------+----------+-----------------+</span></span><br><span class="line">| id | select_type  | table      | partitions | type  | possible_keys | key               | key_len | ref  | rows | filtered | Extra           |</span><br><span class="line">+<span class="comment">----+--------------+------------+------------+-------+---------------+-------------------+---------+------+------+----------+-----------------+</span></span><br><span class="line">|  1 | PRIMARY      | actor      | NULL       | ALL   | NULL          | NULL              | NULL    | NULL |    3 |   100.00 | NULL            |</span><br><span class="line">|  2 | UNION        | film_actor | NULL       | index | NULL          | idx_film_actor_id | 8       | NULL |    3 |   100.00 | Using index     |</span><br><span class="line">| NULL | UNION RESULT | &lt;union1,2&gt; | NULL       | ALL   | NULL          | NULL              | NULL    | NULL | NULL |     NULL | Using temporary |</span><br><span class="line">+<span class="comment">----+--------------+------------+------------+-------+---------------+-------------------+---------+------+------+----------+-----------------+</span></span><br></pre></td></tr></table></figure>
 
-<p>使用如下命令查看正在使用的存储引擎</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'%storage_engine%'</span>;</span><br></pre></td></tr></table></figure>
-<p>可以看到，我们正在使用的是InnoDB引擎</p>
-<div align="center"><img src="http://coderchen33.life/2020-04-08-深入理解MySQL-2020-4-9-17-42-46"></div><br>
-
-<p>接下来我们就对比下我们常用的两个存储引擎InnoDB引擎和MyISAM引擎。</p>
-<h3 id="InnoDB引擎和MyISAM引擎对比"><a href="#InnoDB引擎和MyISAM引擎对比" class="headerlink" title="InnoDB引擎和MyISAM引擎对比"></a>InnoDB引擎和MyISAM引擎对比</h3><p>这里把两种最常用的存储引擎基本的提点通过表格的形式对比如下:</p>
-<div align="center"><img src="http://coderchen33.life/2020-04-08-深入理解MySQL-2020-4-9-20-0-46"></div><br>
-
-<p>除了上面常用的两种存储引擎外，MySQL中还有一些特殊用途的存储引擎，比如只支持INSERT和SELECT的Archive引擎等，这里就不再赘述，有需要可以去官网查看文档。</p>
-<p>另外MySQL从2007年开始提供了插件式的存储引擎API，所以出现了很多第三方存储引擎，如InnoDB的改进版Percona等。</p>
-<h3 id="如何选择存储引擎"><a href="#如何选择存储引擎" class="headerlink" title="如何选择存储引擎"></a>如何选择存储引擎</h3><p>从上面我们知道，MySQL中的存储引擎有非常多，那么如何选择适合业务需求的存储引擎呢?</p>
-<p>主要从以下几方面考虑:</p>
-<ol>
-<li>使用场景是否需要事务支持；</li>
-<li>是否需要支持高并发，InnoDB的并发度远高于MyISAM；</li>
-<li>是否需要支持外键；</li>
-<li>是否需要支持在线热备；</li>
-<li>高效缓冲数据，InnoDB对数据和索引都做了缓冲，而MyISAM只缓冲了索引；</li>
-<li>索引，不同存储引擎的索引并不太一样；</li>
-</ol>
-<p>总之可以简单的归纳为一句话:<strong>除非需要用到某些InnoDB不具备的特性，并且没有其他办法可以替代，否则都应该优先选择InnoDB引擎。</strong></p>
-
+<h3 id="3-table"><a href="#3-table" class="headerlink" title="3. table"></a>3. table</h3><ul>
+<li>这一列表示 explain 的一行正在访问哪个表。</li>
+<li>当 from 子句中有子查询时，table列是 <code>&lt;derivenN&gt;</code> 格式，表示当前查询依赖 id=N 的查询，于是先执行 id=N 的查询。</li>
+<li>当有 union 时，UNION RESULT 的 table 列的值为 <code>&lt;union1,2&gt;</code>，1和2表示参与 union 的 select 行id。<h3 id="4-partitions"><a href="#4-partitions" class="headerlink" title="4. partitions"></a>4. partitions</h3></li>
+</ul>
+<h3 id="5-type"><a href="#5-type" class="headerlink" title="5. type"></a>5. type</h3><h3 id="6-possible-keys"><a href="#6-possible-keys" class="headerlink" title="6. possible_keys"></a>6. possible_keys</h3><h3 id="7-key"><a href="#7-key" class="headerlink" title="7. key"></a>7. key</h3><h3 id="8-key-len列"><a href="#8-key-len列" class="headerlink" title="8. key_len列"></a>8. key_len列</h3><h3 id="9-ref列"><a href="#9-ref列" class="headerlink" title="9. ref列"></a>9. ref列</h3><p>这一列显示了在key列记录的索引中，表查找值所用到的列或常量，常见的有：const（常量），func，NULL，字段名（例：film.id）</p>
+<h3 id="10-rows列"><a href="#10-rows列" class="headerlink" title="10. rows列"></a>10. rows列</h3><p>这一列是mysql估计要读取并检测的行数，注意这个不是结果集里的行数。</p>
+<h3 id="11-filtered列"><a href="#11-filtered列" class="headerlink" title="11. filtered列"></a>11. filtered列</h3><h3 id="12-Extra列"><a href="#12-Extra列" class="headerlink" title="12. Extra列"></a>12. Extra列</h3>
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -277,17 +265,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/04/10/%E7%B4%A2%E5%BC%95%E4%B8%8E%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">索引与查询性能优化</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/08/leetcode-database%E9%A2%98%E8%A7%A3/">
-                <span class="level-item">leetcode-database题解</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/10/%E7%B4%A2%E5%BC%95%E5%92%8C%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AE%80%E4%BB%8B/">
+                <span class="level-item">索引和查询性能优化简介</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -341,7 +322,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            31
+                            32
                         </p>
                     </a>
                 </div>
@@ -409,21 +390,61 @@
                     目录
                 </h3>
                 <ul class="menu-list"><li>
-        <a class="is-flex" href="#MySQL系统架构图">
+        <a class="is-flex" href="#EXPLAIN">
         <span class="has-mr-6">1</span>
-        <span>MySQL系统架构图</span>
+        <span>EXPLAIN</span>
         </a></li><li>
-        <a class="is-flex" href="#MySQL存储引擎">
+        <a class="is-flex" href="#EXPLAIN中的列">
         <span class="has-mr-6">2</span>
-        <span>MySQL存储引擎</span>
+        <span>EXPLAIN中的列</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#InnoDB引擎和MyISAM引擎对比">
+        <a class="is-flex" href="#1-id">
         <span class="has-mr-6">2.1</span>
-        <span>InnoDB引擎和MyISAM引擎对比</span>
+        <span>1. id</span>
         </a></li><li>
-        <a class="is-flex" href="#如何选择存储引擎">
+        <a class="is-flex" href="#2-select-type">
         <span class="has-mr-6">2.2</span>
-        <span>如何选择存储引擎</span>
+        <span>2. select_type</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-table">
+        <span class="has-mr-6">2.3</span>
+        <span>3. table</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-partitions">
+        <span class="has-mr-6">2.4</span>
+        <span>4. partitions</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-type">
+        <span class="has-mr-6">2.5</span>
+        <span>5. type</span>
+        </a></li><li>
+        <a class="is-flex" href="#6-possible-keys">
+        <span class="has-mr-6">2.6</span>
+        <span>6. possible_keys</span>
+        </a></li><li>
+        <a class="is-flex" href="#7-key">
+        <span class="has-mr-6">2.7</span>
+        <span>7. key</span>
+        </a></li><li>
+        <a class="is-flex" href="#8-key-len列">
+        <span class="has-mr-6">2.8</span>
+        <span>8. key_len列</span>
+        </a></li><li>
+        <a class="is-flex" href="#9-ref列">
+        <span class="has-mr-6">2.9</span>
+        <span>9. ref列</span>
+        </a></li><li>
+        <a class="is-flex" href="#10-rows列">
+        <span class="has-mr-6">2.10</span>
+        <span>10. rows列</span>
+        </a></li><li>
+        <a class="is-flex" href="#11-filtered列">
+        <span class="has-mr-6">2.11</span>
+        <span>11. filtered列</span>
+        </a></li><li>
+        <a class="is-flex" href="#12-Extra列">
+        <span class="has-mr-6">2.12</span>
+        <span>12. Extra列</span>
         </a></li></ul></li></ul>
             </div>
         </div>
@@ -447,7 +468,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="深入理解MySQL" height="28">
+                    <img src="/images/logo.png" alt="EXPLAIN关键字详解" height="28">
                 
                 </a>
                 <p class="is-size-7">
