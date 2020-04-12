@@ -10,16 +10,16 @@
 <title>leetcode-database题解 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容">
+    <meta name="description" content="主要内容leetcode中关于sql的语法练习题。leetcode SQL练习地址">
 <meta property="og:type" content="article">
 <meta property="og:title" content="leetcode-database题解">
 <meta property="og:url" content="http://coderchen33.life/2020/04/08/leetcode-database%E9%A2%98%E8%A7%A3/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容">
+<meta property="og:description" content="主要内容leetcode中关于sql的语法练习题。leetcode SQL练习地址">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-04-08T13:12:57.000Z">
-<meta property="article:modified_time" content="2020-04-10T01:01:34.952Z">
+<meta property="article:modified_time" content="2020-04-12T11:23:45.491Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="技术博客">
 <meta name="twitter:card" content="summary">
@@ -151,7 +151,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 5 个字)
+                    5 分钟 读完 (大约 687 个字)
                 </span>
                 
                 
@@ -169,8 +169,33 @@
             
         </h1>
         <div class="content">
-            <p><strong>主要内容</strong></p>
+            <p><strong>主要内容</strong><br>leetcode中关于sql的语法练习题。<br><a href="https://leetcode.com/problemset/database/">leetcode SQL练习地址</a></p>
 <a id="more"></a>
+
+<h2 id="175-Combine-Two-Tables"><a href="#175-Combine-Two-Tables" class="headerlink" title="175.Combine Two Tables"></a>175.Combine Two Tables</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意下面要求没有地址的个人信息也要显示所以要使用左外联结</span></span><br><span class="line"><span class="keyword">SELECT</span> p.FirstName,p.LastName,a.City,a.State</span><br><span class="line"><span class="keyword">FROM</span> Person <span class="keyword">AS</span> p</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> Address <span class="keyword">AS</span> a</span><br><span class="line"><span class="keyword">ON</span> p.PersonId = a.PersonId;</span><br></pre></td></tr></table></figure>
+
+<h2 id="176-Second-Highest-Salary"><a href="#176-Second-Highest-Salary" class="headerlink" title="176. Second Highest Salary"></a>176. Second Highest Salary</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 为了没有数据时返回null，则多加一层SELECT子查询</span></span><br><span class="line"><span class="keyword">SELECT</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> Salary</span><br><span class="line">    <span class="keyword">FROM</span> Employee</span><br><span class="line">    <span class="keyword">Order</span> <span class="keyword">BY</span> Salary <span class="keyword">DESC</span></span><br><span class="line">    <span class="keyword">LIMIT</span> <span class="number">1</span>,<span class="number">1</span>) </span><br><span class="line"><span class="keyword">AS</span> SecondHighestSalary;</span><br></pre></td></tr></table></figure>
+
+<h2 id="177-Nth-Highest-Salary"><a href="#177-Nth-Highest-Salary" class="headerlink" title="177. Nth Highest Salary"></a>177. Nth Highest Salary</h2><p>上面176题的扩展</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> getNthHighestSalary(N <span class="built_in">INT</span>) <span class="keyword">RETURNS</span> <span class="built_in">INT</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">SET</span> N = N<span class="number">-1</span>;  <span class="comment">-- 使用SET设置参数值</span></span><br><span class="line">  RETURN (</span><br><span class="line">      <span class="keyword">SELECT</span> (<span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> Salary <span class="keyword">FROM</span> Employee <span class="keyword">ORDER</span> <span class="keyword">BY</span> Salary <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> N,<span class="number">1</span>)</span><br><span class="line">  );</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<h2 id="178-Rank-Scores"><a href="#178-Rank-Scores" class="headerlink" title="178. Rank Scores"></a>178. Rank Scores</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> s1.Score, <span class="keyword">COUNT</span>(<span class="keyword">DISTINCT</span> s2.Score) <span class="keyword">Rank</span></span><br><span class="line"><span class="keyword">FROM</span> Scores s1</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> Scores s2</span><br><span class="line"><span class="keyword">ON</span> s1.Score &lt;= s2.Score</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> s1.Id</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> s1.Score <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<h2 id="180-Consecutive-Numbers"><a href="#180-Consecutive-Numbers" class="headerlink" title="180. Consecutive Numbers"></a>180. Consecutive Numbers</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> l1.Num ConsecutiveNums</span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">Logs</span> l1</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> <span class="keyword">Logs</span> l2</span><br><span class="line"><span class="keyword">ON</span> l1.Id+<span class="number">1</span> = l2.Id</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> <span class="keyword">Logs</span> l3</span><br><span class="line"><span class="keyword">ON</span> l2.Id +<span class="number">1</span> = l3.Id</span><br><span class="line"><span class="keyword">WHERE</span> l1.Num = l2.Num <span class="keyword">AND</span> l2.Num = l3.Num;</span><br></pre></td></tr></table></figure>
+<h2 id="181-Employees-Earning-More-Than-Their-Managers"><a href="#181-Employees-Earning-More-Than-Their-Managers" class="headerlink" title="181. Employees Earning More Than Their Managers"></a>181. Employees Earning More Than Their Managers</h2><p>对于筛选条件是放在on后面还是使用where子句：<br><strong>先执行 ON，后执行 WHERE；ON 是建立关联关系，WHERE 是对关联关系的筛选</strong>。<br>参考链接 <a href="https://www.jianshu.com/p/d923cf8ae25f">https://www.jianshu.com/p/d923cf8ae25f</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> e1.Name <span class="keyword">AS</span> Employee</span><br><span class="line"><span class="keyword">FROM</span> Employee e1</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> Employee e2</span><br><span class="line"><span class="keyword">ON</span> e1.ManagerId = e2.id</span><br><span class="line"><span class="keyword">WHERE</span> e1.Salary &gt; e2.Salary;</span><br></pre></td></tr></table></figure>
+<h2 id="182-Duplicate-Emails"><a href="#182-Duplicate-Emails" class="headerlink" title="182. Duplicate Emails"></a>182. Duplicate Emails</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- GROUP BY之后使用HAVING</span></span><br><span class="line"><span class="keyword">SELECT</span> Email</span><br><span class="line"><span class="keyword">FROM</span> Person</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> Email</span><br><span class="line"><span class="keyword">HAVING</span> <span class="keyword">COUNT</span>(Email) &gt; <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="183-Customers-Who-Never-Order"><a href="#183-Customers-Who-Never-Order" class="headerlink" title="183. Customers Who Never Order"></a>183. Customers Who Never Order</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> c.Name <span class="keyword">AS</span> Customers</span><br><span class="line"><span class="keyword">FROM</span> Customers <span class="keyword">AS</span> c</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> Orders <span class="keyword">AS</span> o</span><br><span class="line"><span class="keyword">ON</span> c.Id = o.CustomerId</span><br><span class="line"><span class="keyword">WHERE</span> o.CustomerId <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="184-Department-Highest-Salary"><a href="#184-Department-Highest-Salary" class="headerlink" title="184. Department Highest Salary"></a>184. Department Highest Salary</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开始是这样写的，问题在于最大值有两个或两个以上时，只会显示一个，因为使用了聚合函数。</span></span><br><span class="line"><span class="comment">-- SELECT d.Name AS Department,e.Name AS Employee,MAX(e.Salary)</span></span><br><span class="line"><span class="comment">-- FROM Employee AS e</span></span><br><span class="line"><span class="comment">-- INNER JOIN Department AS d</span></span><br><span class="line"><span class="comment">-- ON e.DepartmentId = d.Id</span></span><br><span class="line"><span class="comment">-- GROUP BY e.DepartmentId;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 正确做法</span></span><br><span class="line"><span class="keyword">SELECT</span> d.Name <span class="keyword">AS</span> Department,e.Name <span class="keyword">AS</span> Employee,e.Salary</span><br><span class="line"><span class="keyword">FROM</span> Department <span class="keyword">AS</span> d</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> Employee <span class="keyword">AS</span> e</span><br><span class="line"><span class="keyword">ON</span> d.Id = e.DepartmentId</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> DepartmentId,<span class="keyword">MAX</span>(Salary) <span class="keyword">AS</span> Salary</span><br><span class="line">    <span class="keyword">FROM</span> Employee</span><br><span class="line">    <span class="keyword">GROUP</span> <span class="keyword">BY</span> DepartmentId) <span class="keyword">AS</span> m </span><br><span class="line"><span class="keyword">ON</span> e.Salary = m.Salary</span><br><span class="line"><span class="keyword">WHERE</span> e.DepartmentId = m.DepartmentId;</span><br></pre></td></tr></table></figure>
+
+<h2 id="196-Delete-Duplicate-Emails"><a href="#196-Delete-Duplicate-Emails" class="headerlink" title="196. Delete Duplicate Emails"></a>196. Delete Duplicate Emails</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- delete也可以使用联结</span></span><br><span class="line"><span class="keyword">DELETE</span> p1 <span class="keyword">FROM</span> Person p1 </span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> Person p2</span><br><span class="line"><span class="keyword">ON</span> p1.Email = p2.Email </span><br><span class="line"><span class="keyword">WHERE</span> p1.Id &gt; p2.Id;</span><br></pre></td></tr></table></figure>
+<h2 id="197-Rising-Temperature"><a href="#197-Rising-Temperature" class="headerlink" title="197. Rising Temperature"></a>197. Rising Temperature</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- TO_DAYS()函数返回一个从年份0开始的天数</span></span><br><span class="line"><span class="keyword">SELECT</span> w2.Id</span><br><span class="line"><span class="keyword">FROM</span> Weather w2</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> Weather w1</span><br><span class="line"><span class="keyword">ON</span> <span class="keyword">TO_DAYS</span>(w2.RecordDate) - <span class="keyword">TO_DAYS</span>(w1.RecordDate) = <span class="number">1</span></span><br><span class="line"><span class="keyword">WHERE</span> w2.Temperature &gt; w1.Temperature;</span><br></pre></td></tr></table></figure>
+
+<h2 id="595-Big-Countries"><a href="#595-Big-Countries" class="headerlink" title="595. Big Countries"></a>595. Big Countries</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">name</span>,population,area</span><br><span class="line"><span class="keyword">FROM</span> World</span><br><span class="line"><span class="keyword">WHERE</span> area &gt; <span class="number">3000000</span> <span class="keyword">OR</span> population &gt; <span class="number">25000000</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="596-Classes-More-Than-5-Students"><a href="#596-Classes-More-Than-5-Students" class="headerlink" title="596. Classes More Than 5 Students"></a>596. Classes More Than 5 Students</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- DISTINCT去重</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> <span class="keyword">class</span></span><br><span class="line"><span class="keyword">FROM</span> courses</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="keyword">class</span></span><br><span class="line"><span class="keyword">HAVING</span> <span class="keyword">count</span>(<span class="keyword">DISTINCT</span> student)&gt;=<span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="620-Not-Boring-Movies"><a href="#620-Not-Boring-Movies" class="headerlink" title="620. Not Boring Movies"></a>620. Not Boring Movies</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> cinema</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">id</span>%<span class="number">2</span> != <span class="number">0</span> <span class="keyword">AND</span> description != <span class="string">'boring'</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> rating <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="626-Exchange-Seats"><a href="#626-Exchange-Seats" class="headerlink" title="626. Exchange Seats"></a>626. Exchange Seats</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 完整case函数</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line"><span class="keyword">CASE</span></span><br><span class="line"><span class="keyword">WHEN</span> <span class="keyword">id</span> = (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(<span class="keyword">id</span>) <span class="keyword">FROM</span> seat) <span class="keyword">AND</span> <span class="keyword">id</span> %<span class="number">2</span>=<span class="number">1</span> <span class="keyword">THEN</span> <span class="keyword">id</span></span><br><span class="line"><span class="keyword">WHEN</span> <span class="keyword">id</span>%<span class="number">2</span>=<span class="number">0</span> <span class="keyword">THEN</span> <span class="keyword">id</span> <span class="number">-1</span></span><br><span class="line"><span class="keyword">WHEN</span> <span class="keyword">id</span>%<span class="number">2</span> = <span class="number">1</span> <span class="keyword">THEN</span> <span class="keyword">id</span> +<span class="number">1</span></span><br><span class="line"><span class="keyword">END</span> <span class="keyword">AS</span> <span class="keyword">id</span>, student</span><br><span class="line"><span class="keyword">FROM</span> seat</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="627-Swap-Salary"><a href="#627-Swap-Salary" class="headerlink" title="627. Swap Salary"></a>627. Swap Salary</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 简单case函数</span></span><br><span class="line"><span class="keyword">UPDATE</span> salary</span><br><span class="line"><span class="keyword">SET</span> sex = </span><br><span class="line"><span class="keyword">CASE</span></span><br><span class="line"><span class="keyword">WHEN</span> sex = <span class="string">'m'</span> <span class="keyword">THEN</span> <span class="string">'f'</span>  </span><br><span class="line"><span class="keyword">ELSE</span> <span class="string">'m'</span></span><br><span class="line"><span class="keyword">END</span>;</span><br></pre></td></tr></table></figure>
         </div>
         
         
@@ -342,6 +367,81 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#175-Combine-Two-Tables">
+        <span class="has-mr-6">1</span>
+        <span>175.Combine Two Tables</span>
+        </a></li><li>
+        <a class="is-flex" href="#176-Second-Highest-Salary">
+        <span class="has-mr-6">2</span>
+        <span>176. Second Highest Salary</span>
+        </a></li><li>
+        <a class="is-flex" href="#177-Nth-Highest-Salary">
+        <span class="has-mr-6">3</span>
+        <span>177. Nth Highest Salary</span>
+        </a></li><li>
+        <a class="is-flex" href="#178-Rank-Scores">
+        <span class="has-mr-6">4</span>
+        <span>178. Rank Scores</span>
+        </a></li><li>
+        <a class="is-flex" href="#180-Consecutive-Numbers">
+        <span class="has-mr-6">5</span>
+        <span>180. Consecutive Numbers</span>
+        </a></li><li>
+        <a class="is-flex" href="#181-Employees-Earning-More-Than-Their-Managers">
+        <span class="has-mr-6">6</span>
+        <span>181. Employees Earning More Than Their Managers</span>
+        </a></li><li>
+        <a class="is-flex" href="#182-Duplicate-Emails">
+        <span class="has-mr-6">7</span>
+        <span>182. Duplicate Emails</span>
+        </a></li><li>
+        <a class="is-flex" href="#183-Customers-Who-Never-Order">
+        <span class="has-mr-6">8</span>
+        <span>183. Customers Who Never Order</span>
+        </a></li><li>
+        <a class="is-flex" href="#184-Department-Highest-Salary">
+        <span class="has-mr-6">9</span>
+        <span>184. Department Highest Salary</span>
+        </a></li><li>
+        <a class="is-flex" href="#196-Delete-Duplicate-Emails">
+        <span class="has-mr-6">10</span>
+        <span>196. Delete Duplicate Emails</span>
+        </a></li><li>
+        <a class="is-flex" href="#197-Rising-Temperature">
+        <span class="has-mr-6">11</span>
+        <span>197. Rising Temperature</span>
+        </a></li><li>
+        <a class="is-flex" href="#595-Big-Countries">
+        <span class="has-mr-6">12</span>
+        <span>595. Big Countries</span>
+        </a></li><li>
+        <a class="is-flex" href="#596-Classes-More-Than-5-Students">
+        <span class="has-mr-6">13</span>
+        <span>596. Classes More Than 5 Students</span>
+        </a></li><li>
+        <a class="is-flex" href="#620-Not-Boring-Movies">
+        <span class="has-mr-6">14</span>
+        <span>620. Not Boring Movies</span>
+        </a></li><li>
+        <a class="is-flex" href="#626-Exchange-Seats">
+        <span class="has-mr-6">15</span>
+        <span>626. Exchange Seats</span>
+        </a></li><li>
+        <a class="is-flex" href="#627-Swap-Salary">
+        <span class="has-mr-6">16</span>
+        <span>627. Swap Salary</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
 
     
     
