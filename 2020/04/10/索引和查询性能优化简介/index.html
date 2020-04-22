@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-04-10T01:00:18.000Z">
-<meta property="article:modified_time" content="2020-04-11T13:37:57.645Z">
+<meta property="article:modified_time" content="2020-04-22T13:10:38.722Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    11 分钟 读完 (大约 1591 个字)
+                    11 分钟 读完 (大约 1673 个字)
                 </span>
                 
                 
@@ -193,19 +193,36 @@
 <p>没有良好的硬件，即便我们把表结构、索引和SELECT语句都设计的十分完美都是无济于事的;同样有了良好的硬件，但是库表结构设计的不合理,就会影响我们索引和查询语句的建立和性能;硬件和库表结构设计的合理高效，但是索引建的很烂，最终效果也不会好;上面都建好了，但是我们最终写的SELECT语句很烂,比如在不必要的时候扫描全表等，也会使得查询性能下降。</p>
 <p>硬件优化不是我们需要考虑的，库表结构优化和查询优化之后会详细讲。这里我们就看看对查询性能优化最有效的索引优化。</p>
 <hr>
-<h2 id="MySQL索引结构"><a href="#MySQL索引结构" class="headerlink" title="MySQL索引结构"></a>MySQL索引结构</h2><h3 id="B-树索引"><a href="#B-树索引" class="headerlink" title="B+树索引"></a>B+树索引</h3><h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p><strong>哈希索引能以 O(1) 时间进行查找，但是失去了有序性</strong></p>
+<h2 id="MySQL索引结构"><a href="#MySQL索引结构" class="headerlink" title="MySQL索引结构"></a>MySQL索引结构</h2><p><strong>在MySQL中索引是在存储引擎层实现</strong>，而不是在服务器层。所以，不同的存储引擎的索引工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。接下来我们先看看MySQL支持的索引类型。</p>
+<h3 id="B-树索引"><a href="#B-树索引" class="headerlink" title="B+树索引"></a>B+树索引</h3><h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p>哈希索引基于哈希表实现，<strong>只有精确匹配索引所有列的查询才有效</strong>。对于每一行数据，存储引擎都会对所有的索引列计算一个哈希码，哈希索引将所有的哈希码存储在索引中，同时在哈希表中保存指向每个数据行的指针。</p>
+<p>哈希索引结构如下：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-18-20-16-48"></div><br>
+
+<p>从上面可以看到</p>
 <ul>
-<li>无法用于排序(ORDER BY)与分组(GROUP BY)；</li>
-<li>只支持精确查找，无法用于部分查找和范围查找。</li>
+<li><p><strong>哈希索引只包含哈希值和行指针，而不存储字段值</strong>，所以不能使用索引中的值来避免读取行。</p>
+</li>
+<li><p>虽然无法避免读取行，但由于使用了hash，所以在hash冲突很少的情况下，<strong>仍然可以以O(1)的时间复杂度读取数据</strong>。</p>
+</li>
+<li><p>哈希索引不是按照索引值顺序存储的，所以<strong>无法用于排序(ORDER BY)与分组(GROUP BY)</strong></p>
+</li>
+<li><p>因为哈希索引是使用索引列的全部内容来计算哈希值，<strong>索引不支持部分索引列匹配查找</strong>。例如（A,B）列建立索引，如果查询只用数据列A，则无法使用该索引。</p>
+</li>
+<li><p>只支持精确查找(= IN &lt;=&gt;)，无法用于部分查找和范围查找。</p>
+</li>
 </ul>
-<p>InnoDB 存储引擎有一个特殊的功能叫“自适应哈希索引”，当某个索引值被使用的非常频繁时，会在 B+Tree 索引之上再创建一个哈希索引，这样就让 B+Tree 索引具有哈希索引的一些优点，比如快速的哈希查找。</p>
+<p><strong>InnoDB 存储引擎有一个特殊的功能叫“自适应哈希索引”</strong>，当某个索引值被使用的非常频繁时，会在 B+Tree 索引之上再创建一个哈希索引，这样就让 B+Tree 索引具有哈希索引的一些优点，比如快速的哈希查找。这个是完全自动的、内部的行为，用户无法控制或者配置，不过如果有必要，完全可以关闭这个功能。</p>
 <h3 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h3><p>全文索引用于查找文本中的关键词，而不是直接比较是否相等，类似于搜索引擎做的事情。</p>
 <p>MyISAM引擎支持全文索引，InnoDB 引擎在5.6.4版本后也开始支持全文索引。</p>
 <p>实际上全文索引很少用，我们知道全文索引类似于搜索引擎做的事情，而目前搜索引擎的方案又十分成熟，所以大部分情况下我们使用存储引擎如elasticsearch等而不是全文索引。</p>
 <h3 id="空间数据索引-R-Tree"><a href="#空间数据索引-R-Tree" class="headerlink" title="空间数据索引(R-Tree)"></a>空间数据索引(R-Tree)</h3><p>MyISAM 存储引擎支持空间数据索引（R-Tree），可以用于地理数据存储。空间数据索引会从所有维度来索引数据，可以有效地使用任意维度来进行组合查询。</p>
 <p>必须使用 GIS 相关的函数来维护数据。</p>
 <p>这个索引也很少使用</p>
-<h3 id="MyISAM引擎和InnoDB引擎使用的索引"><a href="#MyISAM引擎和InnoDB引擎使用的索引" class="headerlink" title="MyISAM引擎和InnoDB引擎使用的索引"></a>MyISAM引擎和InnoDB引擎使用的索引</h3><h3 id="索引的优点和缺点"><a href="#索引的优点和缺点" class="headerlink" title="索引的优点和缺点"></a>索引的优点和缺点</h3><p><strong>索引的优点</strong>：</p>
+<h2 id="MyISAM引擎和InnoDB引擎使用的索引"><a href="#MyISAM引擎和InnoDB引擎使用的索引" class="headerlink" title="MyISAM引擎和InnoDB引擎使用的索引"></a>MyISAM引擎和InnoDB引擎使用的索引</h2><p>MyISAM使用前缀压缩技术使得索引更小，InnoDB则按照原数据格式进行存储。</p>
+<p>MyISAM索引通过数据的物理位置引用被索引的行，而InnoDB则根据主键引用被索引的行。</p>
+<p>聚簇索引并不是一种单独的索引类型，而是一种数据存储的方式。</p>
+<h2 id="索引的优点和缺点"><a href="#索引的优点和缺点" class="headerlink" title="索引的优点和缺点"></a>索引的优点和缺点</h2><p>上面知道了B+树的结构，也就能更好的的理解索引的优点和缺点了：</p>
+<p><strong>索引的优点</strong>：</p>
 <ol>
 <li><strong>索引大大减小了服务器需要扫描的数据行数</strong> (索引中存储了实际的数据)</li>
 <li><strong>索引可以帮助服务器避免排序和分组，以及创建临时表</strong>(B+树索引是有序的，所以可以使用ORDER BY和GROUP BY进行排序和分组操作。临时表主要是在排序和分组过程中创建，不需要排序和分组，也就不需要创建临时表)</li>
@@ -220,35 +237,7 @@
 <li><p>如果MySQL中有大数据量的表，<strong>需要花费一定的时间建立优秀的索引</strong>。</p>
 </li>
 </ol>
-<h3 id="什么情况需要建索引"><a href="#什么情况需要建索引" class="headerlink" title="什么情况需要建索引"></a>什么情况需要建索引</h3><ol>
-<li><strong>主键自动建立唯一索引</strong></li>
-<li>查询中与其他表的关联字段，即<strong>外键建立索引</strong></li>
-<li><strong>频繁作为查询条件的字段</strong>(WHERE字段)应该建立索引</li>
-<li><strong>查询中排序的字段，排序字段</strong>(ORDER BY字段)通过索引访问将大大提高排序速度</li>
-<li><strong>查询中统计或者分组字段</strong>(GROUP BY字段)</li>
-</ol>
-<h3 id="什么情况不需要建索引"><a href="#什么情况不需要建索引" class="headerlink" title="什么情况不需要建索引"></a>什么情况不需要建索引</h3><ol>
-<li><strong>表记录太少不需要建索引</strong>(MySQL官方支持500-800w条记录,但实际300w条记录MySQL性能会明显下降)</li>
-<li><strong>频繁增删改的表不需要建索引</strong>(每次更新不仅仅是更新记录，也会更新索引)</li>
-<li><strong>数据重复且分布平均的列不需要建索引</strong>(比如性别列只有男女,且男女比例分布为50%,那么建立索引一般不会提高数据库的查询速度。  这里涉及到一个<strong>索引的选择性问题</strong>。<strong>索引选择性是指索引列中不同值的数目与表中记录数的比。这个值越接近于1，索引的效率就越高</strong>。)</li>
-</ol>
-<hr>
-<h2 id="EXPLAIN"><a href="#EXPLAIN" class="headerlink" title="EXPLAIN"></a>EXPLAIN</h2><p>作用：</p>
-<ol>
-<li>表的读取顺序</li>
-<li>数据读取操作的类型</li>
-<li>哪些索引可以使用</li>
-<li>哪些索引被实际使用</li>
-<li>表之间的引用</li>
-<li>每张表有多少行被优化器查询</li>
-</ol>
-<p>EXPLAIN的用法非常简单 <strong><code>EXPLAIN+SELECT语句</code></strong> 即可。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> actor;</span><br></pre></td></tr></table></figure>
-<div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-4-11-21-35-13"></div><br>
 
-<p>可以看到结果中有非常多的列,接下来我们就一一解释下这些列的作用。</p>
-<h3 id="EXPLAIN中的列"><a href="#EXPLAIN中的列" class="headerlink" title="EXPLAIN中的列"></a>EXPLAIN中的列</h3><h4 id="1-id"><a href="#1-id" class="headerlink" title="1. id"></a>1. id</h4><p>SELECT的标识符，包含一组数字，表示查询中SELECT字句或操作表的顺序。</p>
-<h4 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h4><h2 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h2>
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -369,7 +358,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            32
+                            37
                         </p>
                     </a>
                 </div>
@@ -460,42 +449,14 @@
         <a class="is-flex" href="#空间数据索引-R-Tree">
         <span class="has-mr-6">2.4</span>
         <span>空间数据索引(R-Tree)</span>
-        </a></li><li>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#MyISAM引擎和InnoDB引擎使用的索引">
-        <span class="has-mr-6">2.5</span>
+        <span class="has-mr-6">3</span>
         <span>MyISAM引擎和InnoDB引擎使用的索引</span>
         </a></li><li>
         <a class="is-flex" href="#索引的优点和缺点">
-        <span class="has-mr-6">2.6</span>
-        <span>索引的优点和缺点</span>
-        </a></li><li>
-        <a class="is-flex" href="#什么情况需要建索引">
-        <span class="has-mr-6">2.7</span>
-        <span>什么情况需要建索引</span>
-        </a></li><li>
-        <a class="is-flex" href="#什么情况不需要建索引">
-        <span class="has-mr-6">2.8</span>
-        <span>什么情况不需要建索引</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#EXPLAIN">
-        <span class="has-mr-6">3</span>
-        <span>EXPLAIN</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#EXPLAIN中的列">
-        <span class="has-mr-6">3.1</span>
-        <span>EXPLAIN中的列</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#1-id">
-        <span class="has-mr-6">3.1.1</span>
-        <span>1. id</span>
-        </a></li><li>
-        <a class="is-flex" href="#2">
-        <span class="has-mr-6">3.1.2</span>
-        <span>2.</span>
-        </a></li></ul></li></ul></li><li>
-        <a class="is-flex" href="#索引优化">
         <span class="has-mr-6">4</span>
-        <span>索引优化</span>
+        <span>索引的优点和缺点</span>
         </a></li></ul>
             </div>
         </div>

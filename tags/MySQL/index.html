@@ -148,6 +148,115 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-22T13:14:48.000Z">2020-04-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    几秒 读完 (大约 17 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">查询性能优化</a>
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>MySQL的查询过程</li>
+<li>常见优化策略
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-22T13:14:25.000Z">2020-04-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    20 分钟 读完 (大约 3026 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%88%AA%E5%8F%96%E5%88%86%E6%9E%90/">查询截取分析</a>
+            
+        </h1>
+        <div class="content">
+            <p><strong>查询截取分析流程</strong><br><strong>1. 慢查询的开启并捕获<br>2. explain+慢SQL分析<br>3. show profile查询SQL在MySQL服务器里面的执行细节和生命周期情况<br>4. SQL数据库服务器的参数调优</strong></p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%88%AA%E5%8F%96%E5%88%86%E6%9E%90/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2020-04-11T13:44:00.000Z">2020-04-11</time>
                 
                 <div class="level-item">
@@ -158,7 +267,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分钟 读完 (大约 1313 个字)
+                    16 分钟 读完 (大约 2331 个字)
                 </span>
                 
                 
@@ -171,98 +280,22 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
-
-<h2 id="EXPLAIN"><a href="#EXPLAIN" class="headerlink" title="EXPLAIN"></a>EXPLAIN</h2><p>作用：</p>
+            <p><strong>主要内容</strong></p>
 <ol>
-<li>表的读取顺序</li>
-<li>数据读取操作的类型</li>
-<li>哪些索引可以使用</li>
-<li>哪些索引被实际使用</li>
-<li>表之间的引用</li>
-<li>每张表有多少行被优化器查询</li>
-</ol>
-<p>EXPLAIN的用法非常简单 <strong><code>EXPLAIN+SELECT语句</code></strong> 即可。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> film <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-<p>结果如下：</p>
-<div align="center"><img src="http://coderchen33.life/2020-04-11-EXPLAIN关键字详解-2020-4-12-8-15-46"></div><br>
-
-
-<p>紧随其后，可以通过<code>show warnings</code>得到优化后的select语句(Navicat中不显示，这里直接使用命令行)</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show warnings;</span><br><span class="line">+<span class="comment">-------+------+---------------------------------------------------------------------------------------+</span></span><br><span class="line">| Level | Code | Message                                                                               |</span><br><span class="line">+<span class="comment">-------+------+---------------------------------------------------------------------------------------+</span></span><br><span class="line">| Note  | 1003 | <span class="comment">/* select#1 */</span> <span class="keyword">select</span> <span class="string">'1'</span> <span class="keyword">AS</span> <span class="string">`id`</span>,<span class="string">'film1'</span> <span class="keyword">AS</span> <span class="string">`name`</span> <span class="keyword">from</span> <span class="string">`reviewmysql`</span>.<span class="string">`film`</span> <span class="keyword">where</span> <span class="number">1</span> |</span><br><span class="line">+<span class="comment">-------+------+---------------------------------------------------------------------------------------+</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="EXPLAIN中的列"><a href="#EXPLAIN中的列" class="headerlink" title="EXPLAIN中的列"></a>EXPLAIN中的列</h2><p>我们下面一一解释下上面explain结果中各个列的含义。</p>
-<h3 id="1-id"><a href="#1-id" class="headerlink" title="1. id"></a>1. id</h3><p>SELECT的标识符，包含一组数字，有几个 select 就有几个id，用来表示查询中SELECT子句或操作表的顺序。</p>
-<ul>
-<li>id相同，执行顺序从上之下</li>
-<li>id不同，执行顺序从大到小</li>
-</ul>
-<p>id相同</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-select-type"><a href="#2-select-type" class="headerlink" title="2. select_type"></a>2. select_type</h3><p>1）<strong>simple</strong>：简单查询。查询不包含子查询和union</p>
-<p>2）<strong>primary</strong>：复杂查询中最外层的 select</p>
-<p>3）<strong>subquery</strong>：包含在 select 中的子查询（不在 from 子句中）</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from actor where actor.id = (select actor_id from film_actor where film_id =2);</span><br><span class="line">+<span class="comment">----+-------------+------------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------------+</span></span><br><span class="line">| id | select_type | table      | partitions | type  | possible_keys     | key               | key_len | ref   | rows | filtered | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+------------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------------+</span></span><br><span class="line">|  1 | PRIMARY     | actor      | NULL       | const | PRIMARY           | PRIMARY           | 4       | const |    1 |   100.00 | NULL        |</span><br><span class="line">|  2 | SUBQUERY    | film_actor | NULL       | ref   | idx_film_actor_id | idx_film_actor_id | 4       | const |    1 |   100.00 | Using index |</span><br><span class="line">+<span class="comment">----+-------------+------------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------------+</span></span><br></pre></td></tr></table></figure>
-
-
-<p>4）<strong>derived</strong>：包含在 from 子句中的子查询。MySQL会将结果存放在一个临时表中，也称为派生表（derived的英文含义）</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from actor union select * from film_actor;</span><br><span class="line">+<span class="comment">----+--------------+------------+------------+-------+---------------+-------------------+---------+------+------+----------+-----------------+</span></span><br><span class="line">| id | select_type  | table      | partitions | type  | possible_keys | key               | key_len | ref  | rows | filtered | Extra           |</span><br><span class="line">+<span class="comment">----+--------------+------------+------------+-------+---------------+-------------------+---------+------+------+----------+-----------------+</span></span><br><span class="line">|  1 | PRIMARY      | actor      | NULL       | ALL   | NULL          | NULL              | NULL    | NULL |    3 |   100.00 | NULL            |</span><br><span class="line">|  2 | UNION        | film_actor | NULL       | index | NULL          | idx_film_actor_id | 8       | NULL |    3 |   100.00 | Using index     |</span><br><span class="line">| NULL | UNION RESULT | &lt;union1,2&gt; | NULL       | ALL   | NULL          | NULL              | NULL    | NULL | NULL |     NULL | Using temporary |</span><br><span class="line">+<span class="comment">----+--------------+------------+------------+-------+---------------+-------------------+---------+------+------+----------+-----------------+</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-table"><a href="#3-table" class="headerlink" title="3. table"></a>3. table</h3><ul>
-<li>这一列表示 explain 的一行正在访问哪个表。</li>
-<li>当 from 子句中有子查询时，table列是 <code>&lt;derivenN&gt;</code> 格式，表示当前查询依赖 id=N 的查询，于是先执行 id=N 的查询。</li>
-<li>当有 union 时，UNION RESULT 的 table 列的值为 <code>&lt;union1,2&gt;</code>，1和2表示参与 union 的 select 行id。<h3 id="4-partitions"><a href="#4-partitions" class="headerlink" title="4. partitions"></a>4. partitions</h3></li>
-</ul>
-<h3 id="5-type"><a href="#5-type" class="headerlink" title="5. type"></a>5. type</h3><p>这一列表示关联类型或访问类型，即MySQL决定如何查找表中的行。</p>
-<p>依次从最优到最差分别为：<code>system &gt; const &gt; eq_ref &gt; ref &gt; fulltext &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; index &gt; ALL</code></p>
-<p><strong>NULL</strong>:MySQL能在优化阶段分解查询语句，在执行阶段不用再访问表或索引。</p>
-<p>比如下面的在索引中选取最小值，可以单独查找索引来完成，不需要在执行时访问表</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> <span class="keyword">MIN</span>(<span class="keyword">id</span>) <span class="keyword">FROM</span> film;</span><br></pre></td></tr></table></figure>
-<div align="center"><img src="http://coderchen33.life/2020-04-11-EXPLAIN关键字详解-2020-4-12-8-29-48"></div><br>
-
-
-<p><strong>system和const</strong></p>
-<p>1.system：表只有一行记录，这个是const的特例，一般不会出现，可以忽略<br>2.const：表示通过索引一次就找到了，const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> film <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>eq_ref</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> film_actor <span class="keyword">AS</span> fa</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> film <span class="keyword">AS</span> f</span><br><span class="line"><span class="keyword">ON</span> fa.film_id = f.id;</span><br></pre></td></tr></table></figure>
-
-<div align="center"><img src="http://coderchen33.life/2020-04-11-EXPLAIN关键字详解-2020-4-12-8-58-20"></div><br>
-
-<p><strong>ref</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> film</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">NAME</span> = <span class="string">"film1"</span>;</span><br></pre></td></tr></table></figure>
-<div align="center"><img src="http://coderchen33.life/2020-04-11-EXPLAIN关键字详解-2020-4-12-9-11-14"></div><br>
-
-<p><strong>ref_or_null</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> film</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">NAME</span> = <span class="string">"film1"</span></span><br><span class="line"><span class="keyword">OR</span> <span class="keyword">NAME</span> <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
-<div align="center"><img src="http://coderchen33.life/2020-04-11-EXPLAIN关键字详解-2020-4-12-9-2-35"></div><br>
-
-<p>index_merge：表示使用了索引合并的优化方法。 例如下表：id是主键，tenant_id是普通索引。or 的时候没有用 primary key，而是使用了 primary key(id) 和 tenant_id 索引</p>
-<p><strong>range</strong></p>
-<p>范围扫描通常出现在 in(), between ,&gt; ,&lt;, &gt;= 等操作中。使用一个索引来检索给定范围的行。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> actor</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<div align="center"><img src="http://coderchen33.life/2020-04-11-EXPLAIN关键字详解-2020-4-12-9-17-12"></div><br>
-
-
-<p><strong>index</strong><br>遍历索引树。通常比ALL快，因为索引文件通常比数据文件小。all和index都是读全表，但index是从索引中检索的，而all是从硬盘中检索的。</p>
-<p><strong>ALL</strong><br>遍历全表以找到匹配的行。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> actor;</span><br></pre></td></tr></table></figure>
-<div align="center"><img src="http://coderchen33.life/2020-04-11-EXPLAIN关键字详解-2020-4-12-9-19-19"></div><br>
-
-<h3 id="6-possible-keys"><a href="#6-possible-keys" class="headerlink" title="6. possible_keys"></a>6. possible_keys</h3><p>这一列显示查询可能使用哪些索引来查找。 </p>
-<p>explain 时可能出现 possible_keys 有列，而 key 显示 NULL 的情况，这种情况是因为表中数据不多，mysql认为索引对此查询帮助不大，选择了全表查询。 </p>
-<p>如果该列是NULL，则没有相关的索引。在这种情况下，可以通过检查 where 子句看是否可以创造一个适当的索引来提高查询性能，然后用 explain 查看效果。</p>
-<h3 id="7-key"><a href="#7-key" class="headerlink" title="7. key"></a>7. key</h3><p>这一列显示mysql实际采用哪个索引来优化对该表的访问。</p>
-<p>如果没有使用索引，则该列是 NULL。如果想强制mysql使用或忽视possible_keys列中的索引，在查询中使用 force index、ignore index。</p>
-<h3 id="8-key-len列"><a href="#8-key-len列" class="headerlink" title="8. key_len列"></a>8. key_len列</h3><p>这一列显示了mysql在索引里使用的字节数，通过这个值可以算出具体使用了索引中的哪些列。 </p>
-<h3 id="9-ref列"><a href="#9-ref列" class="headerlink" title="9. ref列"></a>9. ref列</h3><p>这一列显示了在key列记录的索引中，表查找值所用到的列或常量，常见的有：const（常量），func，NULL，字段名（例：film.id）</p>
-<h3 id="10-rows列"><a href="#10-rows列" class="headerlink" title="10. rows列"></a>10. rows列</h3><p>这一列是MySQL估计要扫描的行数，注意这个不是结果集里的行数。</p>
-<h3 id="11-filtered列"><a href="#11-filtered列" class="headerlink" title="11. filtered列"></a>11. filtered列</h3><h3 id="12-Extra列"><a href="#12-Extra列" class="headerlink" title="12. Extra列"></a>12. Extra列</h3>
+<li>explain介绍</li>
+<li>explain各个列的作用</li>
+<li>参考MySQL官网 <a href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html">https://dev.mysql.com/doc/refman/5.7/en/explain-output.html</a></li>
+<li>示例SQL
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/04/11/EXPLAIN%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -292,7 +325,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    11 分钟 读完 (大约 1591 个字)
+                    11 分钟 读完 (大约 1673 个字)
                 </span>
                 
                 
@@ -550,7 +583,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            32
+                            37
                         </p>
                     </a>
                 </div>
@@ -649,7 +682,7 @@
                 <span class="level-item">计算机基础</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">17</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">
@@ -657,7 +690,7 @@
                 <span class="level-item">数据库(MySQL)</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">7</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">
@@ -686,47 +719,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-11T13:44:00.000Z">2020-04-11</time></div>
-                    <a href="/2020/04/11/EXPLAIN%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/" class="title has-link-black-ter is-size-6 has-text-weight-normal">EXPLAIN关键字详解</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-10T01:00:18.000Z">2020-04-10</time></div>
-                    <a href="/2020/04/10/%E7%B4%A2%E5%BC%95%E5%92%8C%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AE%80%E4%BB%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">索引和查询性能优化简介</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-10T00:59:56.000Z">2020-04-10</time></div>
-                    <a href="/2020/04/10/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3MySQL/" class="title has-link-black-ter is-size-6 has-text-weight-normal">深入理解MySQL</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-08T13:12:57.000Z">2020-04-08</time></div>
-                    <a href="/2020/04/08/leetcode-database%E9%A2%98%E8%A7%A3/" class="title has-link-black-ter is-size-6 has-text-weight-normal">leetcode-database题解</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-22T13:15:20.000Z">2020-04-22</time></div>
+                    <a href="/2020/04/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库设计</a>
                     <p class="is-size-7 is-uppercase">
                         
                     </p>
@@ -738,10 +732,49 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-06T07:49:34.000Z">2020-04-06</time></div>
-                    <a href="/2020/04/06/SQL%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B9%8B%E7%B4%A2%E5%BC%95%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E6%B8%B8%E6%A0%87%E3%80%81%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86%E3%80%81%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E7%BB%B4%E6%8A%A4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">SQL基本语法(二) 高级特性</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-22T13:15:11.000Z">2020-04-22</time></div>
+                    <a href="/2020/04/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81%E7%90%86%E8%AE%BA/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库锁理论</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-22T13:14:48.000Z">2020-04-22</time></div>
+                    <a href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="title has-link-black-ter is-size-6 has-text-weight-normal">查询性能优化</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-22T13:14:25.000Z">2020-04-22</time></div>
+                    <a href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%88%AA%E5%8F%96%E5%88%86%E6%9E%90/" class="title has-link-black-ter is-size-6 has-text-weight-normal">查询截取分析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-16T02:26:50.000Z">2020-04-16</time></div>
+                    <a href="/2020/04/16/%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/" class="title has-link-black-ter is-size-6 has-text-weight-normal">索引优化策略和SQL语句优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        
                     </p>
                 </div>
             </div>
@@ -755,7 +788,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 12px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 12px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 14px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/MySQL/" style="font-size: 14px;">MySQL</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 18px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 18px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 16px;">计算机网络</a>
+        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.67px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.67px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 13.33px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 18.33px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 18.33px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 16.67px;">计算机网络</a>
     </div>
 </div>
         
@@ -773,7 +806,7 @@
                     <span class="level-item">四月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">11</span>
                 </span>
             </a>
         </li>
@@ -840,47 +873,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-11T13:44:00.000Z">2020-04-11</time></div>
-                    <a href="/2020/04/11/EXPLAIN%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/" class="title has-link-black-ter is-size-6 has-text-weight-normal">EXPLAIN关键字详解</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-10T01:00:18.000Z">2020-04-10</time></div>
-                    <a href="/2020/04/10/%E7%B4%A2%E5%BC%95%E5%92%8C%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AE%80%E4%BB%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">索引和查询性能优化简介</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-10T00:59:56.000Z">2020-04-10</time></div>
-                    <a href="/2020/04/10/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3MySQL/" class="title has-link-black-ter is-size-6 has-text-weight-normal">深入理解MySQL</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-08T13:12:57.000Z">2020-04-08</time></div>
-                    <a href="/2020/04/08/leetcode-database%E9%A2%98%E8%A7%A3/" class="title has-link-black-ter is-size-6 has-text-weight-normal">leetcode-database题解</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-22T13:15:20.000Z">2020-04-22</time></div>
+                    <a href="/2020/04/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库设计</a>
                     <p class="is-size-7 is-uppercase">
                         
                     </p>
@@ -892,10 +886,49 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-06T07:49:34.000Z">2020-04-06</time></div>
-                    <a href="/2020/04/06/SQL%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B9%8B%E7%B4%A2%E5%BC%95%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E6%B8%B8%E6%A0%87%E3%80%81%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86%E3%80%81%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E7%BB%B4%E6%8A%A4/" class="title has-link-black-ter is-size-6 has-text-weight-normal">SQL基本语法(二) 高级特性</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-22T13:15:11.000Z">2020-04-22</time></div>
+                    <a href="/2020/04/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81%E7%90%86%E8%AE%BA/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库锁理论</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-22T13:14:48.000Z">2020-04-22</time></div>
+                    <a href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="title has-link-black-ter is-size-6 has-text-weight-normal">查询性能优化</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-22T13:14:25.000Z">2020-04-22</time></div>
+                    <a href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%88%AA%E5%8F%96%E5%88%86%E6%9E%90/" class="title has-link-black-ter is-size-6 has-text-weight-normal">查询截取分析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a> / <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-16T02:26:50.000Z">2020-04-16</time></div>
+                    <a href="/2020/04/16/%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/" class="title has-link-black-ter is-size-6 has-text-weight-normal">索引优化策略和SQL语句优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        
                     </p>
                 </div>
             </div>
@@ -909,7 +942,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 12px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 12px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 14px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/MySQL/" style="font-size: 14px;">MySQL</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 18px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 18px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 16px;">计算机网络</a>
+        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.67px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.67px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 13.33px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 18.33px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 18.33px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 16.67px;">计算机网络</a>
     </div>
 </div>
     
@@ -927,7 +960,7 @@
                     <span class="level-item">四月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">11</span>
                 </span>
             </a>
         </li>
