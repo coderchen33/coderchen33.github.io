@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-04-16T02:26:50.000Z">
-<meta property="article:modified_time" content="2020-04-22T12:32:47.634Z">
+<meta property="article:modified_time" content="2020-04-27T14:13:29.019Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="技术博客">
 <meta name="twitter:card" content="summary">
@@ -151,7 +151,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    19 分钟 读完 (大约 2815 个字)
+                    21 分钟 读完 (大约 3178 个字)
                 </span>
                 
                 
@@ -194,6 +194,11 @@
 <li><strong>数据重复且分布平均的列不需要建索引</strong>(比如性别列只有男女,且男女比例分布为50%,那么建立索引一般不会提高数据库的查询速度。  这里涉及到一个<strong>索引的选择性问题</strong>。<strong>索引选择性是指索引列中不同值的数目与表中记录数的比。这个值越接近于1，索引的效率就越高</strong>。)</li>
 </ol>
 <p>demo参考文章 <a href="https://www.cnblogs.com/developer_chan/p/9219239.html">https://www.cnblogs.com/developer_chan/p/9219239.html</a> 这里就不再演示。</p>
+<h3 id="单列索引还是复合索引？"><a href="#单列索引还是复合索引？" class="headerlink" title="单列索引还是复合索引？"></a>单列索引还是复合索引？</h3><p>这个问题是什么意思呢？就以我们下面建的staff表为例，表中有属性： id、name、age、pos、salary。id这里就不说了，主键自动建立索引。比如我们发现经常通过name、age、pos查，那么是为每个列单独创建一个索引，即name列、age列、pos列分别建一个索引，一共三个索引，还是建立一个复合索引(name,age,pos)呢?(这里先不讨论复合索引的顺序)</p>
+<p><strong>答案是能复合索引就复合索引</strong></p>
+<p>原因在于<strong>多个单列索引在多条件查询时只会生效第一个索引</strong>(5.0版本后，虽然MySQL会同时使用几个单列索引做扫描并将结果合并，但是索引合并时会消耗大量的cpu和内存资源。另一方面也说明我们自己建的索引糟糕)。</p>
+<p>而使用复合索引进行多条件查询时，只要复合最佳左前缀法则，那么就会用到多个索引列，从而增加查询的速度。所以多条件联合查询时最好使用联合索引！</p>
+<p>具体的demo这里也就不演示了，可以参考<a href="https://www.cnblogs.com/wyaokai/p/10836527.html">这篇文章</a>(只看看实验就好了)。</p>
 <h2 id="索引优化策略"><a href="#索引优化策略" class="headerlink" title="索引优化策略"></a>索引优化策略</h2><p>这里先准备我们的测试用例：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> staff;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> staff (</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span> PRIMARY <span class="keyword">KEY</span> auto_increment,</span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">50</span>),</span><br><span class="line">    age <span class="built_in">INT</span>,</span><br><span class="line">    pos <span class="built_in">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">COMMENT</span> <span class="string">'职位'</span>,</span><br><span class="line">    salary <span class="built_in">DECIMAL</span>(<span class="number">10</span>,<span class="number">2</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 插入数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> staff(<span class="keyword">name</span>, age, pos, salary) <span class="keyword">VALUES</span>(<span class="string">'Alice'</span>, <span class="number">22</span>, <span class="string">'HR'</span>, <span class="number">5000</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> staff(<span class="keyword">name</span>, age, pos, salary) <span class="keyword">VALUES</span>(<span class="string">'Bob'</span>, <span class="number">22</span>, <span class="string">'RD'</span>, <span class="number">10000</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> staff(<span class="keyword">name</span>, age, pos, salary) <span class="keyword">VALUES</span>(<span class="string">'David'</span>, <span class="number">22</span>, <span class="string">'Sale'</span>, <span class="number">120000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 建立name、age、pos的复合索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> idx_staff_nameAgePos <span class="keyword">ON</span> staff(<span class="keyword">name</span>,age,pos);</span><br></pre></td></tr></table></figure>
 
@@ -435,7 +440,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            37
+                            39
                         </p>
                     </a>
                 </div>
@@ -447,7 +452,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            6
+                            7
                         </p>
                     </a>
                 </div>
@@ -459,7 +464,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            10
+                            11
                         </p>
                     </a>
                 </div>
@@ -514,6 +519,10 @@
         <a class="is-flex" href="#什么情况不需要建索引">
         <span class="has-mr-6">1.2</span>
         <span>什么情况不需要建索引</span>
+        </a></li><li>
+        <a class="is-flex" href="#单列索引还是复合索引？">
+        <span class="has-mr-6">1.3</span>
+        <span>单列索引还是复合索引？</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#索引优化策略">
         <span class="has-mr-6">2</span>
