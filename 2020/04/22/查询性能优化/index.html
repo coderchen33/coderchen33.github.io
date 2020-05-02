@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-04-22T13:14:48.000Z">
-<meta property="article:modified_time" content="2020-04-28T10:58:58.483Z">
+<meta property="article:modified_time" content="2020-05-02T04:03:29.424Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 27 个字)
+                    1 分钟 读完 (大约 149 个字)
                 </span>
                 
                 
@@ -182,7 +182,13 @@
 </ol>
 <h2 id="查询过程"><a href="#查询过程" class="headerlink" title="查询过程"></a>查询过程</h2><div align="center"><img src="http://coderchen33.life/2020-04-22-查询性能优化-2020-04-28-18-31-19"></div><br>
 
-
+<ol>
+<li>客户端发送一条查询给服务器</li>
+<li>服务器先检查查询缓存，如果命中缓存，则立刻返回存储在缓存中的结果。否则进入下一阶段。</li>
+<li>服务器端进行SQL解析、预处理，再由优化器生成对应的执行计划。</li>
+<li>MySQL根据优化器生成的执行计划，调用存储引擎的API来执行查询。</li>
+<li>将结果返回给客户端。</li>
+</ol>
 <h2 id="常见优化策略"><a href="#常见优化策略" class="headerlink" title="常见优化策略"></a>常见优化策略</h2>
         </div>
         
@@ -304,7 +310,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            39
+                            44
                         </p>
                     </a>
                 </div>
@@ -316,7 +322,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            7
+                            8
                         </p>
                     </a>
                 </div>
@@ -328,7 +334,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            11
+                            12
                         </p>
                     </a>
                 </div>
