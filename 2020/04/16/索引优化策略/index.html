@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>索引优化策略和SQL语句优化 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容  建立合理高效的索引 索引优化策略(最佳左前缀法则)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="索引优化策略和SQL语句优化">
+<meta property="og:url" content="http://coderchen33.life/2020/04/16/%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容  建立合理高效的索引 索引优化策略(最佳左前缀法则)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-04-16T02:26:50.000Z">
+<meta property="article:modified_time" content="2020-04-27T14:13:29.019Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="技术博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="索引优化策略和SQL语句优化" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-16T02:26:50.000Z">2020-04-16</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    21 分钟 读完 (大约 3178 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                索引优化策略和SQL语句优化
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>建立合理高效的索引</li>
+<li>索引优化策略(最佳左前缀法则)</li>
+</ol>
+<a id="more"></a>
+
+<p>建议看这篇文章之前，先看下我之前写的两篇文章：</p>
+<ul>
+<li><a href="http://www.coderchen33.life/2020/04/10/%E7%B4%A2%E5%BC%95%E5%92%8C%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AE%80%E4%BB%8B/">索引和查询性能的优化</a></li>
+<li><a href="http://www.coderchen33.life/2020/04/11/EXPLAIN%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/">explain关键字详解</a></li>
+</ul>
+<h2 id="建立合理高效的索引"><a href="#建立合理高效的索引" class="headerlink" title="建立合理高效的索引"></a>建立合理高效的索引</h2><h3 id="什么情况需要建索引"><a href="#什么情况需要建索引" class="headerlink" title="什么情况需要建索引"></a>什么情况需要建索引</h3><ol>
+<li><strong>主键自动建立唯一索引</strong></li>
+<li>查询中与其他表的关联字段，即<strong>外键建立索引，左外联右表建索引，右联结左表建索引</strong></li>
+<li><strong>频繁作为查询条件的字段</strong>(WHERE字段)应该建立索引</li>
+<li><strong>查询中排序的字段，排序字段</strong>(ORDER BY字段)通过索引访问将大大提高排序速度</li>
+<li><strong>查询中统计或者分组字段</strong>(GROUP BY字段)</li>
+</ol>
+<h3 id="什么情况不需要建索引"><a href="#什么情况不需要建索引" class="headerlink" title="什么情况不需要建索引"></a>什么情况不需要建索引</h3><ol>
+<li><strong>表记录太少不需要建索引</strong>(MySQL官方支持500-800w条记录,但实际300w条记录MySQL性能会明显下降)</li>
+<li><strong>频繁增删改的表不需要建索引</strong>(每次更新不仅仅是更新记录，也会更新索引)</li>
+<li><strong>数据重复且分布平均的列不需要建索引</strong>(比如性别列只有男女,且男女比例分布为50%,那么建立索引一般不会提高数据库的查询速度。  这里涉及到一个<strong>索引的选择性问题</strong>。<strong>索引选择性是指索引列中不同值的数目与表中记录数的比。这个值越接近于1，索引的效率就越高</strong>。)</li>
+</ol>
+<p>demo参考文章 <a href="https://www.cnblogs.com/developer_chan/p/9219239.html">https://www.cnblogs.com/developer_chan/p/9219239.html</a> 这里就不再演示。</p>
+<h3 id="单列索引还是复合索引？"><a href="#单列索引还是复合索引？" class="headerlink" title="单列索引还是复合索引？"></a>单列索引还是复合索引？</h3><p>这个问题是什么意思呢？就以我们下面建的staff表为例，表中有属性： id、name、age、pos、salary。id这里就不说了，主键自动建立索引。比如我们发现经常通过name、age、pos查，那么是为每个列单独创建一个索引，即name列、age列、pos列分别建一个索引，一共三个索引，还是建立一个复合索引(name,age,pos)呢?(这里先不讨论复合索引的顺序)</p>
+<p><strong>答案是能复合索引就复合索引</strong></p>
+<p>原因在于<strong>多个单列索引在多条件查询时只会生效第一个索引</strong>(5.0版本后，虽然MySQL会同时使用几个单列索引做扫描并将结果合并，但是索引合并时会消耗大量的cpu和内存资源。另一方面也说明我们自己建的索引糟糕)。</p>
+<p>而使用复合索引进行多条件查询时，只要复合最佳左前缀法则，那么就会用到多个索引列，从而增加查询的速度。所以多条件联合查询时最好使用联合索引！</p>
+<p>具体的demo这里也就不演示了，可以参考<a href="https://www.cnblogs.com/wyaokai/p/10836527.html">这篇文章</a>(只看看实验就好了)。</p>
+<h2 id="索引优化策略"><a href="#索引优化策略" class="headerlink" title="索引优化策略"></a>索引优化策略</h2><p>这里先准备我们的测试用例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> staff;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> staff (</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span> PRIMARY <span class="keyword">KEY</span> auto_increment,</span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">50</span>),</span><br><span class="line">    age <span class="built_in">INT</span>,</span><br><span class="line">    pos <span class="built_in">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">COMMENT</span> <span class="string">'职位'</span>,</span><br><span class="line">    salary <span class="built_in">DECIMAL</span>(<span class="number">10</span>,<span class="number">2</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 插入数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> staff(<span class="keyword">name</span>, age, pos, salary) <span class="keyword">VALUES</span>(<span class="string">'Alice'</span>, <span class="number">22</span>, <span class="string">'HR'</span>, <span class="number">5000</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> staff(<span class="keyword">name</span>, age, pos, salary) <span class="keyword">VALUES</span>(<span class="string">'Bob'</span>, <span class="number">22</span>, <span class="string">'RD'</span>, <span class="number">10000</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> staff(<span class="keyword">name</span>, age, pos, salary) <span class="keyword">VALUES</span>(<span class="string">'David'</span>, <span class="number">22</span>, <span class="string">'Sale'</span>, <span class="number">120000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 建立name、age、pos的复合索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> idx_staff_nameAgePos <span class="keyword">ON</span> staff(<span class="keyword">name</span>,age,pos);</span><br></pre></td></tr></table></figure>
+
+<h3 id="WHERE子句的优化-到GROUP-BY之前"><a href="#WHERE子句的优化-到GROUP-BY之前" class="headerlink" title="WHERE子句的优化(到GROUP BY之前)"></a>WHERE子句的优化(到GROUP BY之前)</h3><div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-19-07-45-48"></div><br>
+
+
+<p>1.全值匹配<br>全值匹配是指和索引中的所有列进行匹配。比如我们上面建立了name，age，pos的复合索引，查询时用到索引中的所有列，即name，age，pos三个列都用到。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-19-07-52-19"></div><br>
+
+<p><strong>2.最佳左前缀法则</strong></p>
+<p>如果索引了多列，要遵守最佳左前缀法则。即<strong>查询从索引的最左前列开始并且不跳过索引中的列</strong>。</p>
+<ul>
+<li><strong>带头大哥不能死</strong></li>
+<li><strong>中间兄弟不能断</strong></li>
+</ul>
+<p>下面的例子中很好的体现了正确使用最佳左前缀法则的例子，并且从explain中看到都是使用到了我们建立的索引,并且随着条件的进一步准确，用到的索引列也就越多。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-11-03-00"></div><br>
+
+<p>但是如果不是按照索引的最左列开始查找(这个例子中是name列)，则会使我们的索引失效,即<strong>开头大哥不能死</strong>。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-11-05-31"></div><br>
+
+<p>同样，如果我们只用到了1和3列，跳过了索引中的第2列，那么索引中只用到了第1列(只有一个const)。即<strong>中间兄弟不能断</strong></p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-11-06-43"></div><br>
+
+<p>3.不在索引列上做任何操作(计算、函数、自动类型转换)</p>
+<p>下面的例子中对id列做了计算操作，从而使得索引失效，转而执行全表扫描。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-11-11-40"></div><br>
+
+<p>4.<strong>存储引擎不能使用索引中范围右边的列</strong></p>
+<p>下面的例子中也可以看出来，从=变为&gt;则会使索引访问从ref降低为range。<br>但是从key列中我们也可以看到，范围中也使用到了索引。其实这里索引使用到了name列和age列两列（从key_len可以看出来），其中name列用于查询，age列用于排序。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-11-20-23"></div><br>
+
+<p>5.<strong>尽量使用覆盖索引</strong>，减少select *</p>
+<p><strong>覆盖索引</strong>：<strong>只访问索引的查询</strong>(查询列覆盖索引列)，即查询只需要访问索引，而无需访问数据行。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-11-23-35"></div><br>
+
+<p>当然一般不可能全部覆盖，都是只覆盖一部分</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-19-08-49-39"></div><br>
+
+<p>6.mysql使用！= 或者&lt;&gt;会导致索引失效</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-19-08-54-33"></div><br>
+
+<p>7.is null和is not null会导致索引失效</p>
+<p>is null之前的版本中是无法使用索引的，这次使用的5.7版本中可使用到索引，应该是mysql底层做了优化。<br>而is not null 还是不能够使用索引</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-12-37-21"></div><br>
+
+
+<p>8.<strong>like也是范围匹配的另一种形式。%号要加在右边才能用到索引。不会使右边的索引失效</strong>。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-12-40-00"></div><br>
+
+<p>和范围右边的索引列失效不同的是，如果%放在右边不会使之后的索引列失效</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-11-48-05"></div><br>
+
+<p>我们知道%a% 和%a  以及 a%可能匹配到的数据是不一样的，如果我们必须要使用%在前面的即%a%  和 %a才能查出准确的数据，那如何解决%必须放在前面的问题?</p>
+<p>使用覆盖索引解决：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-19-09-59-01"></div><br>
+
+
+<p>9.varchar类型的字段不加单引号，mysql会进行自动类型转换(参考第3点)，导致索引失效。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-16-15-39-58"></div><br>
+
+<p>10.or会导致索引失效</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-19-09-39-36"></div><br>
+
+
+<p>到这里，基本对于where的优化，基本就讲完了，但是看一下接下来这两个例子可能让你怀疑人生：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-11-56-14"></div><br>
+
+<p>第一个SQL语句中，并没有按照索引列的顺序使用索引，但是为什么我们的复合索引(name,age,pos)都用到了呢？  我们的最佳左前缀法则呢？其实这里是MySQL内部对我们的SQL语句进行了优化，找到最合适的索引。同样下面的范围查找也是同理。</p>
+<p>但是，<strong>我们实际写的时候为了语义明确尽量按复合索引的索引列顺序进行书写</strong>。</p>
+<h3 id="where优化总结"><a href="#where优化总结" class="headerlink" title="where优化总结"></a>where优化总结</h3><div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-11-50-56"></div><br>
+
+<p>《高性能MySQL》中对于索引的说明，已经包含在了上面的例子中，这里给出参考:</p>
+<blockquote>
+<p>索引对如下类型有效：<br>-全值匹配（参考1.）<br>-匹配最左前缀（参考2.）<br>-匹配列前缀（参考8.like）<br>-匹配范围值（参考4.范围匹配和8.like）<br>-精确匹配某一列并范围匹配另外一列（参考4.  8.）<br>-只访问索引的查询（参考5.覆盖索引）</p>
+</blockquote>
+<blockquote>
+<p>B+树本身的机构问题导致的索引失效<br>-如果不是按照索引的最左列开始，则无法使用索引(参考2)<br>-不能跳过索引中的列（参考2）<br>-如果查询中某个列有范围，则其右边所有列都无法使用索引（参考4. 8.）</p>
+<p>MySQL优化器和存储引擎使用索引方式导致的索引失效(参考3.6.7.9.10)<br>这些可能会在之后的MySQL优化中取消.比如上面的is null之前是不能使用索引，5.7版本后就可以使用了。</p>
+</blockquote>
+<p>从上面我们也可以看到对于索引的使用，<strong>关键还是要注意：全值匹配、最佳左前缀法则、范围匹配(&gt; &lt; 以及like)、覆盖索引这几个关键部分</strong>。</p>
+<h3 id="分组-GROUP-BY-和排序-ORDER-BY-的优化"><a href="#分组-GROUP-BY-和排序-ORDER-BY-的优化" class="headerlink" title="分组(GROUP BY)和排序(ORDER BY)的优化"></a>分组(GROUP BY)和排序(ORDER BY)的优化</h3><p>到目前为止，我们上面的例子都是针对where字句之后，group by和order by之前进行的优化。我们知道索引不仅仅能用来查询，还能用来分组(GROUP BY)和排序(ORDER BY)，接下来我们就看看这一部分的优化吧。</p>
+<p>使用索引来做排序，我们只需要关注一个重点就是<strong>是否会产生filesort文件内排序</strong>。</p>
+<p>ORDER BY中只有两种方式可以使用索引进行排序：</p>
+<p><strong>1. ORDER BY语句使用索引最左前缀法则</strong></p>
+<p>正确使用最佳左前缀法则，避免了文件排序</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-21-52-23"></div><br>
+
+<p>错误使用最佳左前缀用于排序，产生了文件内排序，降低了效率。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-21-54-47"></div><br>
+
+
+
+<p><strong>2. WHERE子句中前导列为常量时或者join子句中对这些列指定了常量从而构成最佳左前缀</strong></p>
+<p>前两个SQL语句中where子句中都是指定了常量和order by子句中的列组成了最左前缀，避免了filesort。对于第3条SQL语句，我们知道范围右边失效，所以同样由name age pos构成最左前缀，避免filesort。而第4条中由于where子句中不是常量，无法构成最佳左前缀所以产生filesort。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-22-04-21"></div><br>
+
+
+<p>另外对于排序而言，<strong>全升序或全降序不会产生file sort，而只要有一个不同则会产生file sort</strong></p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-22-09-00"></div><br>
+
+<h3 id="分组-GROUP-BY-和排序-ORDER-BY-优化总结"><a href="#分组-GROUP-BY-和排序-ORDER-BY-优化总结" class="headerlink" title="分组(GROUP BY)和排序(ORDER BY)优化总结"></a>分组(GROUP BY)和排序(ORDER BY)优化总结</h3><p>1.<strong>ORDER BY子句尽可能避免using filesort方式排序</strong><br>2.<strong>尽可能在索引列上完成排序操作，遵照最佳左前缀法则</strong>。下表是对上面例子的总结。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-20-43-46"></div><br>
+
+<p>3.<strong>如果不在索引列上</strong>，filesort有两种算法：双路排序和单路排序。</p>
+<ul>
+<li><p><strong>双路排序</strong>：在MySQL4.1之前使用双路排序。简单的讲就是从磁盘读取排序字段、在buffer进行排序、再按照buffer中拍好的序从磁盘中读取其他字段。总的来说进行了两次磁盘扫描，得到最终数据。</p>
+</li>
+<li><p><strong>单路排序</strong>：从磁盘中查询所需的列，按照order by列在buffer中对它们进行排序，然后按照排序后的列表进行输出。它避免了第二次读取数据，并且把随机I/O变成了顺序I/O，但是会使用更多的空间，因为它把所有字段都保存在内存中了。</p>
+</li>
+</ul>
+<p>如果使用双路排序，取一批数据要对磁盘进行两次扫描，众所周知，I/O操作是很耗时的，因此出现了改进的算法：单路排序。</p>
+<p>但是在单路排序中，当读取数据超过sort_buffer的容量时，就会导致多次读取数据，并创建临时表，最后多路合并，产生多次I/O，反而增加其I/O运算。</p>
+<p><strong>解决方法：</strong></p>
+<ul>
+<li><strong>避免select *</strong></li>
+<li><strong>增大<code>sort_buffer_size</code>参数的设置</strong></li>
+<li><strong>增大<code>max_length_for_sort_data</code>参数的设置</strong>。</li>
+</ul>
+<p>原因在于：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-16-索引优化策略-2020-04-20-21-28-54"></div><br>
+
+
+<p>4.<strong>group by与order by很类似</strong>，其<strong>实质是先排序后分组</strong>，</p>
+<ul>
+<li>遵照索引创建顺序的最佳左前缀法则</li>
+<li>当无法使用索引列的时候，也要对sort_buffer_size和max_length_for_sort_data参数进行调整。</li>
+<li>注意where高于having，能写在where中的限定条件就不要去having限定了</li>
+</ul>
+
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%88%AA%E5%8F%96%E5%88%86%E6%9E%90/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">查询截取分析</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/11/EXPLAIN%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/">
+                <span class="level-item">EXPLAIN关键字详解</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            44
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            8
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#建立合理高效的索引">
+        <span class="has-mr-6">1</span>
+        <span>建立合理高效的索引</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#什么情况需要建索引">
+        <span class="has-mr-6">1.1</span>
+        <span>什么情况需要建索引</span>
+        </a></li><li>
+        <a class="is-flex" href="#什么情况不需要建索引">
+        <span class="has-mr-6">1.2</span>
+        <span>什么情况不需要建索引</span>
+        </a></li><li>
+        <a class="is-flex" href="#单列索引还是复合索引？">
+        <span class="has-mr-6">1.3</span>
+        <span>单列索引还是复合索引？</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#索引优化策略">
+        <span class="has-mr-6">2</span>
+        <span>索引优化策略</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#WHERE子句的优化-到GROUP-BY之前">
+        <span class="has-mr-6">2.1</span>
+        <span>WHERE子句的优化(到GROUP BY之前)</span>
+        </a></li><li>
+        <a class="is-flex" href="#where优化总结">
+        <span class="has-mr-6">2.2</span>
+        <span>where优化总结</span>
+        </a></li><li>
+        <a class="is-flex" href="#分组-GROUP-BY-和排序-ORDER-BY-的优化">
+        <span class="has-mr-6">2.3</span>
+        <span>分组(GROUP BY)和排序(ORDER BY)的优化</span>
+        </a></li><li>
+        <a class="is-flex" href="#分组-GROUP-BY-和排序-ORDER-BY-优化总结">
+        <span class="has-mr-6">2.4</span>
+        <span>分组(GROUP BY)和排序(ORDER BY)优化总结</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="索引优化策略和SQL语句优化" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

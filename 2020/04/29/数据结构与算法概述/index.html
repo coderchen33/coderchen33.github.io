@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>数据结构与算法概述 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容  数据结构概述 算法时间复杂度分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法概述">
+<meta property="og:url" content="http://coderchen33.life/2020/04/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容  数据结构概述 算法时间复杂度分析">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-04-29T13:04:32.000Z">
+<meta property="article:modified_time" content="2020-05-02T12:29:02.953Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="algorithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="数据结构与算法概述" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-29T13:04:32.000Z">2020-04-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    11 分钟 读完 (大约 1606 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                数据结构与算法概述
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>数据结构概述</li>
+<li>算法时间复杂度分析<a id="more"></a>
+
+
+</li>
+</ol>
+<h2 id="数据结构概述"><a href="#数据结构概述" class="headerlink" title="数据结构概述"></a>数据结构概述</h2><p>数据结构主要从三个方面理解和学习:</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-数据结构与算法概述-2020-05-02-12-54-57"></div><br>
+
+
+<p>按照分类角度的不同，数据结构包括逻辑结构和物理结构。</p>
+<h3 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构"></a>逻辑结构</h3><p>指的是数据对象中数据元素之间的关系，有以下四种：</p>
+<ul>
+<li><strong>集合</strong>   结构中的数据元素除了<strong>同属于一种类型</strong>外，别无其它关系。 </li>
+<li><strong>线性结构</strong>    结构中的数据元素之间是<strong>一对一</strong>的关系。 </li>
+<li><strong>树结构</strong>    结构中的数据元素之间存在<strong>一对多</strong>的多层关系。 </li>
+<li><strong>图结构</strong>   结构中的数据元素之间是<strong>多对多</strong>的关系。</li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-数据结构与算法概述-2020-05-02-12-57-11"></div><br>
+
+
+<h3 id="物理结构"><a href="#物理结构" class="headerlink" title="物理结构"></a>物理结构</h3><p>也叫存储结构，指的是数据的逻辑结构在计算机中的存储方式。有以下两种：</p>
+<ul>
+<li><strong>顺序存储</strong>:把数据元素存放在<strong>地址连续的存储单元</strong>里，其数据间的逻辑关系和物理关系是一致的。 </li>
+<li><strong>链式存储结构</strong>：把数据元素存放在<strong>任意存储单元</strong>里，这组存储单元<strong>可以是连续的也可以是不连续</strong>的。但是需要在<strong>每一个数据元素中增加一个存放地址的指针</strong>，用此指针来表示数据元素之间的逻辑关系</li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-数据结构与算法概述-2020-05-02-12-59-19"></div><br>
+
+
+<h2 id="算法概述"><a href="#算法概述" class="headerlink" title="算法概述"></a>算法概述</h2><p>算法定义 ：算法是解决特定问题求解步骤的描述，在计算机中为指令的有限序列，并且每条指令表示一个或多个操作</p>
+<p>算法的特性：</p>
+<ul>
+<li>输入：有0个或多个输入</li>
+<li>输出：至少有1个或多个输出</li>
+<li>有穷性：算法在有限的步骤后应该自动结束而不会无限循环。</li>
+<li>确定性：算法中的每个步骤都有确定的含义，不会出现二义性</li>
+<li>可行性：算法的每一步都是可行的</li>
+</ul>
+<p>算法的设计要求：</p>
+<ul>
+<li>正确性：算法对于合法数据能够得到满足要求的结果，能够处理非法输入，并得到合理的结果。</li>
+<li>可读性：算法要便于阅读、理解和交流</li>
+<li>健壮性：算法不应该得到莫名其妙的结果</li>
+<li>性价比：利用最少的资源得到满足要求的结果</li>
+</ul>
+<h2 id="算法的时间复杂度"><a href="#算法的时间复杂度" class="headerlink" title="算法的时间复杂度"></a>算法的时间复杂度</h2><h3 id="算法的时间复杂度-1"><a href="#算法的时间复杂度-1" class="headerlink" title="算法的时间复杂度"></a>算法的时间复杂度</h3><p><strong>定义</strong></p>
+<p>在进行算法分析时，语句总的执行次数T(n)是关于问题规模n的函数，进而分析T(n)随n的变化情况并确定T(n)的数量级。算法的时间复杂度，也就是算法的时间量度，记作:T(n)=O(f(n))  [大O表示法]。它表示随问题规模n的增大，算法执行时间的增长率和f(n)的增长率相同，称作算法的<strong>渐近时间复杂度</strong>，简称为时间复杂度。其中f(n)是问题规模n的某个函数。</p>
+<p><strong>推导大O阶方法</strong></p>
+<blockquote>
+<p>1.用常数1取代运行时间中的所有加法常数<br>2.在修改后的运行次数函数中，只保留最高阶项。<br>3.如果最高阶项存在且不是1，则去除与这个项目相乘的常数。得到的结果就是大O阶</p>
+</blockquote>
+<p>注意有时候，算法中基本操作重复执行的次数还随问题的输入数据集不同而不同，如在冒泡排序中，输入数据有序而无序，其结果是不一样的，通常我们看平均时间复杂度。</p>
+<p>有时候，算法中基本操作重复执行的次数还随问题的输入数据集不同而不同，如在冒泡排序中，输入数据有序而无序，其结果是不一样的。此时，我们计算平均值。</p>
+<p>以下面几个例子为例,简单介绍下推倒大O阶的方法：</p>
+<p>demo1 ：（1）执行1次，（2）执行1次, （3）执行1次    T(n) = 1+1+1= 3=O(1)  也称为常数阶</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> sum = <span class="number">0</span>;  <span class="comment">//(1)</span></span><br><span class="line">sum = (<span class="number">1</span>+i)*i/<span class="number">2</span>;  <span class="comment">//(2)</span></span><br><span class="line">System.out.println(sum);  <span class="comment">//(3)</span></span><br></pre></td></tr></table></figure>
+
+<p>demo2: （1）执行1次，（2）执行n次（3）执行n次 T(n) = 1+2n =O(n)  也称为线性阶</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> sum=<span class="number">0</span>;  <span class="comment">//(1)</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;=n ; i++) &#123;  <span class="comment">//(2)</span></span><br><span class="line">    sum = sum + i;  <span class="comment">//(3)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>demo3：（1）执行1次， （2）执行n次（3）执行n2次,（4）执行n2次 T(n)=1+n+2n2=O(n2),称为n方阶</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> sum=<span class="number">0</span>;  <span class="comment">//(1)</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;=n ; i++) &#123;  <span class="comment">//(2)</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j&lt;=n ; j++)&#123;  <span class="comment">//(3)</span></span><br><span class="line">        sum = sum + i;  <span class="comment">//(4)</span></span><br><span class="line">    &#125;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>demo4：(1)的频度是1,设(2)的频度是f(n)，则：2f(n)&lt;=n;f(n)&lt;=log2n，取最大值f(n)= log2n, T(n)=O(log2n)  也称为对数阶</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">1</span>;  <span class="comment">//(1)</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt;= n)&#123;</span><br><span class="line">        i = i*<span class="number">2</span>;  <span class="comment">//(2)</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>常见时间复杂度</p>
+<p><strong>O(1)&lt;O(logn)&lt;O(n)&lt;O(nlogn)&lt;O(n^2)&lt; O(n^3) &lt;O(2n)&lt;O(n!)&lt;O(n^n)</strong></p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-数据结构与算法概述-2020-05-02-13-13-33"></div><br>
+
+
+
+<p>O(1)、O(logn)、O(n)、O(n2)上文都已经介绍过比较经典的例子，O(nlog n)在之后排序算法会介绍到（归并排序和快排）。</p>
+<p>O(n^3)、 O(2n)、O(n!)、O(n^n)等除非是很小的n，否则哪怕n=100，运行时间也会非常大。所以对于这种复杂度的算法一般没有讨论的意义。</p>
+<h3 id="算法的空间复杂度"><a href="#算法的空间复杂度" class="headerlink" title="算法的空间复杂度"></a>算法的空间复杂度</h3><p>空间复杂度：算法所需存储空间的度量，记作： S(n)=O( f(n) ) ,其中 n 为问题的规模。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> x;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">    x = <span class="number">10</span>; <span class="comment">//O（1）</span></span><br><span class="line">    <span class="comment">//使用x</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">10</span>;  <span class="comment">//O(n)</span></span><br><span class="line">    <span class="comment">//使用a</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个算法在计算机存储器上所占用的存储空间，包括三个方面:</p>
+<ol>
+<li>存储算法本身所占用的存储空间</li>
+<li>算法的输入输出数据所占用的存储空间</li>
+<li><strong>算法在运行过程中临时占用的存储空间</strong></li>
+</ol>
+<p>我们知道代码本身多几行少几行所占用的空间可以忽略不计，而算法的输入输出无论用什么算法都是一定的，所以我们需要关注的应该是3,即算法在运行过程中临时占用的存储空间。</p>
+<p>另外<strong>如果额外空间相对于输入数据量来说是个常数，则称此算法是原地工作</strong>。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/algorithm/" rel="tag">algorithm</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/04/29/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84%E3%80%81%E9%93%BE%E8%A1%A8%E3%80%81%E6%A0%88%E3%80%81%E9%98%9F%E5%88%97/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">线性表之数组、链表、栈、队列</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80/">
+                <span class="level-item">操作系统基础</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            44
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            8
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#数据结构概述">
+        <span class="has-mr-6">1</span>
+        <span>数据结构概述</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#逻辑结构">
+        <span class="has-mr-6">1.1</span>
+        <span>逻辑结构</span>
+        </a></li><li>
+        <a class="is-flex" href="#物理结构">
+        <span class="has-mr-6">1.2</span>
+        <span>物理结构</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#算法概述">
+        <span class="has-mr-6">2</span>
+        <span>算法概述</span>
+        </a></li><li>
+        <a class="is-flex" href="#算法的时间复杂度">
+        <span class="has-mr-6">3</span>
+        <span>算法的时间复杂度</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#算法的时间复杂度-1">
+        <span class="has-mr-6">3.1</span>
+        <span>算法的时间复杂度</span>
+        </a></li><li>
+        <a class="is-flex" href="#算法的空间复杂度">
+        <span class="has-mr-6">3.2</span>
+        <span>算法的空间复杂度</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="数据结构与算法概述" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

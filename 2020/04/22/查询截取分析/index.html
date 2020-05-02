@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>查询截取分析 - chen33的个人博客</title>
+
+
+    <meta name="description" content="查询截取分析流程1. 慢查询的开启并捕获2. explain+慢SQL分析3. show profile查询SQL在MySQL服务器里面的执行细节和生命周期情况4. SQL数据库服务器的参数调优">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查询截取分析">
+<meta property="og:url" content="http://coderchen33.life/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%88%AA%E5%8F%96%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="查询截取分析流程1. 慢查询的开启并捕获2. explain+慢SQL分析3. show profile查询SQL在MySQL服务器里面的执行细节和生命周期情况4. SQL数据库服务器的参数调优">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-04-22T13:14:25.000Z">
+<meta property="article:modified_time" content="2020-04-22T13:17:35.923Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="查询截取分析" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-22T13:14:25.000Z">2020-04-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    20 分钟 读完 (大约 3026 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                查询截取分析
+            
+        </h1>
+        <div class="content">
+            <p><strong>查询截取分析流程</strong><br><strong>1. 慢查询的开启并捕获<br>2. explain+慢SQL分析<br>3. show profile查询SQL在MySQL服务器里面的执行细节和生命周期情况<br>4. SQL数据库服务器的参数调优</strong></p>
+<a id="more"></a>
+
+<p>如果我们发现是SQL语句导致的我们系统变慢，首先需要做的是通过我们的慢查询日志定位我们的问题SQL语句，然后通过explain分析原因，并进行优化。如果无法找到原因，则需要借助更加详细的show profile进行分析和优化。最终都找不到原因，则考虑进行数据库服务器的参数调优。</p>
+<p>之前我们学习索引的时候已经学习了explain，接下来我们就主要看看使用慢查询日志以及show profile。</p>
+<h2 id="慢查询日志分析"><a href="#慢查询日志分析" class="headerlink" title="慢查询日志分析"></a>慢查询日志分析</h2><p>之前我们学习了explain来分析SQL语句，但是我们写了很多条SQL语句，哪条语句导致的系统变慢呢？我们是不是需要把所有的SQL语句都分析一遍呢？答案肯定是不可能的。问题在于如何找出我们出问题的SQL语句，这时候就需要用到我们的慢查询日志。</p>
+<p>慢查询日志是MySQL提供的一种日志记录，它记录MySQL中响应时间超过阈值的语句，具体指运行时间超过<code>long_query_time</code>值的sql语句，该sql语句会被记录到慢查询日志中。</p>
+<h4 id="1-查看是否开启慢查询"><a href="#1-查看是否开启慢查询" class="headerlink" title="1.查看是否开启慢查询"></a>1.查看是否开启慢查询</h4><p><strong>默认情况下MySQL没有开启慢查询日志</strong>，需要我们手动设置。当然，<strong>如果不是调优需要的话，一般不建议启动该参数</strong>。</p>
+<p>可以通过下面的命令查看是否开启慢查询日志：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'%slow_query_log%'</span>;</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-21-19-52-56"></div><br>
+
+<p>可以看到，MySQL没有开启慢查询日志，并且慢查询日志信息保存在<code>主机名-slow.log</code>文件下。</p>
+<p>手动开启慢查询日志：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> slow_query_log = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-21-20-02-37"></div><br>
+
+<p>这种使用命令的方式只对当前数据库有效，如果MySQL重启后则会失效。<br>如果需要永久生效，则必须修改mysql的配置文件my.cnf的配置文件。[mysqld]下添加参数：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log=1</span><br><span class="line">slow_query_log_file=/var/lib/mysql/centos7-slow.log</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-查看和设置慢查询的阈值时间"><a href="#2-查看和设置慢查询的阈值时间" class="headerlink" title="2. 查看和设置慢查询的阈值时间"></a>2. 查看和设置慢查询的阈值时间</h4><p>上面我们已经开启了慢查询日志，但是多慢的SQL语句会被记录下来呢？</p>
+<p>可以通过如下命令查看：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'long_query_time%'</span>;</span><br></pre></td></tr></table></figure>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-21-20-12-47"></div><br>
+
+<p>可以看到MySQL中默认是10s。这里需要注意是寻找<strong>大于</strong> <code>long_query_time</code> <strong>而不是大于等于</strong></p>
+<p>我们可以手动进行设置这个时间（在my.cnf中也可以修改）。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> long_query_time=<span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-21-20-17-44"></div><br>
+
+<p>上面我们设置查询时间超过3秒为慢查询，但是我们看到sql语句执行成功，但是我们再次查询后还是初始时的10s。难道我们设置的无效吗？实际上这时候已经生效了。我们可以通过<code>show global variables like &#39;long_query_time%&#39;;</code>或者新开一个会话进行查看。</p>
+<p>这里我们新开一个会话，执行一个4秒钟的sql语句:</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-21-20-34-22"></div><br>
+
+<p>接着我们去<code>var/lib/mysql/centos7-slow.log</code>下面查看：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-21-20-37-55"></div><br>
+
+<p>可以看到慢查询日志中记录了超过阈值的mysql语句，这样我们就知道了哪条sql语句执行较慢，从而针对这条sql语句进行分析和优化。</p>
+<p>这里贴一下配置文件中如何配置吧。在[mysqld]下进行如下配置就和我们上面通过命令行的方式相同了。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log=1;</span><br><span class="line">slow_query_log_file=/var/lib/mysql/centos7-slow.log;</span><br><span class="line">long_query_time=3;</span><br><span class="line">log_output=FILE</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-慢查询日志分析工具mysqldumpslow"><a href="#3-慢查询日志分析工具mysqldumpslow" class="headerlink" title="3.慢查询日志分析工具mysqldumpslow"></a>3.慢查询日志分析工具mysqldumpslow</h4><p>上面只是做了个演示，实际上在生产环境中，如果要手工分析日志，查找分析SQL语句显然是个体力活，MySQL也给我们提供了日志分析工具mysqldumpslow。</p>
+<p>使用时可以通过下面命令查询参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldumpslow --help</span><br></pre></td></tr></table></figure>
+
+<p>比较常用的参数有：</p>
+<ul>
+<li>s：是表示按照何种方式排序</li>
+<li>c: 访问次数</li>
+<li>l：锁定时间</li>
+<li>r: 返回记录</li>
+<li>t：查询时间</li>
+<li>al: 平均锁定时间</li>
+<li>ar: 平均返回记录数</li>
+<li>at: 平均查询时间</li>
+<li>t: 返回前面多少条的数据</li>
+<li>g: 后面搭配一个正则表达式，大小写不敏感的</li>
+</ul>
+<p>使用时可以参照下例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">得到返回记录集最多的10个SQL</span><br><span class="line">mysqldumpslow -s r -t 10 &#x2F;var&#x2F;lib&#x2F;mysql&#x2F;centos7-slow.log</span><br><span class="line"></span><br><span class="line">得到访问次数最多的10个SQL</span><br><span class="line">mysqldumpslow -s c -t 10 &#x2F;var&#x2F;lib&#x2F;mysql&#x2F;centos7-slow.log</span><br><span class="line"></span><br><span class="line">得到按照时间排序的前10条里面含有左连接的查询语句</span><br><span class="line">mysqldumpslow -s t -t 10 -g &quot;left join&quot; &#x2F;var&#x2F;lib&#x2F;mysql&#x2F;centos7-slow.log</span><br><span class="line"></span><br><span class="line">另外建议在使用这些命令是结合|和more使用，否则可能会爆屏</span><br><span class="line">mysqldumpslow -s r -t 10 &#x2F;var&#x2F;lib&#x2F;mysql&#x2F;centos7-slow.log | more</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>批量插入数据，方便后边演示</strong></p>
+<p>一、首先我们创建两张表：</p>
+<p>1.tb_dept_bigdata（部门表）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 部门表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> tb_dept_bigdata(</span><br><span class="line"><span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">unsigned</span> primary <span class="keyword">key</span> auto_increment,</span><br><span class="line">deptno mediumint <span class="keyword">unsigned</span> <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="number">0</span>,</span><br><span class="line">dname <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">''</span>,</span><br><span class="line">loc <span class="built_in">varchar</span>(<span class="number">13</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">''</span></span><br><span class="line">)<span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">default</span> <span class="keyword">charset</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<p>2.tb_emp_bigdata（员工表）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> tb_emp_bigdata(</span><br><span class="line"><span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">unsigned</span> primary <span class="keyword">key</span> auto_increment,</span><br><span class="line">empno mediumint <span class="keyword">unsigned</span> <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="number">0</span>,<span class="comment">/*编号*/</span></span><br><span class="line">empname <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">''</span>,<span class="comment">/*名字*/</span></span><br><span class="line">job <span class="built_in">varchar</span>(<span class="number">9</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">''</span>,<span class="comment">/*工作*/</span></span><br><span class="line">mgr mediumint <span class="keyword">unsigned</span> <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="number">0</span>,<span class="comment">/*上级编号*/</span></span><br><span class="line">hiredate <span class="built_in">date</span> <span class="keyword">not</span> <span class="literal">null</span>,<span class="comment">/*入职时间*/</span></span><br><span class="line">sal <span class="built_in">decimal</span>(<span class="number">7</span>,<span class="number">2</span>) <span class="keyword">not</span> <span class="literal">null</span>,<span class="comment">/*薪水*/</span></span><br><span class="line">comm <span class="built_in">decimal</span>(<span class="number">7</span>,<span class="number">2</span>) <span class="keyword">not</span> <span class="literal">null</span>,<span class="comment">/*红利*/</span></span><br><span class="line">deptno mediumint <span class="keyword">unsigned</span> <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="number">0</span> <span class="comment">/*部门编号*/</span></span><br><span class="line">)<span class="keyword">engine</span>=<span class="keyword">innodb</span> <span class="keyword">default</span> <span class="keyword">charset</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<p>3.打开<code>log_bin_trust_function_creators</code>参数</p>
+<p>简单介绍一下，当二进制日志启用后，这个变量需要启用。它控制是否可以信任存储函数创建者，不会创建写入二进制日志引起不安全事件的存储函数。如果设置为0（默认值），用户不得创建或修改存储函数，除非它们具有除CREATE ROUTINE或ALTER ROUTINE特权之外的SUPER权限。</p>
+<p>当开启二进制日志后，如果不开启这个参数，我们创建或修改函数会报错<code>“ERROR 1418 (HY000): This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)”</code> 同样，这个参数对于触发器也适用。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看是否关闭</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'log_bin_trust_function_creators'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启参数</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> log_bin_trust_function_creators=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-15-17-45"></div><br>
+
+
+<p>二、其次我们创建两个函数:<br>1.随机生成字符串的函数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">function</span> <span class="keyword">if</span> <span class="keyword">exists</span> rand_string;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">function</span> rand_string(n <span class="built_in">int</span>) <span class="keyword">returns</span> <span class="built_in">varchar</span>(<span class="number">255</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line"><span class="keyword">declare</span> chars_str <span class="built_in">varchar</span>(<span class="number">52</span>) <span class="keyword">default</span> <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'</span>;</span><br><span class="line"><span class="keyword">declare</span> return_str <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">default</span> <span class="string">''</span>;</span><br><span class="line"><span class="keyword">declare</span> i <span class="built_in">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">while i&lt;n do</span><br><span class="line"><span class="keyword">set</span> return_str=<span class="keyword">concat</span>(return_str,<span class="keyword">substring</span>(chars_str,<span class="keyword">floor</span>(<span class="number">1</span>+<span class="keyword">rand</span>()*<span class="number">52</span>),<span class="number">1</span>));</span><br><span class="line"><span class="keyword">set</span> i=i+<span class="number">1</span>;</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">while</span>;</span><br><span class="line">return return_str;</span><br><span class="line"><span class="keyword">end</span> $$</span><br></pre></td></tr></table></figure>
+
+<p>2.创建随机生成编号的函数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成100-110的部门编号</span></span><br><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">function</span> <span class="keyword">if</span> <span class="keyword">exists</span> rand_num;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">function</span> rand_num() <span class="keyword">returns</span> <span class="built_in">int</span>(<span class="number">5</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line"><span class="keyword">declare</span> i <span class="built_in">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">set</span> i=<span class="keyword">floor</span>(<span class="number">100</span>+<span class="keyword">rand</span>()*<span class="number">10</span>);</span><br><span class="line">return i;</span><br><span class="line"><span class="keyword">end</span> $$</span><br></pre></td></tr></table></figure>
+
+<p>三、然后我们创建两个存储过程用来往表中批量插入数据<br>1.插入部门表的存储过程</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">procedure</span> <span class="keyword">if</span> <span class="keyword">exists</span> insert_dept;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> insert_dept(<span class="keyword">in</span> <span class="keyword">start</span> <span class="built_in">int</span>(<span class="number">10</span>),<span class="keyword">in</span> max_num <span class="built_in">int</span>(<span class="number">10</span>))</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line"><span class="keyword">declare</span> i <span class="built_in">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">set</span> autocommit=<span class="number">0</span>; <span class="comment">-- 关闭自动提交</span></span><br><span class="line">repeat</span><br><span class="line"><span class="keyword">set</span> i=i+<span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 调用了上面定义的rand_string函数来随机产生部门名称和部门位置</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_dept_bigdata (deptno,dname,loc) </span><br><span class="line"><span class="keyword">values</span>((<span class="keyword">start</span>+i),rand_string(<span class="number">10</span>),rand_string(<span class="number">8</span>));  </span><br><span class="line">until i=max_num</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">repeat</span>;</span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"><span class="keyword">end</span> $$</span><br></pre></td></tr></table></figure>
+
+<p>2.插入员工表的存储过程</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">delimiter $$</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">procedure</span> <span class="keyword">if</span> <span class="keyword">exists</span> insert_emp;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> insert_emp(<span class="keyword">in</span> <span class="keyword">start</span> <span class="built_in">int</span>(<span class="number">10</span>),<span class="keyword">in</span> max_num <span class="built_in">int</span>(<span class="number">10</span>))</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line"><span class="keyword">declare</span> i <span class="built_in">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">set</span> autocommit=<span class="number">0</span>;  <span class="comment">-- 关闭自动提交</span></span><br><span class="line">repeat</span><br><span class="line"><span class="keyword">set</span> i=i+<span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 同样调用上面的rand_string和rand_num来产生员工名称和部门编号</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tb_emp_bigdata (empno,empname,job,mgr,hiredate,sal,comm,deptno) </span><br><span class="line"><span class="keyword">values</span>((<span class="keyword">start</span>+i),rand_string(<span class="number">6</span>),<span class="string">'developer'</span>,<span class="number">0001</span>,<span class="keyword">curdate</span>(),<span class="number">2000</span>,<span class="number">400</span>,rand_num());</span><br><span class="line">until i=max_num</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">repeat</span>;</span><br><span class="line"><span class="keyword">commit</span>;</span><br><span class="line"><span class="keyword">end</span> $$</span><br></pre></td></tr></table></figure>
+
+
+<p>四、调用存储过程批量插入数据</p>
+<p>调用存储过程往部门表中插入10个部门</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">delimiter ;</span><br><span class="line"><span class="keyword">call</span> insert_dept(<span class="number">100</span>,<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-10-01-25"></div><br>
+
+<p>调用存储过程往emp表中添加50万条记录</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">delimiter ;</span><br><span class="line"><span class="comment">-- 100002-600001</span></span><br><span class="line"><span class="keyword">call</span> insert_dept(<span class="number">100001</span>,<span class="number">500000</span>);</span><br></pre></td></tr></table></figure>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-10-01-03"></div><br>
+
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-10-01-50"></div><br>
+
+<hr>
+<h2 id="show-profile"><a href="#show-profile" class="headerlink" title="show profile"></a>show profile</h2><p>我们上面提到，通过慢查询日志找到执行时间比较长的SQL语句之后，就会使用explain来分析SQL语句并进行优化。如果还是无法解决问题，就需要用到我们的show profile。</p>
+<p>show profile是MySQL提供可以用来分析当前会话中语句执行的资源消耗情况。可以用于我们SQL的调优的测量。</p>
+<p>MySQL中默认是关闭的，并且记录15条记录。可以通过下面的命令查看：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看是否开启</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'profiling'</span>;</span><br><span class="line"><span class="comment"># 设置开启</span></span><br><span class="line"><span class="keyword">set</span> profiling = <span class="keyword">on</span>;</span><br></pre></td></tr></table></figure>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-15-23-52"></div><br>
+
+<p>本来一开始是打算使用这两条sql语句进行测试，但是却出现了问题</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> *<span class="keyword">from</span> tb_emp_bigdata <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>%<span class="number">10</span> <span class="keyword">limit</span> <span class="number">150000</span>;</span><br><span class="line"><span class="keyword">select</span> *<span class="keyword">from</span> tb_emp_bigdata <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>%<span class="number">20</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这里的意思是说MySQL处于only_full_group_by SQL模式(5.7.5之后的默认情况，我用的是5.7.26),在这种模式下需要select列中都要在group by中,或者本身是聚合列(SUM,AVG,MAX,MIN) 才行，所以去掉就好。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-16-11-03"></div><br>
+
+<p>解决方法：<br>首先查看sql_mode模式，可以看到是包含only_full_group_by模式的。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-16-17-03"></div><br>
+
+
+<p>我们直接去掉它即可</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-16-20-27"></div><br>
+
+<p>注意上面只是对本次会话有效，如果需要一直有效，则需要在my.cnf的[mysqld]下进行配置</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</span><br></pre></td></tr></table></figure>
+<p>配置完成后重启MySQL即可。</p>
+<p>错误解决后，我们回来继续看show profile。开启profiling后，我们随便写几条sql语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> staff;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span>,age,pos <span class="keyword">from</span> staff <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">'Alice'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> staff <span class="keyword">group</span> <span class="keyword">by</span> age;</span><br><span class="line"><span class="comment">-- 当然还有我们要测试的SQL语句</span></span><br><span class="line"><span class="comment">-- 这两个语句本身并没有意义，只是为了增加查询时间</span></span><br><span class="line"><span class="keyword">select</span> *<span class="keyword">from</span> tb_emp_bigdata <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>%<span class="number">10</span> <span class="keyword">limit</span> <span class="number">150000</span>;</span><br><span class="line"><span class="keyword">select</span> *<span class="keyword">from</span> tb_emp_bigdata <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>%<span class="number">20</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="number">5</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> staff <span class="keyword">group</span> <span class="keyword">by</span> age;</span><br><span class="line"><span class="keyword">select</span> *<span class="keyword">from</span> tb_emp_bigdata <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>%<span class="number">20</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>接着我们看下下面的sql语句的执行结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">profiles</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到show profiles的结果中记录了我们开启profiling后的每一条sql语句，默认是15条。(我这里是为了解决上面说的sql_mode问题，如果一开始就设置好了，那么应该是从序号1开始的)</p>
+<p>我们看到这个表中有三列:<br>Query_ID：是我们开启profiling后执行的每条SQL语句id<br>Duration：是我们每条SQL语句的执行时间<br>Query：不用说就是我们的SQL语句</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-16-05-41"></div><br>
+
+
+<p>通过上面的表中得到Query_ID后，才是show profile真正发挥作用的时候了：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 这里只是写了比较常用的cpu,block io进行显示</span></span><br><span class="line"><span class="comment">-- 其他参数参考下表</span></span><br><span class="line"><span class="keyword">show</span> profile cpu,<span class="keyword">block</span> io <span class="keyword">for</span> <span class="keyword">query</span> 上面表中的Query_ID</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-16-50-09"></div><br>
+
+<p>这里我们先看下简单的10号SQL的信息：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-16-40-32"></div><br>
+
+<p>可以看到左边Status列就是我们这条SQL语句的完整的生命周期。Duration列是SQL每个步骤耗费时间。 CPU 和Block列则是CPU和IO耗费情况。</p>
+<p>我们在来看下上面特意准备的执行时间比较长的SQL语句：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-20-查询截取分析-2020-04-22-20-38-33"></div><br>
+
+<p>从上面我们可以看到具体执行时间比较长的有创建临时表creating tmp table和我们的sending data。这样我们就可以根据这两点来对我们的SQL语句进行优化。</p>
+<p>如果在show profile诊断结果中出现了下面结果中的任何一条，则sql语句需要优化。<br>①converting  HEAP to MyISAM：查询结果太大，内存不够，数据往磁盘上搬了。<br>②Creating tmp table：创建临时表。先拷贝数据到临时表，用完后再删除临时表。<br>③Copying to tmp table on disk：把内存中临时表复制到磁盘上，危险！！！<br>④locked。<br>⑤sending data时间过长</p>
+<p>比如常见的sending data时间过长的原因可能是因为没有索引或者没有正确使用索引。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果发现是SQL语句执行的慢，导致系统变慢的话，我们需要做的有：<br><strong>1. 首先开启慢查询并捕获执行的慢的SQL语句<br>2. 找出SQL语句后通过explain进行分析(一般在这里就能解决)<br>3. 如果explain解决不了，则通过show profile进行更细致的分析，从而对SQL进行优化。(到这里基本95%的问题能解决)<br>4. 最后还是解决不了，则需要与DBA沟通进行SQL数据库服务器的参数调优</strong></p>
+<p>到这里，我们的SQL调优的基本知识算是了解了。但要知道实际生产上的调优远比我们上面写的demo要复杂的多，所以还是多多积累吧。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/MySQL/" rel="tag">MySQL</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/04/22/%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">查询性能优化</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/16/%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/">
+                <span class="level-item">索引优化策略和SQL语句优化</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            44
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            8
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#慢查询日志分析">
+        <span class="has-mr-6">1</span>
+        <span>慢查询日志分析</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-查看是否开启慢查询">
+        <span class="has-mr-6">1.1</span>
+        <span>1.查看是否开启慢查询</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-查看和设置慢查询的阈值时间">
+        <span class="has-mr-6">1.2</span>
+        <span>2. 查看和设置慢查询的阈值时间</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-慢查询日志分析工具mysqldumpslow">
+        <span class="has-mr-6">1.3</span>
+        <span>3.慢查询日志分析工具mysqldumpslow</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#show-profile">
+        <span class="has-mr-6">2</span>
+        <span>show profile</span>
+        </a></li><li>
+        <a class="is-flex" href="#总结">
+        <span class="has-mr-6">3</span>
+        <span>总结</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="查询截取分析" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

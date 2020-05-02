@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>SQL基本语法(二) 高级特性 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容  索引、视图、存储过程、游标、触发器 MySQL事务管理 MySQL权限管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL基本语法(二) 高级特性">
+<meta property="og:url" content="http://coderchen33.life/2020/04/06/SQL%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B9%8B%E7%B4%A2%E5%BC%95%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E3%80%81%E8%A7%A6%E5%8F%91%E5%99%A8%E3%80%81%E6%B8%B8%E6%A0%87%E3%80%81%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86%E3%80%81%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E7%BB%B4%E6%8A%A4/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容  索引、视图、存储过程、游标、触发器 MySQL事务管理 MySQL权限管理">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-04-06T07:49:34.000Z">
+<meta property="article:modified_time" content="2020-04-16T00:37:06.214Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="SQL基本语法(二) 高级特性" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-06T07:49:34.000Z">2020-04-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    26 分钟 读完 (大约 3829 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                SQL基本语法(二) 高级特性
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>索引、视图、存储过程、游标、触发器</li>
+<li>MySQL事务管理</li>
+<li>MySQL权限管理<a id="more"></a>
+
+</li>
+</ol>
+<h2 id="索引、视图、存储过程、游标、触发器"><a href="#索引、视图、存储过程、游标、触发器" class="headerlink" title="索引、视图、存储过程、游标、触发器"></a>索引、视图、存储过程、游标、触发器</h2><h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p>首先声明，索引这个东西十分复杂也十分重要，尤其是对于查询性能优化，写一本书都不过分，所以这里只写索引最最基本的使用。之后会详细介绍索引和查询性能优化。</p>
+<p><strong>索引是存储引擎用于快速找到记录的一种数据结构</strong>。主要作用就是在数据量比较大时，可以提高我们的查询效率。可以简单的把索引类比成我们书的目录。</p>
+<p>索引主要包括：</p>
+<ul>
+<li><strong>单值索引</strong>：即一个索引只包含单个列，一个表可以有多个单值索引</li>
+<li><strong>唯一索引</strong>： 索引列的值必须唯一，但允许有空值。</li>
+<li><strong>复合索引</strong>： 即一个索引包含多个列。</li>
+</ul>
+<p>索引的基本使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  创建索引</span></span><br><span class="line"><span class="comment">-- 加UNIQUE则为唯一索引，不加就是单值索引</span></span><br><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">UNIQUE</span>] <span class="keyword">INDEX</span> indexName <span class="keyword">ON</span> mytable(columname);</span><br><span class="line"><span class="comment">-- 复合索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> indexName <span class="keyword">ON</span> mytable(col1,col2);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除索引</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">INDEX</span> indexName <span class="keyword">ON</span> mytable;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看索引</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">INDEX</span> <span class="keyword">FROM</span> mytable;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h3><p>视图是一个<strong>虚表</strong>，即<strong>视图包含的不是数据而是根据需要检索数据的SQL语句</strong>。视图提供了一种封装SELECT语句的层次，可用来简化数据处理，重新格式化和保护基础数据。</p>
+<p>使用视图的好处：</p>
+<ul>
+<li>重用SQL语句，对于复杂点的SQL语句将它创建为视图后可以方便的重用</li>
+<li>因为视图可以使用表的一部分而不是整个表，所以可以保护原来表中的一些重要数据。</li>
+<li>视图可以更改数据格式和表示。</li>
+</ul>
+<p><strong>视图的基本使用</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本模板</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> myview <span class="keyword">AS</span></span><br><span class="line"><span class="comment">-- SELECT语句</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用视图简化复杂联结</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> productcustomers <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> c.cust_name,c.cust_contact,oi.prod_id</span><br><span class="line"><span class="keyword">FROM</span> customers <span class="keyword">AS</span> c</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> orders <span class="keyword">AS</span> o</span><br><span class="line"><span class="keyword">ON</span> c.cust_id = o.cust_id</span><br><span class="line"><span class="keyword">INNER</span> <span class="keyword">JOIN</span> orderitems <span class="keyword">AS</span> oi</span><br><span class="line"><span class="keyword">ON</span> o.order_num = oi.order_num;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 这时候就可以直接查询不用再写上面复杂的联结</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> productcustomers;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用视图保护表中数据</span></span><br><span class="line"><span class="comment">-- 只给出3列数据，products表中其他数据不给</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> productsview <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> prod_id,prod_name,vend_id</span><br><span class="line"><span class="keyword">FROM</span> products;</span><br><span class="line"><span class="comment">-- 这时候只有上面的3列数据</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> productsview;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 可以看到每个VIEW的作用取决于SELECT语句是如何定义的</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>更新视图</strong><br>上面的都是对视图进行查询，我们之前提到过可以把视图可以看成表来进行操作，那么如果对视图进行增删改，原来的表中的数据会发生变化吗？</p>
+<ol>
+<li>通常，视图是可更新的（即，可以对它们使用 INSERT、UPDATE 和 DELETE ），更新一个视图将更新其基表。</li>
+<li>并非所有视图都是可更新的。如果MySQL不能正确地确定被更新的基数据，则不允许更新（包括插入和删除）</li>
+</ol>
+<p>比如如果SELECT语句中使用了下面这些条件就不能进行视图的更新：</p>
+<ul>
+<li>分组（使用 GROUP BY 和 HAVING )</li>
+<li>联结；</li>
+<li>子查询；</li>
+<li>并；</li>
+<li>聚集函数（ Min() 、 Count() 、 Sum() 等）；</li>
+<li>DISTINCT；</li>
+<li>导出（计算）列。</li>
+</ul>
+<p><strong>绝大部分情况下,视图只用于检索（ SELECT 语句）而不用于更新（ INSERT 、 UPDATE 和 DELETE ）</strong></p>
+<h3 id="存储过程"><a href="#存储过程" class="headerlink" title="存储过程"></a>存储过程</h3><p>之前我们都是使用的是1条SQL语句，但有的操作需要针对许多表的多条MySQL语句这时就需要用到存储过程。<strong>存储过程可以看成是对一系列 SQL 操作的批处理</strong>。（<strong>可以理解为我们封装了一个方法</strong>）</p>
+<p>使用存储过程的好处：</p>
+<ul>
+<li>代码封装，保证了一定的安全性；</li>
+<li>代码复用；</li>
+<li>由于是预先编译，因此具有很高的性能。</li>
+</ul>
+<p><strong>存储过程基本使用</strong>：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建存储过程</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> productpricing()  <span class="comment">-- 没有接收参数</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">AVG</span>(prod_price) <span class="keyword">AS</span> priceaverage</span><br><span class="line">  <span class="keyword">FROM</span> products;  <span class="comment">-- 分号;不可省</span></span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 调用存储过程</span></span><br><span class="line"><span class="keyword">CALL</span> productpricing();</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除存储过程</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">PROCEDURE</span> productpricing;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建存储过程使用参数</span></span><br><span class="line"><span class="comment">-- 此存储过程接收3个参数</span></span><br><span class="line"><span class="comment">-- OUT表示从存储过程传出  还有 IN传入存储过程   INOUT对存储过程传入和传出</span></span><br><span class="line"><span class="comment">-- pmin存储产品最低价格 类型为DECIMAL类型（创建表的类型都能用）其他同理</span></span><br><span class="line"><span class="comment">-- 通过INTO关键字保存到响应变量中</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> productpricing(</span><br><span class="line">  <span class="keyword">OUT</span> pmin <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>),</span><br><span class="line">  <span class="keyword">OUT</span> pmax <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>),</span><br><span class="line">  <span class="keyword">OUT</span> pavg <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>)</span><br><span class="line">)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">MIN</span>(prod_price)</span><br><span class="line">  <span class="keyword">INTO</span> pmin</span><br><span class="line">  <span class="keyword">FROM</span> products;</span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">MAX</span>(prod_price)</span><br><span class="line">  <span class="keyword">INTO</span> pmax</span><br><span class="line">  <span class="keyword">FROM</span> products;</span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">AVG</span>(prod_price)</span><br><span class="line">  <span class="keyword">INTO</span> pavg</span><br><span class="line">  <span class="keyword">FROM</span> products;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 调用存储过程</span></span><br><span class="line"><span class="comment">-- 需要传递3个参数，使用@</span></span><br><span class="line"><span class="keyword">CALL</span> productpricing(</span><br><span class="line">  @pricelow,</span><br><span class="line">  @pricehigh,</span><br><span class="line">  @priceaverage</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询</span></span><br><span class="line"><span class="keyword">SELECT</span> @pricelow,@pricehigh,@priceaverage</span><br><span class="line"></span><br><span class="line"><span class="comment">-- </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 再看另外一个例子使用IN</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> ordertotal(</span><br><span class="line">  <span class="keyword">IN</span> onumber <span class="built_in">INT</span>,</span><br><span class="line">  <span class="keyword">OUT</span> ototal <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>)</span><br><span class="line">)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">SUM</span>(item_price*quantity)</span><br><span class="line">  <span class="keyword">FROM</span> orderitems</span><br><span class="line">  <span class="keyword">WHERE</span> order_num = onumber</span><br><span class="line">  <span class="keyword">INTO</span> ototal;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 和调用函数相同，可以传递不同的值</span></span><br><span class="line"><span class="keyword">CALL</span> ordertotal(<span class="number">20005</span>,@total);</span><br><span class="line"><span class="keyword">SELECT</span> @total;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CALL</span> ordertotal(<span class="number">20009</span>,@total);</span><br><span class="line"><span class="keyword">SELECT</span> @total;</span><br></pre></td></tr></table></figure>
+
+<p><strong>智能存储过程使用</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获得订单合计，但需要对合计增加营业税</span></span><br><span class="line"><span class="comment">-- 1. 获得合计</span></span><br><span class="line"><span class="comment">-- 2. 把营业税有条件的添加到合计</span></span><br><span class="line"><span class="comment">-- 3. 返回合计(带或不带税)</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> ordertotal(</span><br><span class="line">  <span class="keyword">IN</span> onumber <span class="built_in">INT</span>,</span><br><span class="line">  <span class="keyword">IN</span> taxable <span class="built_in">BOOLEAN</span>,</span><br><span class="line">  <span class="keyword">OUT</span> ototal <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>)</span><br><span class="line">)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 声明total变量</span></span><br><span class="line">  <span class="keyword">DECLARE</span> total <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>);</span><br><span class="line">  <span class="comment">-- 声明上税百分比</span></span><br><span class="line">  <span class="keyword">DECLARE</span> taxrate <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 获得订单合计</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">SUM</span>(item_price*quantity)</span><br><span class="line">  <span class="keyword">FROM</span> orderitems</span><br><span class="line">  <span class="keyword">WHERE</span> order_num = onumber</span><br><span class="line">  <span class="keyword">INTO</span> total;</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 判断是否要上税</span></span><br><span class="line">  IF taxable THEN</span><br><span class="line">      <span class="comment">-- true 需要上税</span></span><br><span class="line">      <span class="keyword">SELECT</span> total+(total/<span class="number">100</span>*taxrate) <span class="keyword">INTO</span> total;</span><br><span class="line">  <span class="keyword">END</span> <span class="keyword">IF</span>;</span><br><span class="line">  <span class="comment">-- 直接将total赋给ototal</span></span><br><span class="line">  <span class="keyword">SELECT</span> total <span class="keyword">INTO</span> ototal;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CALL</span> ordertotal(<span class="number">20005</span>,<span class="literal">FALSE</span>,@total);</span><br><span class="line"><span class="keyword">SELECT</span> @total;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CALL</span> ordertotal(<span class="number">20005</span>,<span class="literal">TRUE</span>,@total);</span><br><span class="line"><span class="keyword">SELECT</span> @total;</span><br></pre></td></tr></table></figure>
+
+<h3 id="游标"><a href="#游标" class="headerlink" title="游标"></a>游标</h3><p>游标的主要作用是<strong>对一个结果集进行移动遍历（可以理解为是一个指针，指向查出的结果的每一行）</strong>。主要用于交互式应用，其中用户需要对数据集中的任意一行或多行进行浏览和修改。</p>
+<p>注意：<strong>游标只能在存储过程中使用</strong></p>
+<p><strong>游标的基本使用</strong>：</p>
+<ol>
+<li>声明游标 2. 打开游标  3. 取出数据  4. 关闭游标<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> processorders()</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="comment">-- 声明游标为ordernumbers</span></span><br><span class="line">  <span class="keyword">DECLARE</span> ordernumbers <span class="keyword">CURSOR</span>  </span><br><span class="line">  <span class="keyword">FOR</span></span><br><span class="line">  <span class="keyword">SELECT</span> order_num <span class="keyword">FROM</span> orders;</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 打开游标</span></span><br><span class="line">  OPEN ordernumbers;</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- ...具体操作</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 关闭游标</span></span><br><span class="line">  CLOSE ordernumbers;</span><br><span class="line"><span class="keyword">END</span>;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>接下来看个具体的例子</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每个订单加上上税后的金额</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> processorders()</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="comment">-- 声明局部变量</span></span><br><span class="line">  <span class="keyword">DECLARE</span> done <span class="built_in">BOOLEAN</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;<span class="comment">-- 声明循环终止符</span></span><br><span class="line">  <span class="keyword">DECLARE</span> o <span class="built_in">INT</span>;  <span class="comment">-- 声明局部变量o 用于存储每行数据</span></span><br><span class="line">  <span class="keyword">DECLARE</span> t <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>); <span class="comment">-- 存储每个订单合计</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 声明游标为ordernumbers</span></span><br><span class="line">  <span class="keyword">DECLARE</span> ordernumbers <span class="keyword">CURSOR</span></span><br><span class="line">  <span class="keyword">FOR</span></span><br><span class="line">  <span class="keyword">SELECT</span> order_num <span class="keyword">FROM</span> orders;</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 声明句柄用于条件出现时(即SQLSTATE=02000时)设置done为1，结束循环）</span></span><br><span class="line">  <span class="keyword">DECLARE</span> CONTINUE <span class="keyword">HANDLER</span> <span class="keyword">FOR</span> <span class="keyword">SQLSTATE</span> <span class="string">'02000'</span> <span class="keyword">SET</span> done=<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 创建一个表来存储结果</span></span><br><span class="line">  <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> ordertotals(order_num <span class="built_in">INT</span>,total <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 打开游标</span></span><br><span class="line">  OPEN ordernumbers;</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 循环所有行</span></span><br><span class="line">  REPEAT</span><br><span class="line"></span><br><span class="line">    <span class="comment">--  FETCH 用来检索当前行的 order_num 列</span></span><br><span class="line">    <span class="comment">--  自动从第一行开始,并存储到一个名为 o 的局部声明的变量中</span></span><br><span class="line">    FETCH ordernumbers INTO o;</span><br><span class="line">    <span class="comment">-- 得到订单总量</span></span><br><span class="line">    <span class="keyword">CALL</span> ordertotal(o,<span class="number">1</span>,t);  <span class="comment">-- （之前创建的存储过程）计算每个订单上税合计</span></span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> ordertotals (order_num,total) <span class="keyword">VALUES</span>(o,t);</span><br><span class="line">    <span class="comment">-- 结束循环</span></span><br><span class="line">    UNTIL done <span class="keyword">END</span> <span class="keyword">REPEAT</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">-- 关闭游标</span></span><br><span class="line">  CLOSE ordernumbers;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CALL</span> processorders();</span><br><span class="line"></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> ordertotals;</span><br></pre></td></tr></table></figure>
+
+<h3 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h3><p>触发器：<strong>监视某种情况，并触发某种操作</strong>，它是提供给程序员来保证数据完整性的一种方法。</p>
+<p>触发器是与表事件相关的<strong>一种特殊的存储过程</strong>，它的执行不是由程序调用，也不是手工启动，而是由事件来触发。<strong>触发器会在某个表执行以下语句时而自动执行：DELETE、INSERT、UPDATE。</strong></p>
+<p>触发器创建语法四要素：</p>
+<ol>
+<li>监视地点(table)</li>
+<li>监视事件(INSERT/UPDATE/DELELTE)</li>
+<li>触发时间(BEFORE/AFTER)</li>
+<li>触发事件(INSERT/UPDATE/DELELTE)</li>
+</ol>
+<p>这里对BEFORE和AFTER进行一下说明</p>
+<ul>
+<li><strong><code>BEFORE</code></strong> 在监视事件之前执行触发事件。则主要用于数据校验和净化。</li>
+<li><strong><code>AFTER</code></strong> 在监视事件之后执行触发事件。主要用于审计跟踪，将修改记录到另外一张表中。</li>
+</ul>
+<p><strong>触发器的基本使用</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基本语法</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> 触发器名</span><br><span class="line"><span class="keyword">BEFORE</span>/<span class="keyword">AFTER</span> <span class="keyword">INSERT</span>/<span class="keyword">UPDATE</span>/<span class="keyword">DELETE</span> <span class="keyword">ON</span> 表名</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span> <span class="comment">-- 这句话在MySQL中是固定(指的是操作的每一行)</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">sql</span>语句;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 简单的例子</span></span><br><span class="line"><span class="comment">-- 在插入vendors表中一条记录后，在products表中插入一条记录</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> newvendors</span><br><span class="line"><span class="keyword">AFTER</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> vendors</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">INSERT</span> <span class="keyword">INTO</span> products <span class="keyword">VALUES</span> (<span class="string">'ANNNNNN'</span>,<span class="number">1009</span>,<span class="string">'jdfks'</span>,<span class="number">9.99</span>,<span class="string">'插入时的描述'</span>);</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"><span class="comment">-- 测试一下</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> vendors <span class="keyword">VALUES</span> (<span class="number">1009</span>,<span class="string">'haha'</span>,<span class="string">'haha'</span>,<span class="string">'haha'</span>,<span class="string">'aa'</span>,<span class="string">'dfsfs'</span>,<span class="string">'USA'</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="INSERT触发器"><a href="#INSERT触发器" class="headerlink" title="INSERT触发器"></a>INSERT触发器</h4><p>INSERT触发器内可以引用一个名为NEW的虚拟表，访问被插入的行。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 比如还是上面的例子，vend_id就可以使用NEW.vend_id</span></span><br><span class="line"><span class="comment">-- 这里NEW就表示vendors表中插入的一条记录</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TRIGGER</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="string">`newvendors`</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> newvendors</span><br><span class="line"><span class="keyword">AFTER</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> vendors</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">INSERT</span> <span class="keyword">INTO</span> products <span class="keyword">VALUES</span> (<span class="string">'ANNNNNN'</span>,NEW.vend_id,<span class="string">'jdfks'</span>,<span class="number">9.99</span>,<span class="string">'插入时的描述'</span>);</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"><span class="comment">-- 测试一下</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> vendors <span class="keyword">VALUES</span> (<span class="number">1009</span>,<span class="string">'haha'</span>,<span class="string">'haha'</span>,<span class="string">'haha'</span>,<span class="string">'aa'</span>,<span class="string">'dfsfs'</span>,<span class="string">'USA'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以使用IF判断</span></span><br><span class="line"><span class="comment">-- 判断供应商国家是不是USA，是的话执行，否则不执行</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> newvendors</span><br><span class="line"><span class="keyword">AFTER</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> vendors</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">IF</span> NEW.vend_country = <span class="string">'USA'</span> <span class="keyword">THEN</span></span><br><span class="line">  <span class="keyword">INSERT</span> <span class="keyword">INTO</span> products <span class="keyword">VALUES</span> (<span class="string">'ANNNNNN'</span>,NEW.vend_id,<span class="string">'jdfks'</span>,<span class="number">9.99</span>,<span class="string">'插入时的描述'</span>);</span><br><span class="line">  <span class="keyword">END</span> <span class="keyword">IF</span>;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 测试一下</span></span><br><span class="line"><span class="comment">-- 插入成功，两张表都更新</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> vendors <span class="keyword">VALUES</span> (<span class="number">1009</span>,<span class="string">'haha'</span>,<span class="string">'haha'</span>,<span class="string">'haha'</span>,<span class="string">'aa'</span>,<span class="string">'dfsfs'</span>,<span class="string">'USA'</span>);  </span><br><span class="line"><span class="comment">-- 插入失败,因为是AFTER,所以只有vendors表中更新</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> vendors <span class="keyword">VALUES</span> (<span class="number">1010</span>,<span class="string">'haha'</span>,<span class="string">'haha'</span>,<span class="string">'haha'</span>,<span class="string">'aa'</span>,<span class="string">'dfsfs'</span>,<span class="string">'France'</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="DELETE触发器"><a href="#DELETE触发器" class="headerlink" title="DELETE触发器"></a>DELETE触发器</h4><p>在 DELETE触发器代码内，你可以引用一个名为OLD的虚拟表，访问被删除的行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 将删除的数据保存到另一张表中</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> deletesaveorder</span><br><span class="line"><span class="keyword">BEFORE</span> <span class="keyword">DELETE</span> <span class="keyword">ON</span> orders</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">INSERT</span> <span class="keyword">INTO</span> deleteorder (order_num,order_date,cust_id)</span><br><span class="line">  <span class="keyword">VALUES</span>(OLD.order_num,OLD.order_date,OLD.cust_id);</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 测试</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> orders <span class="keyword">WHERE</span> order_num = <span class="number">20010</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="UPDATE触发器"><a href="#UPDATE触发器" class="headerlink" title="UPDATE触发器"></a>UPDATE触发器</h4><p>在 UPDATE触发器代码内<br>可以引用一个名为OLD的虚拟表，访问被删除的行<br>也可以引用一个名为 NEW 的虚拟表访问新更新的值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TRIGGER</span> updatevendor;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> updatevendor</span><br><span class="line"><span class="keyword">BEFORE</span> <span class="keyword">UPDATE</span> <span class="keyword">ON</span> vendors</span><br><span class="line"><span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="comment">-- 一种简便的写法因为是BEFORE,所以可以直接SET</span></span><br><span class="line">  <span class="keyword">SET</span> NEW.vend_state = <span class="keyword">UPPER</span>(NEW.vend_state);</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"><span class="comment">-- 测试一下</span></span><br><span class="line"><span class="keyword">UPDATE</span> vendors <span class="keyword">SET</span> vend_state = <span class="string">'ab'</span> <span class="keyword">WHERE</span> vend_id = <span class="number">1006</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="MySQL事务管理"><a href="#MySQL事务管理" class="headerlink" title="MySQL事务管理"></a>MySQL事务管理</h2><p>事务处理是一种机制，通过<strong>确保成批的 SQL 操作要么完全执行，要么完全不执行</strong>，来维护数据库的完整性，保证数据库不包含不完整的操作结果。</p>
+<ul>
+<li><strong>事务</strong>（transaction）指一组 SQL 语句；</li>
+<li><strong>回退</strong>（rollback）指撤销指定 SQL 语句的过程；</li>
+<li><strong>提交</strong>（commit）指将未存储的 SQL 语句结果写入数据库表；</li>
+<li><strong>保留点</strong>（savepoint）指事务处理中设置的临时占位符（placeholder），你可以对它发布回退（与回退整个事务处理不同）。</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>事务不能回退 SELECT 语句，回退 SELECT 语句也没意义</li>
+<li>事务也不能回退 CREATE 和 DROP 语句。</li>
+<li>MySQL中事务是默认自动提交的，MySQL会把每一条INSERT、UPDATE、DELETE语句都看做是一个事务自动提交。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看是否是自动提交  ON表示开启自动提交 OFF表示关闭</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'autocommit'</span>  <span class="comment">-- ON</span></span><br><span class="line"><span class="comment">-- 使用autocommit = 0关闭自动提交，</span></span><br><span class="line"><span class="comment">-- autocommit = 1开启自动提交</span></span><br><span class="line"><span class="keyword">SET</span> autocommit = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'autocommit'</span>  <span class="comment">-- OFF</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>事务使用的基本方法</strong>：</p>
+<ul>
+<li>如果没有设置保留点，ROLLBACK 会回退到 START TRANSACTION 语句处；</li>
+<li>如果设置了保留点，并且在 ROLLBACK 中指定该保留点，则会回退到该保留点。</li>
+<li>保留点在事务处理完成（执行一条 ROLLBACK 或 COMMIT）后自动释放。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">START</span> <span class="keyword">TRANSACTION</span></span><br><span class="line"><span class="comment">-- ...</span></span><br><span class="line"><span class="keyword">SAVEPOINT</span> delete1 </span><br><span class="line"><span class="comment">-- ...</span></span><br><span class="line"><span class="keyword">ROLLBACK</span> <span class="keyword">TO</span> delete1</span><br><span class="line"><span class="comment">-- ...</span></span><br><span class="line"><span class="keyword">COMMIT</span></span><br></pre></td></tr></table></figure>
+我们先按照上面关闭自动提交，再来看下面的实验结果</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ROLLBACK 和SAVEPOINT测试</span></span><br><span class="line"><span class="comment">-- SELECT * FROM ordertotals;</span></span><br><span class="line"><span class="keyword">START</span> <span class="keyword">TRANSACTION</span>;</span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> ordertotals <span class="keyword">WHERE</span> order_num = <span class="number">20005</span>;</span><br><span class="line"><span class="keyword">SAVEPOINT</span> delete1;</span><br><span class="line"><span class="comment">-- SELECT * FROM ordertotals;</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> ordertotals;</span><br><span class="line"><span class="comment">-- SELECT * FROM ordertotals;</span></span><br><span class="line"><span class="keyword">ROLLBACK</span> <span class="keyword">TO</span> delete1;  <span class="comment">--回滚到delete1点，只是删除了order_num = 20005的列</span></span><br><span class="line"><span class="comment">-- SELECT * FROM ordertotals;</span></span><br><span class="line"><span class="keyword">ROLLBACK</span>;</span><br><span class="line"><span class="comment">-- SELECT * FROM ordertotals;  --回滚到开始处，20005行也没有删除</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># COMMIT测试</span></span><br><span class="line"><span class="comment">-- 彻底删除了20005行，无法回滚了</span></span><br><span class="line"><span class="keyword">START</span> <span class="keyword">TRANSACTION</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> ordertotals <span class="keyword">WHERE</span> order_num = <span class="number">20005</span>;</span><br><span class="line"><span class="keyword">SAVEPOINT</span> delete1;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MySQL权限管理"><a href="#MySQL权限管理" class="headerlink" title="MySQL权限管理"></a>MySQL权限管理</h2><p>到目前为止我们使用的都是MySQL的root账户，它对整个MySQL服务器具有完全的控制。不过实际使用时决不能使用root,应该创建一系列的账号，有的用于管理，有的供用户使用，有的供开发人员使用。</p>
+<p>MySQL的权限管理就是<strong>管理用户以及用户访问数据的权限</strong>管理。比如哪些用户可以创建表，哪些用户只能读和写表;哪些用户只能添加数据不能删除数据等等。</p>
+<p>MySQL用户账号和信息存储在名为 mysql 的MySQL数据库中,可以使用下面的命令查看用户：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">USE</span> mysql;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">user</span> <span class="keyword">FROM</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建账户</span></span><br><span class="line"><span class="comment">-- 新创建的账户没有任何权限。</span></span><br><span class="line"><span class="comment">-- Vic用户名  mypassword密码</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> Vic <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'mypassword'</span>;  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改账户名</span></span><br><span class="line"><span class="keyword">RENAME</span> <span class="keyword">USER</span> Vic <span class="keyword">TO</span> coderchen;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除账户</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> coderchen;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改密码</span></span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> coderchen = <span class="keyword">Password</span>(<span class="string">'chenpassword'</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h3><p>新创建的用户账号没有访问权限。它们能登录MySQL，但不能看到数据，不能执行任何数据库操作。比如上面的新建用户coderchen。  因此新创建用户后需要给用户赋予权限。</p>
+<p>授予权限使用 <strong><code>GRANT</code></strong>  撤销权限使用 <strong><code>REVOKE</code></strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看用户权限</span></span><br><span class="line"><span class="comment">-- 又重新创建了coderchen账号</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">GRANTS</span> <span class="keyword">FOR</span> myuser;</span><br><span class="line"><span class="comment">-- 运行结果如下所示：表示coderchen没有任何权限</span></span><br><span class="line"><span class="comment">-- GRANT USAGE ON *.* TO 'coderchen'@'%'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置访问权限</span></span><br><span class="line"><span class="comment">-- 授予coderchen对reviewmysql中的所有表具有SELECT和INSERT权限</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">SELECT</span>, <span class="keyword">INSERT</span> <span class="keyword">ON</span> reviewmysql.* <span class="keyword">TO</span> coderchen;</span><br><span class="line"><span class="comment">-- 验证一下</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">GRANTS</span> <span class="keyword">FOR</span> coderchen;</span><br><span class="line"><span class="comment">-- 运行结果如下：可以看到多了一行我们设置的权限</span></span><br><span class="line"><span class="comment">-- GRANT USAGE ON *.* TO 'coderchen'@'%'</span></span><br><span class="line"><span class="comment">-- GRANT SELECT, INSERT ON `reviewmysql`.* TO 'coderchen'@'%'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 这时候也可以用coderchen连接数据库进行测试</span></span><br><span class="line"><span class="comment">-- 查询和插入都没问题</span></span><br><span class="line"><span class="comment">-- 更新会出现UPDATE command denied to user 'coderchen'@'localhost' for table 'orders'错误</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 撤销访问权限</span></span><br><span class="line"><span class="comment">-- 撤销插入权限</span></span><br><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> reviewmysql.* <span class="keyword">FROM</span> coderchen;</span><br><span class="line"><span class="comment">-- 验证一下</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">GRANTS</span> <span class="keyword">FOR</span> coderchen;</span><br><span class="line"><span class="comment">-- 运行结果如下：可以看到第二行中已经少了INSERT权限</span></span><br><span class="line"><span class="comment">-- GRANT USAGE ON *.* TO 'coderchen'@'%'</span></span><br><span class="line"><span class="comment">-- GRANT SELECT ON `reviewmysql`.* TO 'coderchen'@'%'</span></span><br></pre></td></tr></table></figure>
+
+
+<p>GRANT 和 REVOKE 可在几个层次上控制访问权限：</p>
+<ul>
+<li>整个服务器，使用 GRANT ALL 和 REVOKE ALL；</li>
+<li>整个数据库，使用 ON database.*；</li>
+<li>特定的表，使用 ON database.table；</li>
+<li>特定的列；</li>
+<li>特定的存储过程。</li>
+</ul>
+<p>详细的权限说明参考下表</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-06-SQL基本语法之索引、视图、存储过程、触发器、游标、事务管理、用户管理、数据库维护-2020-4-8-19-42-13"></div><br>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/MySQL/" rel="tag">MySQL</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/04/08/leetcode-database%E9%A2%98%E8%A7%A3/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">leetcode-database题解</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/06/SQL%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B9%8B%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">
+                <span class="level-item">SQL基本语法(一) 增删改查</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            44
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            8
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#索引、视图、存储过程、游标、触发器">
+        <span class="has-mr-6">1</span>
+        <span>索引、视图、存储过程、游标、触发器</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#索引">
+        <span class="has-mr-6">1.1</span>
+        <span>索引</span>
+        </a></li><li>
+        <a class="is-flex" href="#视图">
+        <span class="has-mr-6">1.2</span>
+        <span>视图</span>
+        </a></li><li>
+        <a class="is-flex" href="#存储过程">
+        <span class="has-mr-6">1.3</span>
+        <span>存储过程</span>
+        </a></li><li>
+        <a class="is-flex" href="#游标">
+        <span class="has-mr-6">1.4</span>
+        <span>游标</span>
+        </a></li><li>
+        <a class="is-flex" href="#触发器">
+        <span class="has-mr-6">1.5</span>
+        <span>触发器</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#INSERT触发器">
+        <span class="has-mr-6">1.5.1</span>
+        <span>INSERT触发器</span>
+        </a></li><li>
+        <a class="is-flex" href="#DELETE触发器">
+        <span class="has-mr-6">1.5.2</span>
+        <span>DELETE触发器</span>
+        </a></li><li>
+        <a class="is-flex" href="#UPDATE触发器">
+        <span class="has-mr-6">1.5.3</span>
+        <span>UPDATE触发器</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#MySQL事务管理">
+        <span class="has-mr-6">2</span>
+        <span>MySQL事务管理</span>
+        </a></li><li>
+        <a class="is-flex" href="#MySQL权限管理">
+        <span class="has-mr-6">3</span>
+        <span>MySQL权限管理</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#用户管理">
+        <span class="has-mr-6">3.1</span>
+        <span>用户管理</span>
+        </a></li><li>
+        <a class="is-flex" href="#权限管理">
+        <span class="has-mr-6">3.2</span>
+        <span>权限管理</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="SQL基本语法(二) 高级特性" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

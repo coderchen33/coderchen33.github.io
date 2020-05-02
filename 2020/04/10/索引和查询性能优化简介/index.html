@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>索引和查询性能优化简介 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容  查询性能优化简介 MySQL索引结构 创建高性能的索引策略">
+<meta property="og:type" content="article">
+<meta property="og:title" content="索引和查询性能优化简介">
+<meta property="og:url" content="http://coderchen33.life/2020/04/10/%E7%B4%A2%E5%BC%95%E5%92%8C%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容  查询性能优化简介 MySQL索引结构 创建高性能的索引策略">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-04-10T01:00:18.000Z">
+<meta property="article:modified_time" content="2020-05-02T12:28:18.584Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="索引和查询性能优化简介" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-10T01:00:18.000Z">2020-04-10</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E5%BA%93-MySQL/">数据库(MySQL)</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    32 分钟 读完 (大约 4806 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                索引和查询性能优化简介
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>查询性能优化简介</li>
+<li>MySQL索引结构</li>
+<li>创建高性能的索引策略</li>
+</ol>
+<a id="more"></a>
+
+<h2 id="查询性能优化简介"><a href="#查询性能优化简介" class="headerlink" title="查询性能优化简介"></a>查询性能优化简介</h2><p>这里先整体提一下查询性能优化的结构，好让我们知道之后学习的内容是属于哪个层面的优化。</p>
+<p>查询性能优化主要分为以下4个层面:</p>
+<ol start="0">
+<li><strong>硬件优化</strong> (硬件层面的优化，比如说增加内存等)</li>
+<li><strong>库表结构的优化</strong> (库表结构设计的是否合理,比如是否符合范式等)</li>
+<li><strong>索引优化</strong> (索引的建立是否合理高效)</li>
+<li><strong>查询优化</strong> (SELECT语句如何写的准确高效)</li>
+</ol>
+<p>上面提到的每一层设计或使用的不合理都会影响最终查询的性能，并且这几层从上到下都是层层递进的。</p>
+<p>没有良好的硬件，即便我们把表结构、索引和SELECT语句都设计的十分完美都是无济于事的;同样有了良好的硬件，但是库表结构设计的不合理,就会影响我们索引和查询语句的建立和性能;硬件和库表结构设计的合理高效，但是索引建的很烂，最终效果也不会好;上面都建好了，但是我们最终写的SELECT语句很烂,比如在不必要的时候扫描全表等，也会使得查询性能下降。</p>
+<p>硬件优化不是我们需要考虑的，库表结构优化和查询优化之后会详细讲。这里我们就看看对查询性能优化最有效的索引优化。</p>
+<hr>
+<h2 id="MySQL索引结构"><a href="#MySQL索引结构" class="headerlink" title="MySQL索引结构"></a>MySQL索引结构</h2><p><strong>在MySQL中索引是在存储引擎层实现</strong>，而不是在服务器层。所以，不同的存储引擎的索引工作方式并不一样，也不是所有的存储引擎都支持所有类型的索引。接下来我们先看看MySQL支持的索引类型。</p>
+<h3 id="B-树索引"><a href="#B-树索引" class="headerlink" title="B+树索引"></a>B+树索引</h3><div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-27-21-16-32"></div><br>
+
+
+<p>如上图，是一颗B+树，关于B+树的定义可以参考我<a href="http://www.coderchen33.life/2020/04/29/%E4%BA%8C%E5%8F%89%E6%8E%92%E5%BA%8F%E6%A0%91%E3%80%81%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81%E7%BA%A2%E9%BB%91%E6%A0%91%E3%80%81B%E6%A0%91%E3%80%81B-%E6%A0%91/">数据结构里面树的文章</a>，这里只说一些重点。浅蓝色的块我们称之为一个磁盘块，可以看到每个磁盘块包含几个数据项（深蓝色所示）和指针（黄色所示），如磁盘块1包含数据项17和35，包含指针P1、P2、P3，P1表示小于17的磁盘块，P2表示在17和35之间的磁盘块，P3表示大于35的磁盘块。<strong>真实的数据存在于叶子节点即3、5、9、10、13、15、28、29、36、60、75、79、90、99。非叶子节点不存储真实的数据，只存储指引搜索方向的数据项，如17、35并不真实存在于数据表中</strong>。</p>
+<h4 id="B-树的查找过程"><a href="#B-树的查找过程" class="headerlink" title="B+树的查找过程"></a>B+树的查找过程</h4><p>如图所示，如果要查找数据项29，那么首先会把磁盘块1由磁盘加载到内存，此时发生一次IO，在内存中用二分查找确定29在17和35之间，锁定磁盘块1的P2指针，内存时间因为非常短（相比磁盘的IO）可以忽略不计，通过磁盘块1的P2指针的磁盘地址把磁盘块3由磁盘加载到内存，发生第二次IO，29在26和30之间，锁定磁盘块3的P2指针，通过指针加载磁盘块8到内存，发生第三次IO，同时内存中做二分查找找到29，结束查询，总计三次IO。真实的情况是，3层的B+树可以表示上百万的数据，如果上百万的数据查找只需要三次IO，性能提高将是巨大的，如果没有索引，每个数据项都要发生一次IO，那么总共需要百万次的IO，显然成本非常非常高。</p>
+<h4 id="B-树性质"><a href="#B-树性质" class="headerlink" title="B+树性质"></a>B+树性质</h4><p>1.通过上面的分析，我们知道<strong>IO次数取决于B+数的高度h</strong>，假设当前数据表的数据为N，每个磁盘块的数据项的数量是m，则有<code>h=㏒(m+1)N</code>，当数据量N一定的情况下，m越大，h越小；而<strong>m = 磁盘块的大小 / 数据项的大小，磁盘块的大小也就是一个数据页的大小，是固定的，如果数据项占的空间越小，数据项的数量越多，树的高度越低</strong>。这就是为什么每个数据项，即<strong>索引字段要尽量的小</strong>，比如int占4字节，要比bigint8字节少一半。这也是为什么<strong>B+树要求把真实的数据放到叶子节点而不是内层节点</strong>，一旦放到内层节点，磁盘块的数据项会大幅度下降，导致树增高。当数据项等于1时将会退化成线性表。</p>
+<p>2.<strong>当B+树的数据项是复合的数据结构，比如(name,age,sex)的时候，B+数是按照从左到右的顺序来建立搜索树的</strong>，比如当(张三,20,F)这样的数据来检索的时候，B+树会优先比较name来确定下一步的所搜方向，如果name相同再依次比较age和sex，最后得到检索的数据；但当(20,F)这样的没有name的数据来的时候，B+树就不知道下一步该查哪个节点，因为建立搜索树的时候name就是第一个比较因子，必须要先根据name来搜索才能知道下一步去哪里查询。比如当(张三,F)这样的数据来检索时，B+树可以用name来指定搜索方向，但下一个字段age的缺失，所以只能把名字等于张三的数据都找到，然后再匹配性别是F的数据了， 这个是非常重要的性质，即<strong>索引的最佳左前缀法则</strong>，这个在之后索引优会详细介绍。</p>
+<h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p>哈希索引基于哈希表实现，<strong>只有精确匹配索引所有列的查询才有效</strong>。对于每一行数据，存储引擎都会对所有的索引列计算一个哈希码，哈希索引将所有的哈希码存储在索引中，同时在哈希表中保存指向每个数据行的指针。</p>
+<p>哈希索引结构如下：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-18-20-16-48"></div><br>
+
+<p>从上面可以看到</p>
+<ul>
+<li><p><strong>哈希索引只包含哈希值和行指针，而不存储字段值</strong>，所以不能使用索引中的值来避免读取行。</p>
+</li>
+<li><p>虽然无法避免读取行，但由于使用了hash，所以在hash冲突很少的情况下，<strong>仍然可以以O(1)的时间复杂度读取数据</strong>。</p>
+</li>
+<li><p>哈希索引不是按照索引值顺序存储的，所以<strong>无法用于排序(ORDER BY)与分组(GROUP BY)</strong></p>
+</li>
+<li><p>因为哈希索引是使用索引列的全部内容来计算哈希值，<strong>索引不支持部分索引列匹配查找</strong>。例如（A,B）列建立索引，如果查询只用数据列A，则无法使用该索引。</p>
+</li>
+<li><p>只支持精确查找(= IN &lt;=&gt;)，无法用于部分查找和范围查找。</p>
+</li>
+</ul>
+<p><strong>InnoDB 存储引擎有一个特殊的功能叫“自适应哈希索引”</strong>，当某个索引值被使用的非常频繁时，会在 B+Tree 索引之上再创建一个哈希索引，这样就让 B+Tree 索引具有哈希索引的一些优点，比如快速的哈希查找。这个是完全自动的、内部的行为，用户无法控制或者配置，不过如果有必要，完全可以关闭这个功能。</p>
+<h3 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h3><p>全文索引用于查找文本中的关键词，而不是直接比较是否相等，类似于搜索引擎做的事情。</p>
+<p>MyISAM引擎支持全文索引，InnoDB 引擎在5.6.4版本后也开始支持全文索引。</p>
+<p>实际上全文索引很少用，我们知道全文索引类似于搜索引擎做的事情，而目前搜索引擎的方案又十分成熟，所以大部分情况下我们使用存储引擎如elasticsearch等而不是全文索引。</p>
+<h3 id="空间数据索引-R-Tree"><a href="#空间数据索引-R-Tree" class="headerlink" title="空间数据索引(R-Tree)"></a>空间数据索引(R-Tree)</h3><p>MyISAM 存储引擎支持空间数据索引（R-Tree），可以用于地理数据存储。空间数据索引会从所有维度来索引数据，可以有效地使用任意维度来进行组合查询。</p>
+<p>必须使用 GIS 相关的函数来维护数据。</p>
+<p>这个索引也很少使用</p>
+<h2 id="InnoDB引擎和MyISAM引擎使用的索引"><a href="#InnoDB引擎和MyISAM引擎使用的索引" class="headerlink" title="InnoDB引擎和MyISAM引擎使用的索引"></a>InnoDB引擎和MyISAM引擎使用的索引</h2><h3 id="InnoDB引擎使用的索引"><a href="#InnoDB引擎使用的索引" class="headerlink" title="InnoDB引擎使用的索引"></a>InnoDB引擎使用的索引</h3><blockquote>
+<p>以下内容主要来自一篇文章，如果看我解释的不清楚的话，可以去看<a href="https://mp.weixin.qq.com/s?__biz=MzIxNTQ3NDMzMw==&mid=2247483701&idx=1&sn=bd229dd584f51ef4fe545d44ad8cdbf9&chksm=979688c7a0e101d1b5c752094013b78f5bd50ab905257ba82149d85d35ea07aba1a15b0e52b4&mpshare=1&srcid=0409Tn66UYWSWvqEVlOpwGtR&key=6cd553e86912686a47d76f2d900b1b5b388c90b29708f016db3a6e1bcebe032220ba63626095c4298f32cda7d0d7bd11bded2365f05c32e522584dd149b98db0bb8549ef144cdca694665d31d35cfeef&ascene=0&uin=MzAzMjU4NDM3Nw==&devicetype=iMac%20MacBookPro12,1%20OSX%20OSX%2010.12.4%20build(16E195)&version=12020810&nettype=WIFI&lang=zh_CN&fontScale=100&pass_ticket=YHEmqDDX8hHkj5FiSVpQvjYqIMBDHHDS2po4mfJe%20qIXlqwJI%20g7aJUZq0%20DwGJ0&scene=21#wechat_redirect">原文</a></p>
+</blockquote>
+<h4 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a><strong>聚簇索引</strong></h4><div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-28-16-50-58"></div><br>
+
+<p>聚簇索引并不是一种单独的索引类型，而是<strong>一种数据存储的方式</strong>。它是指<strong>将实际的数据行和索引放到了一块，并且索引结构的叶子节点保存了实际的数据行</strong>。因为无法把数据行同时存放在两个地方，所以<strong>一个表只能有一个聚簇索引</strong>。</p>
+<p>上图即为InnoDB引擎中的聚簇索引，它是在同一个结构中保存了B+树索引和实际数据行，体现在两个方面：</p>
+<p>1.<strong>使用记录</strong> <strong><code>主键</code></strong> <strong>值的大小进行记录和页的排序</strong>，这包括三个方面的含义：</p>
+<ul>
+<li>页内的记录是按照<code>主键</code>的大小顺序排成一个单向链表。</li>
+<li>各个存放用户记录的页也是根据页中记录的<code>主键</code>大小顺序排成一个双向链表。</li>
+<li>各个存放目录项的页也是根据页中记录的<code>主键</code>大小顺序排成一个双向链表。</li>
+</ul>
+<p>2.<strong>B+树的叶子节点存储的是实际的完整的数据行</strong>。</p>
+<p>从上面知道，InnoDB的数据文件本身要按主键聚集，所以InnoDB要求表必须有主键，如果没有显式指定，则MySQL系统会自动选择一个可以唯一标识数据记录的列作为主键，如果不存在这种列，则MySQL自动为InnoDB表生成一个隐含字段作为主键，这个字段长度为6个字节，类型为长整形。</p>
+<h4 id="二级索引-辅助索引"><a href="#二级索引-辅助索引" class="headerlink" title="二级索引(辅助索引)"></a><strong>二级索引(辅助索引)</strong></h4><p>上边介绍的聚簇索引只能在搜索条件是主键值时才能发挥作用，因为B+树中的数据都是按照主键进行排序的。那如果我们想以别的列作为搜索条件该咋办呢？只能从头到尾沿着链表依次遍历记录么?  </p>
+<p>答案是否定的，不然如果不能快速查找和排序我们还建索引干什么玩意儿。</p>
+<p>实际上，我们每新建一个索引就会新建一棵B+树，不同的B+树中的数据采用不同的排序规则。比方说我们在非主键列c2列新建一个索引，则会新建一棵B+树，效果如下图所示：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-28-16-23-46"></div><br>
+
+
+<p>这个B+树与上边介绍的聚簇索引有几处不同：</p>
+<p>1.使用记录 <strong><code>c2列</code></strong> 的大小进行记录和页的排序，这包括三个方面的含义：</p>
+<ul>
+<li>页内的记录是按照c2列的大小顺序排成一个单向链表。</li>
+<li>各个存放用户记录的页也是根据页中记录的c2列大小顺序排成一个双向链表。</li>
+<li>各个存放目录项的页也是根据页中记录的c2列大小顺序排成一个双向链表。</li>
+</ul>
+<p>2.B+树的叶子节点存储的并不是完整的用户记录，而只是 <strong><code>c2列+主键</code></strong> 这两个列的值。</p>
+<p>3.目录项记录中不再是 <strong><code>主键+页号</code></strong> 的搭配，而变成了 <strong><code>c2列+页号</code></strong> 的搭配。</p>
+<p>所以如果我们现在想通过c2列的值查找某些记录的话就可以使用我们刚刚建好的这个B+树了。和上面的步骤一样，从根页面根据c2列的值找到叶子页面后，叶子页面中存储的数据是c2和c1（也就是主键）两个列，所以 <strong><code>我们必须再根据主键值去聚簇索引中再查找一遍完整的用户记录</code></strong> 。</p>
+<p>我们根据这个以c2列大小排序的B+树只能确定我们要查找记录的主键值，所以如果我们想根据c2列的值查找到完整的用户记录的话，仍然需要到聚簇索引中再查一遍，这个过程也被称为<strong>回表</strong>。也就是根据c2列的值查询一条完整的用户记录需要使用到2棵B+树！！！</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-28-16-39-24"></div><br>
+
+<p>上面介绍的是单一索引，实际上更常用的是复合索引。我们知道建立复合索引(c2,c3)后，对记录先是根据c2进行排序，c2相同时再根据c3排序，反映到B+树上，则如下图所示:</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-28-16-48-20"></div><br>
+
+<p>如图所示，我们需要注意一下几点：</p>
+<ul>
+<li><p>每条目录项记录都由<code>c2、c3、页号</code>这三个部分组成，各条记录先按照c2列的值进行排序，如果记录的c2列相同，则按照c3列的值进行排序。</p>
+</li>
+<li><p>B+树叶子节点处的用户记录由<code>c2、c3和主键c1列</code>组成。</p>
+</li>
+</ul>
+<h3 id="MyISAM引擎使用的索引"><a href="#MyISAM引擎使用的索引" class="headerlink" title="MyISAM引擎使用的索引"></a><strong>MyISAM引擎使用的索引</strong></h3><p><strong>MyISAM的索引方案虽然也使用B+树，但是和InnoDB不同的是在MyISAM中是将索引和数据分开存储</strong>。</p>
+<p>将表中的记录按照插入时间 <strong><code>顺序</code></strong> 的存储在一块存储空间上，我们可以通过 <strong><code>行号</code></strong> 而快速访问到一条记录。如图所示：</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-28-17-32-10"></div><br>
+
+<p>由于在插入数据的时候并没有刻意按照主键大小排序，所以我们并不能在这些数据上使用二分法进行查找。</p>
+<p>1.MyISAM会单独为表的主键创建一个B+树索引，只不过在B+树的叶子节点中存储的不是完整的用户记录，而是 <strong><code>主键值 + 行号</code></strong> 的组合。也就是先通过索引找到对应的行号，再通过行号去找对应的记录！</p>
+<p>这一点和InnoDB是完全不相同的，在InnoDB存储引擎中，我们只需要根据主键值对聚簇索引进行一次查找能找到对应的记录，而在MyISAM中却需要进行一次<strong>回表</strong>操作，意味着 <strong><code>MyISAM中建立的索引全部都是二级索引！</code></strong></p>
+<p>2.如果有需要的话，我们也可以对其它的列分别建立索引或者建立联合索引，原理和InnoDB中的索引是一样的，只不过在叶子节点处存储的是相应的 <strong><code>列 + 行号</code></strong> 而已。<strong>这些索引也全部都是二级索引</strong>。</p>
+<p><strong>由于索引树是独立的，通过辅助键检索无需访问主键的索引树，即不用回表。</strong></p>
+<div align="center"><img src="http://coderchen33.life/2020-04-10-索引和查询性能优化简介-2020-04-28-18-03-36"></div><br>
+
+
+
+<h3 id="InnoDB引擎和MyISAM引擎的对比"><a href="#InnoDB引擎和MyISAM引擎的对比" class="headerlink" title="InnoDB引擎和MyISAM引擎的对比"></a><strong>InnoDB引擎和MyISAM引擎的对比</strong></h3><p>相同点: <strong>MyISAM和InnoDB引擎使用的都是B+树索引</strong>。</p>
+<p>不同点: <strong>InnoDB引擎是聚簇索引+二级索引，而MyISAM引擎使用的都是二级索引</strong>。具体而言体现在：</p>
+<ol>
+<li><p>InnoDB引擎将B+树索引和实际的数据行存放在一起，实现索引即数据。 而MyISAM引擎中B+树索引和实际的数据行分开。</p>
+</li>
+<li><p>InnoDB引擎数据的物理存放顺序与索引顺序是一致的，即有序。而MyISAM表中的记录按照插入时间顺序的存储在一块存储空间上，是无序的。</p>
+</li>
+<li><p>InnoDB引擎中页节点存放的是主键+实际数据行，而MyISAM引擎中存放的是主键+行号。</p>
+</li>
+<li><p>如果根据主键查询数据InnoDB引擎可以直接从索引中取到，如果从二级索引中查询时需要进行回表。 而MyISAM引擎中不需要进行回表。所以如果表是只读表，则MyISAM的效率会比InnoDB高</p>
+</li>
+</ol>
+<h2 id="索引的优点和缺点"><a href="#索引的优点和缺点" class="headerlink" title="索引的优点和缺点"></a>索引的优点和缺点</h2><p>因为我们平时绝大部分时候使用的是InnoDB引擎的B+树结构的索引，并且我们上面知道了B+树的结构，这里也就能更好的的理解索引的优点和缺点了：</p>
+<p><strong>索引的优点</strong>：</p>
+<ol>
+<li><strong>索引大大减小了服务器需要扫描的数据行数</strong> (索引中存储了实际的数据)</li>
+<li><strong>索引可以帮助服务器避免排序和分组，以及创建临时表</strong>(B+树索引是有序的，所以可以使用ORDER BY和GROUP BY进行排序和分组操作。临时表主要是在排序和分组过程中创建，不需要排序和分组，也就不需要创建临时表)</li>
+<li><strong>将随机I/O变为顺序I/O</strong> (B+树索引是有序的，会将相邻的数据存储在一起)</li>
+</ol>
+<p><strong>索引的缺点</strong></p>
+<ol>
+<li><p>索引保存了主键和索引字段的真实数据，所以<strong>索引列也是要占用空间</strong>的。</p>
+</li>
+<li><p>虽然索引大大提高了查询速度，但同时<strong>会降低更新表的速度</strong>，如对表的INSERT、UPDATE和DELETE。因为更新表时,MySQL不仅要保存数据，还要保存索引文件每次更新添加了索引列的字段。</p>
+</li>
+<li><p>如果MySQL中有大数据量的表，<strong>需要花费一定的时间建立优秀的索引</strong>。</p>
+</li>
+</ol>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/MySQL/" rel="tag">MySQL</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/04/11/EXPLAIN%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%A6%E8%A7%A3/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">EXPLAIN关键字详解</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/10/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3MySQL/">
+                <span class="level-item">深入理解MySQL</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            44
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            8
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#查询性能优化简介">
+        <span class="has-mr-6">1</span>
+        <span>查询性能优化简介</span>
+        </a></li><li>
+        <a class="is-flex" href="#MySQL索引结构">
+        <span class="has-mr-6">2</span>
+        <span>MySQL索引结构</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#B-树索引">
+        <span class="has-mr-6">2.1</span>
+        <span>B+树索引</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#B-树的查找过程">
+        <span class="has-mr-6">2.1.1</span>
+        <span>B+树的查找过程</span>
+        </a></li><li>
+        <a class="is-flex" href="#B-树性质">
+        <span class="has-mr-6">2.1.2</span>
+        <span>B+树性质</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#哈希索引">
+        <span class="has-mr-6">2.2</span>
+        <span>哈希索引</span>
+        </a></li><li>
+        <a class="is-flex" href="#全文索引">
+        <span class="has-mr-6">2.3</span>
+        <span>全文索引</span>
+        </a></li><li>
+        <a class="is-flex" href="#空间数据索引-R-Tree">
+        <span class="has-mr-6">2.4</span>
+        <span>空间数据索引(R-Tree)</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#InnoDB引擎和MyISAM引擎使用的索引">
+        <span class="has-mr-6">3</span>
+        <span>InnoDB引擎和MyISAM引擎使用的索引</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#InnoDB引擎使用的索引">
+        <span class="has-mr-6">3.1</span>
+        <span>InnoDB引擎使用的索引</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#聚簇索引">
+        <span class="has-mr-6">3.1.1</span>
+        <span>聚簇索引</span>
+        </a></li><li>
+        <a class="is-flex" href="#二级索引-辅助索引">
+        <span class="has-mr-6">3.1.2</span>
+        <span>二级索引(辅助索引)</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#MyISAM引擎使用的索引">
+        <span class="has-mr-6">3.2</span>
+        <span>MyISAM引擎使用的索引</span>
+        </a></li><li>
+        <a class="is-flex" href="#InnoDB引擎和MyISAM引擎的对比">
+        <span class="has-mr-6">3.3</span>
+        <span>InnoDB引擎和MyISAM引擎的对比</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#索引的优点和缺点">
+        <span class="has-mr-6">4</span>
+        <span>索引的优点和缺点</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="索引和查询性能优化简介" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>二叉排序树、平衡二叉树、红黑树、B树、B+树 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容  二叉排序树(BST树) 平衡二叉树(AVL树) 红黑树(R-B Tree) B&#x2F;B+树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉排序树、平衡二叉树、红黑树、B树、B+树">
+<meta property="og:url" content="http://coderchen33.life/2020/04/29/%E4%BA%8C%E5%8F%89%E6%8E%92%E5%BA%8F%E6%A0%91%E3%80%81%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E3%80%81%E7%BA%A2%E9%BB%91%E6%A0%91%E3%80%81B%E6%A0%91%E3%80%81B-%E6%A0%91/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容  二叉排序树(BST树) 平衡二叉树(AVL树) 红黑树(R-B Tree) B&#x2F;B+树">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-04-29T13:37:46.000Z">
+<meta property="article:modified_time" content="2020-05-02T01:08:56.800Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="algorithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="二叉排序树、平衡二叉树、红黑树、B树、B+树" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-29T13:37:46.000Z">2020-04-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    25 分钟 读完 (大约 3717 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                二叉排序树、平衡二叉树、红黑树、B树、B+树
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>二叉排序树(BST树)</li>
+<li>平衡二叉树(AVL树)</li>
+<li>红黑树(R-B Tree)</li>
+<li>B/B+树<a id="more"></a>
+
+
+</li>
+</ol>
+<h2 id="二叉排序树-BST树"><a href="#二叉排序树-BST树" class="headerlink" title="二叉排序树(BST树)"></a>二叉排序树(BST树)</h2><p>二叉排序树（Binary Sort Tree）又称二叉查找树、二叉搜索树。它或者是一棵空树；或者是具有下列性质的二叉树：</p>
+<blockquote>
+<p><strong>1. 若左子树不空，则左子树上所有结点的值均<code>小于</code>它的根结点的值；<br>2. 若右子树不空，则右子树上所有结点的值均<code>大于</code>它的根结点的值；<br>3. 左、右子树也分别为二叉排序树</strong></p>
+</blockquote>
+<p>我们以数组{3,2,1,5,4,6}构建一个二叉排序树如下:</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-01-10-07-33"></div><br>
+
+<p>可以看到BST树因为有排序，所以检索的时间复杂度为<code>O(logn)</code>。但是BST树还有一个问题:如果我们的数组是{2,1,3,4,5…},或者甚至如果我们的数组为{1,2,3,4,5..}或者{5,4,3,2,1…},那么我们的数组就会退化成一个单链表。查询的时间复杂度从<code>O(logn)</code>退化为<code>O(n)</code></p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-01-09-53-38"></div><br>
+
+
+<p>所以对于BST树而言:</p>
+<ol>
+<li><strong>平均时间复杂度为<code>O(logn)</code>,最坏时间复杂度为  <code>O(n)</code></strong></li>
+<li>另外，<strong>二叉排序树的中序遍历是一个递增序列</strong>。(上面中序遍历为1,2,3,4,5,6)</li>
+</ol>
+<p>我们知道,BST树主要是用来进行检索，但是由于它会退化成线性表，使得检索的时间复杂度为O(logn)，所以一般情况下很少使用。</p>
+<h2 id="平衡二叉树-AVL树"><a href="#平衡二叉树-AVL树" class="headerlink" title="平衡二叉树(AVL树)"></a>平衡二叉树(AVL树)</h2><p>为了避免上述二叉排序树退化成链表，出现了平衡二叉排序树，又叫AVL树。那么是怎么定义的呢？</p>
+<blockquote>
+<ol>
+<li><strong>首先平衡二叉树是二叉排序树</strong>。那么它或者为空树，或者满足上面BST中提到的三点要求。</li>
+<li>其次和普通二叉排序树不同的是二叉平衡树<strong>要求左右的子树高度之差绝对值不超过1</strong>。</li>
+</ol>
+</blockquote>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-01-10-00-28"></div><br>
+
+
+<p>通常我们将二叉树上结点的左子树深度减去右子树深度的值称为<strong>平衡因子BF</strong>(Balance Factor),那么平衡二叉树的平衡因子只能是<code>-1,0,1</code>。上面的小的数字就是那个节点的BF。</p>
+<h3 id="左旋和右旋"><a href="#左旋和右旋" class="headerlink" title="左旋和右旋"></a>左旋和右旋</h3><p>上面我们看到AVL树是自平衡的，那么AVL树是如何保证它的平衡性呢?实际上平衡二叉树在每次插入元素时都会做相应的旋转操作。旋转的四种情况如下：</p>
+<blockquote>
+<ul>
+<li>插入点位于x的<strong>左孩子的左子树</strong>中。    <strong>左左LL　　需要进行右旋</strong>。</li>
+<li>插入点位于x的<strong>右孩子的右子树</strong>中。    <strong>右右RR　　需要进行左旋</strong>。</li>
+<li>插入点位于x的<strong>左孩子的右子树</strong>中。    <strong>左右LR　　需要较低的先左旋，转换为LL问题，再右旋。</strong></li>
+<li>插入点位于x的<strong>右孩子的左子树</strong>中。    <strong>右左RL　　需要较低的先右旋，转化为RR问题。再左旋。</strong></li>
+</ul>
+</blockquote>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-01-09-32-10"></div><br>
+
+
+<p>当插入一个节点破坏了树的平衡状态时，我们需要做的有两点:</p>
+<ol>
+<li>找出<strong>最小不平衡子树</strong>(距离插入节点最近，且BF不在[-1,1]范围内的节点为根的子树)。</li>
+<li>通过旋转操作维持二叉树的平衡状态(LL、RR、LR、RL)</li>
+</ol>
+<p>我们以数组a[9]={3,2,1,4,5,6,7,10,9}构建二叉排序树的过程来详细介绍上面的四种调整关系:</p>
+<p>首先3,2先正常的构建，但是在插入1时，应该插入到2的左子树，这时3的BF因子为<code>2</code>，不满足平衡条件，<code>最小平衡子树为3,2,1</code>。由于<code>BF=2 &gt; 0</code> 所以是<code>LL型调整</code>，所以进行<code>右旋</code>。 </p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-04-30-19-00-22"></div><br>
+
+<p>接着插入4，平衡因子没有被破坏。接着插入5,这时3的BF因子为-2,2的BF因子也是-2，但是3离插入节点4最近，所以<code>最小非平衡子树为3,4,5</code>,由于由于<code>BF=-2 &lt; 0</code> 所以是<code>RR型调整</code>，所以进行<code>左旋</code>。 </p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-04-30-21-14-43"></div><br>
+
+<p>接着插入6,7  相信看懂了上面的过程，插入6,7的过程就非常简单了。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-04-30-21-48-58"></div><br>
+
+<p>接着我们插入10，平衡状态未被破坏。但是插入9时，<code>最小不平衡子树为7,10,9</code>,但是如果直接进行左旋会出现9成为10的右子树，不符合排序二叉树的要求。这时候其实7的BF为-2,10的BF为1，<code>符号不同</code>（之前都是相同）所以需要<code>先统一符号</code>，首先9,10右旋，使得7和9的符号<code>统一为负</code>，再进行7,9,10的<code>左旋</code>。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-04-30-22-10-50"></div><br>
+
+<p>对于LR型调整，在这个例子中不好描述，我们直接上一个新的例子：</p>
+<p>插入节点5时，导致失衡。首先调整3,1,4,5使得BF因子和10同号转化为LL问题，之后再进行右旋。</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-01-18-48-23"></div><br>
+
+<p>对于AVL树而言:</p>
+<ol>
+<li>因为AVL树中树是完全平衡的，所以<strong>平均检索复杂度和最坏检索复杂度都为<code>O(logn)</code></strong></li>
+<li>虽然解决了最坏检索复杂度的问题，但是每次插入和删除时AVL树都会做调整，所以<strong>插入和删除效率相对较低。</strong></li>
+</ol>
+<h2 id="红黑树-R-B-Tree"><a href="#红黑树-R-B-Tree" class="headerlink" title="红黑树(R-B Tree)"></a>红黑树(R-B Tree)</h2><p>和平衡二叉树一样，红黑树也是一种<strong>自平衡的二叉排序树</strong>。也就是说红黑树满足二叉排序树的三点要求，并且和AVL树一样，通过旋转操作进行自身的平衡。但是<strong>和AVL树不同的是， 红黑树不严格要求BF=-1,0,1,而是通过对任何一条从根到叶子的路径上各个节点着色的方式的限制,确保左右子树树高差不超过一倍</strong>因此它是一种<strong>弱平衡二叉树</strong>(由于是弱平衡,可以推出,相同的节点情况下,AVL树的高度低于红黑树),</p>
+<p>红黑树在每个节点增加一个存储位表示节点的颜色,可以是红色或黑色。它必须满足下面性质：</p>
+<blockquote>
+<ol>
+<li>节点非黑即红。</li>
+<li>根节点是黑色。</li>
+<li>所有叶子节点都是黑色，并且是NULL节点</li>
+<li>每个红色节点的两个子节点都是黑色。（从每个叶子到根的所有路径上不能有两个连续的红色节点）</li>
+<li><strong>任意一节点到其每个叶子节点的所有路径都包含相同数目的黑色节点</strong>。</li>
+</ol>
+</blockquote>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-02-07-49-42"></div><br>
+
+
+
+<p>红黑树为了维持自身的平衡性主要有两大操作:</p>
+<p><strong>1. 重新染色 (重新标记黑色或红色)<br>2. 旋转 (就是我们上面提到的左旋和右旋)</strong></p>
+<p>注意这里是有先后顺序的，<strong>我们会先尝试重新染色，如果重新染色不能达到红黑树的5点要求，然后我们尝试旋转操作。</strong></p>
+<p>这里我们看下重新染色和旋转的规则:</p>
+<ol>
+<li><strong>将新插入的节点标记为红色</strong></li>
+<li><strong>如果 X 是根结点(root)，则标记为黑色</strong></li>
+<li>各种情况的讨论</li>
+</ol>
+<p>情况的讨论参考文章:<br><a href="https://zhuanlan.zhihu.com/p/79980618?utm_source=cn.wiz.note">https://zhuanlan.zhihu.com/p/79980618?utm_source=cn.wiz.note</a><br><a href="https://www.cnblogs.com/LiaHon/p/11203229.html">https://www.cnblogs.com/LiaHon/p/11203229.html</a><br><a href="https://www.jianshu.com/p/e136ec79235c">https://www.jianshu.com/p/e136ec79235c</a></p>
+<p>我们以插入 10，20，30，15 到一个空树中，简单介绍一下:</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-02-08-24-23"></div><br>
+
+
+<p>AVL树和红黑树对比:</p>
+<p>理论上来说相对于要求严格平衡的AVL树来说,红黑树因为不是严格平衡，所以<strong>查找的时间复杂度虽然为O(logn),但可能在某些时候不如AVL树</strong>。但是也正是由于其弱平衡，并且通过染色的方式对自己进行平衡调整，所以<strong>相对来说插入和删除效率比AVL树高</strong>。</p>
+<p>所以对于只进行查询的操作,肯定是AVL树好，但是除了查询操作外，还要进行插入和删除操作，综合考虑还是选择红黑树。这也是为什么hashmap中使用红黑树而不是AVL树的原因。</p>
+<hr>
+<h2 id="多路查找树"><a href="#多路查找树" class="headerlink" title="多路查找树"></a>多路查找树</h2><p>上面我们提到的树主要用来在内存内进行排序，考虑的是内存那种运算的时间复杂度。但是如果数据达到内存中放不下需要存到硬盘上，或者比如<strong>我们的MySQL数据库，数据本身就存储在硬盘上。那么我们更多的需要考虑的就是如何减少对磁盘的IO访问</strong>。</p>
+<p>之前我们学习的树中一个节点只能存储一个元素，<strong>在元素非常多的时候，要么树的度非常大，要么树的高度非常大，甚至两个必须都必须足够大才行。(AVL树和红黑树度为2，树高非常高)</strong> 这就使得需要进行IO访问的次数增多，因此需要打破每一个节点只存储一个元素的限制，因此引入了多路查找树。</p>
+<p><strong>多路查找树，其每一个节点的孩子数可以多于两个，且每一个节点处可以存储多个元素</strong>。由于它是查找树，所有元素之间存在某种特定的排序关系</p>
+<p>这里，每一个节点可以存储多少个元素，以及它的孩子数的多少是非常关键的。其中比较特殊的就是2-3树、2-3-4树、B树、B+树。</p>
+<h2 id="2-3树"><a href="#2-3树" class="headerlink" title="2-3树"></a>2-3树</h2><p>2-3树是这样一棵多路查找树:</p>
+<blockquote>
+<ol>
+<li>每一个节点都是2节点(具有两个孩子)或3节点(三个孩子)。</li>
+<li>一个2节点包含一个元素和两个孩子(或没有孩子)</li>
+<li>一个3节点包含一小一大两个元素和三个孩子(或没有孩子)。<ul>
+<li>其中左子树包含小于较小元素的元素</li>
+<li>右子树包含大于较大元素的元素</li>
+<li>中间子树包含结余两元素之间的元素</li>
+</ul>
+</li>
+<li>2-3树中所有叶子节点位于同一层。</li>
+</ol>
+</blockquote>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-01-20-52-04"></div><br>
+
+<h2 id="2-3-4树"><a href="#2-3-4树" class="headerlink" title="2-3-4树"></a>2-3-4树</h2><p>有了2-3树的理解，对于2-3-4树就很好理解了，它其实是2-3树的扩展，包括了4节点的使用。</p>
+<p>一个4节点包含小中大三个元素和四个孩子(或没有孩子。如果某个4节点有孩子的话:<br>-左子树包含小于最小元素的元素<br>-第二子树包含大于最小元素，小于第二元素的元素<br>-第三子树包含大于第二元素，小于最大元素的元素<br>-右子树包含大于最大元素的元素</p>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-01-21-14-26"></div><br>
+
+
+<h2 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h2><p>B树是一种平衡的多路查找树，2-3树和2-3-4树都是B树的特例。节点最大的孩子数目称为B树的阶，因此2-3树是3阶B树，2-3-4树是4阶B树。</p>
+<p>一个m阶B树具有如下性质:</p>
+<blockquote>
+<ol>
+<li>根节点的儿子数量范围[2,m]</li>
+<li>每个中间节点包含 k-1 个关键字和 k 个孩子，孩子的数量 = 关键字的数量 +1，k 的取值范围为 [ceil(m/2), m]。</li>
+<li>叶子节点位于同一层，且叶子节点包括 k-1 个关键字（叶子节点没有孩子），k 的取值范围为 [ceil(m/2), m]。</li>
+<li>假设中间节点节点的关键字为：Key[1], Key[2], …, Key[k-1]，且关键字按照升序排序，即 Key[i]&lt;Key[i+1]。此时 k-1 个关键字相当于划分了 k 个范围，也就是对应着 k个指针，即为：P[1], P[2], …, P[k]，其中 P[1] 指向关键字小于 Key[1] 的子树，P[i] 指向关键字属于 (Key[i-1], Key[i]) 的子树，P[k] 指向关键字大于 Key[k-1] 的子树。</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>图片来自文章 <a href="https://mp.weixin.qq.com/s/k4-RaW4ROlo6chSXsO_4AA">https://mp.weixin.qq.com/s/k4-RaW4ROlo6chSXsO_4AA</a></p>
+</blockquote>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-02-06-06-36"></div><br>
+
+
+<p>举个例子上图为三阶图，查看磁盘3，关键字为20，30.三个孩子分别是(18,19),(22,25),(32,36).其中(18,19)小于20，(22,25)在(20,30)之间，(32，36)大于30.</p>
+<p>如图所示，如果要查找数据项22，那么B树的查找过程如下:</p>
+<ol>
+<li>首先会把磁盘块1由磁盘加载到内存，此时发生一次IO，在内存中用二分查找确22大于18小于20，得到指向磁盘块3的P2指针。</li>
+<li>通过磁盘块3的P2指针的磁盘地址把磁盘块3由磁盘加载到内存，发生第二次IO，22在20和30之间，得到指向磁盘块9的P2指针。</li>
+<li>通过磁块9的P2指针加载磁盘块9到内存，发生第三次IO，同时内存中做二分查找找到22，结束查询，总计三次IO。</li>
+</ol>
+<p>上面还是一个简单的例子，假设我们每个磁盘块可以存储1000个数据，那么一个三层的B树能存储的数据量是1000*1000=100w条数据。进行查找时也只需要进行3次IO。  如果是红黑树或者AVL树的话，树高则会非常大，IO次数也无法想象。</p>
+<h2 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h2><p>从上面可以看到B树优点非常多，但是B树还有一个问题，就是如果我们要对数据进行<strong>中序遍历，那么需要在硬盘的页面间进行多次访问，发生多次IO影响效率</strong>。比如上面的例子中需要先定位到磁盘块5，得到7 8 发生3次IO，接着读磁盘块2，得到9，又发生一次IO，接着读磁盘块6….  最终IO次数会非常大，严重影响效率。</p>
+<p>因此应文件系统的需要而提出了一种B+树结构。严格意义上来讲B+树已经不是一种树。</p>
+<p>一棵m阶B+树和一个m阶B树的差别:</p>
+<ol>
+<li>有n棵子树的节点中包含有n个关键字</li>
+<li><strong>所有叶子节点包含全部关键字信息，及指向含这些关键字记录的指针，叶子节点本身依关键字的大小自小二大顺序连接</strong></li>
+<li>所有<strong>非叶子节点中不包含真实数据仅含有其子树中的最大最小关键字</strong>。</li>
+</ol>
+<blockquote>
+<p>图片来自文章 <a href="https://mp.weixin.qq.com/s/k4-RaW4ROlo6chSXsO_4AA">https://mp.weixin.qq.com/s/k4-RaW4ROlo6chSXsO_4AA</a></p>
+</blockquote>
+<div align="center"><img src="http://coderchen33.life/2020-04-29-二叉排序树、平衡二叉树、红黑树、B树、B-树-2020-05-02-06-33-59"></div><br>
+
+<p>这样对于中序遍历来说我们需要做的是首先发生3次IO找到最小值10，因为关键字全部在叶子节点，所以就不用访问上层的非叶子节点。找到10之后，直接通过指针直接顺序访问就能得到中序遍历的结果。</p>
+<p>上面提到的中序遍历最终还是用来进行排序和范围查找。比如我们要找18到32之间的数据，首先发生3次IO定位到18所在的磁盘块8，然后顺序读取到32即可。只发生3+2=5次IO，这也是为什么MySQL数据库中使用B+树结构来做索引的原因。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/algorithm/" rel="tag">algorithm</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/05/01/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">十大排序算法</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/04/29/%E6%A0%91%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E5%89%8D%E4%B8%AD%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86/">
+                <span class="level-item">树的基本概念和前中后序遍历</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            44
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            8
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            12
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#二叉排序树-BST树">
+        <span class="has-mr-6">1</span>
+        <span>二叉排序树(BST树)</span>
+        </a></li><li>
+        <a class="is-flex" href="#平衡二叉树-AVL树">
+        <span class="has-mr-6">2</span>
+        <span>平衡二叉树(AVL树)</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#左旋和右旋">
+        <span class="has-mr-6">2.1</span>
+        <span>左旋和右旋</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#红黑树-R-B-Tree">
+        <span class="has-mr-6">3</span>
+        <span>红黑树(R-B Tree)</span>
+        </a></li><li>
+        <a class="is-flex" href="#多路查找树">
+        <span class="has-mr-6">4</span>
+        <span>多路查找树</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-3树">
+        <span class="has-mr-6">5</span>
+        <span>2-3树</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-3-4树">
+        <span class="has-mr-6">6</span>
+        <span>2-3-4树</span>
+        </a></li><li>
+        <a class="is-flex" href="#B树">
+        <span class="has-mr-6">7</span>
+        <span>B树</span>
+        </a></li><li>
+        <a class="is-flex" href="#B-树">
+        <span class="has-mr-6">8</span>
+        <span>B+树</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="二叉排序树、平衡二叉树、红黑树、B树、B+树" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
