@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>leetcode字符串练习 - chen33的个人博客</title>
+
+
+    <meta name="description" content="字符串练习tips  通常字符串是结合其他算法进行考察，如果是单纯的字符串问题，只需要具体问题具体分析即可。 A的ascii码是65 小a的ascii码是97。使用过程中通常会定义数组int[256]进行哈希存储键盘可输入字符的次数。 Java中对于字符串的常用API等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leetcode字符串练习">
+<meta property="og:url" content="http://coderchen33.life/2020/06/06/leetcode%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%BB%83%E4%B9%A0/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="字符串练习tips  通常字符串是结合其他算法进行考察，如果是单纯的字符串问题，只需要具体问题具体分析即可。 A的ascii码是65 小a的ascii码是97。使用过程中通常会定义数组int[256]进行哈希存储键盘可输入字符的次数。 Java中对于字符串的常用API等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-06-06T13:51:38.000Z">
+<meta property="article:modified_time" content="2020-06-07T13:36:24.595Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="leetcode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="leetcode字符串练习" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-06-06T13:51:38.000Z">2020-06-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分钟 读完 (大约 671 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                leetcode字符串练习
+            
+        </h1>
+        <div class="content">
+            <p><strong>字符串练习tips</strong></p>
+<ol>
+<li>通常字符串是结合其他算法进行考察，如果是单纯的字符串问题，只需要具体问题具体分析即可。</li>
+<li>A的ascii码是65 小a的ascii码是97。使用过程中通常会定义数组int[256]进行哈希存储键盘可输入字符的次数。</li>
+<li>Java中对于字符串的常用API等。</li>
+</ol>
+<a id="more"></a>
+
+<h2 id="1-字符串循环移位包含"><a href="#1-字符串循环移位包含" class="headerlink" title="1.字符串循环移位包含"></a>1.字符串循环移位包含</h2><p>编程之美 3.1</p>
+<p>给定两个字符串 s1 和 s2，要求判定 s2 是否能够被 s1 做循环移位得到的字符串包含。</p>
+<blockquote>
+<p>s1 = AABCD, s2 = CDAA<br>Return : true</p>
+</blockquote>
+<p>s1 进行循环移位的结果是 s1s1 的子字符串，因此只要判断 s2 是否是 s1s1 的子字符串即可。</p>
+<p>例如如果保留循环移位前的单词，那么AABCD会变为AABCDA  AABCDAA .. 最终变为AABCDAABCD,这时只需要在s1s1中判断是否存在s2即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s1 += s1;</span><br><span class="line"><span class="keyword">return</span> s1.indexOf(s2)!=-<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-字符串循环移位"><a href="#2-字符串循环移位" class="headerlink" title="2.字符串循环移位"></a>2.字符串循环移位</h2><p>编程之美 2.17</p>
+<p>将字符串向右循环移动 k 位。</p>
+<blockquote>
+<p>s = “abcd123” k = 3<br>Return “123abcd”</p>
+</blockquote>
+<p>将 abcd123 中的 abcd 和 123 单独翻转，得到 dcba321，然后对整个字符串进行翻转，得到 123abcd。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RightShift</span><span class="params">(<span class="keyword">char</span>[] str,<span class="keyword">int</span> N,<span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">    K%=N;  <span class="comment">//K可能大于N </span></span><br><span class="line">    reverse(str,<span class="number">0</span>,N-K-<span class="number">1</span>);</span><br><span class="line">    reverse(str,N-K,N-<span class="number">1</span>);</span><br><span class="line">    reverse(str,<span class="number">0</span>,N-<span class="number">1</span>);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">reverse</span><span class="params">(<span class="keyword">char</span>[] str,<span class="keyword">int</span> lo,<span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(;lo&lt;hi;lo++,hi--)&#123;</span><br><span class="line">        <span class="keyword">char</span> temp = str[lo];</span><br><span class="line">        str[lo] = str[hi];</span><br><span class="line">        str[hi] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-字符串中单词的翻转"><a href="#3-字符串中单词的翻转" class="headerlink" title="3.字符串中单词的翻转"></a>3.字符串中单词的翻转</h2><p>程序员代码面试指南</p>
+<blockquote>
+<p>s = “I am a student”<br>Return “student a am I”</p>
+</blockquote>
+<p>和上面的方法类似，先将每个单词翻转，然后将整个字符串翻转。</p>
+<h2 id="4-两个字符串包含的字符是否完全相同"><a href="#4-两个字符串包含的字符是否完全相同" class="headerlink" title="4.两个字符串包含的字符是否完全相同"></a>4.两个字符串包含的字符是否完全相同</h2><p><a href="https://leetcode.com/problems/valid-anagram/">242. Valid Anagram (Easy)</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isAnagram</span><span class="params">(String s, String t)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] count = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];<span class="comment">//本题只包含小写字符</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:s.toCharArray()) count[c-<span class="string">'a'</span>]++;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:t.toCharArray()) count[c-<span class="string">'a'</span>]--;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> x:count)</span><br><span class="line">            <span class="keyword">if</span>(x!=<span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-计算一组字符集合可以组成的回文字符串的最大长度"><a href="#5-计算一组字符集合可以组成的回文字符串的最大长度" class="headerlink" title="5. 计算一组字符集合可以组成的回文字符串的最大长度"></a>5. 计算一组字符集合可以组成的回文字符串的最大长度</h2><p><a href="https://leetcode.com/problems/longest-palindrome/submissions/">409.Longest Palindrome (Easy)</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span>[] count = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">256</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c:s.toCharArray()) count[c]++;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> x:count)&#123;</span><br><span class="line">            res += x/<span class="number">2</span>*<span class="number">2</span>;  <span class="comment">//比如3个可以拿出两个来凑回文字符串</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(res&lt;s.length()) res++;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-字符串同构"><a href="#6-字符串同构" class="headerlink" title="6.字符串同构"></a>6.字符串同构</h2><p><a href="https://leetcode.com/problems/isomorphic-strings/">205. Isomorphic Strings (Easy)</a></p>
+<p>只需要记录上次字符出现的位置即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isIsomorphic</span><span class="params">(String s, String t)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(s.length()!=t.length()) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">int</span>[] m1 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">256</span>];</span><br><span class="line">        <span class="keyword">int</span>[] m2 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">256</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;s.length();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(m1[s.charAt(i)]!=m2[t.charAt(i)]) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            m1[s.charAt(i)] = i+<span class="number">1</span>; <span class="comment">//这里只是为了避开初始化为0的情况，加几都可以</span></span><br><span class="line">            m2[t.charAt(i)] = i+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-回文子字符串个数"><a href="#7-回文子字符串个数" class="headerlink" title="7. 回文子字符串个数"></a>7. 回文子字符串个数</h2><p><a href="https://leetcode.com/problems/palindromic-substrings/">647. Palindromic Substrings (Medium)</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> res;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">countSubstrings</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;s.length();i++)&#123;</span><br><span class="line">            extend(s,i,i);</span><br><span class="line">            extend(s,i,i+<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">extend</span><span class="params">(String s,<span class="keyword">int</span> start,<span class="keyword">int</span> end)</span></span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(start&gt;=<span class="number">0</span> &amp;&amp; end &lt; s.length() &amp;&amp; s.charAt(start)==s.charAt(end))&#123;</span><br><span class="line">            res++;</span><br><span class="line">            start--;</span><br><span class="line">            end++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-判断一个整数是否是回文数"><a href="#8-判断一个整数是否是回文数" class="headerlink" title="8.判断一个整数是否是回文数"></a>8.判断一个整数是否是回文数</h2><p><a href="https://leetcode.com/problems/palindrome-number/">9. Palindrome Number (Easy)</a></p>
+<p>要求不能使用额外空间，也就不能将整数转换为字符串进行判断。</p>
+<p>将整数分成左右两部分，右边那部分需要转置，然后判断这两部分是否相等。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(x==<span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span>(x&lt;<span class="number">0</span> || x%<span class="number">10</span>==<span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">int</span> right = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(right&lt;x)&#123;</span><br><span class="line">            right = right*<span class="number">10</span> + x%<span class="number">10</span>;</span><br><span class="line">            x =x/<span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> right==x || right/<span class="number">10</span>==x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/algorithm/" rel="tag">algorithm</a>, <a class="has-link-grey -link" href="/tags/leetcode/" rel="tag">leetcode</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/06/06/leetcode%E5%9B%BE%E7%BB%93%E6%9E%84%E7%BB%83%E4%B9%A0/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">leetcode图结构练习</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/05/16/leetcode%E6%A0%91%E7%BB%93%E6%9E%84%E7%BB%83%E4%B9%A0/">
+                <span class="level-item">leetcode树结构练习</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            59
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            8
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            13
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-字符串循环移位包含">
+        <span class="has-mr-6">1</span>
+        <span>1.字符串循环移位包含</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-字符串循环移位">
+        <span class="has-mr-6">2</span>
+        <span>2.字符串循环移位</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-字符串中单词的翻转">
+        <span class="has-mr-6">3</span>
+        <span>3.字符串中单词的翻转</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-两个字符串包含的字符是否完全相同">
+        <span class="has-mr-6">4</span>
+        <span>4.两个字符串包含的字符是否完全相同</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-计算一组字符集合可以组成的回文字符串的最大长度">
+        <span class="has-mr-6">5</span>
+        <span>5. 计算一组字符集合可以组成的回文字符串的最大长度</span>
+        </a></li><li>
+        <a class="is-flex" href="#6-字符串同构">
+        <span class="has-mr-6">6</span>
+        <span>6.字符串同构</span>
+        </a></li><li>
+        <a class="is-flex" href="#7-回文子字符串个数">
+        <span class="has-mr-6">7</span>
+        <span>7. 回文子字符串个数</span>
+        </a></li><li>
+        <a class="is-flex" href="#8-判断一个整数是否是回文数">
+        <span class="has-mr-6">8</span>
+        <span>8.判断一个整数是否是回文数</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="leetcode字符串练习" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
