@@ -158,7 +158,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 分钟 读完 (大约 153 个字)
+                    12 分钟 读完 (大约 1795 个字)
                 </span>
                 
                 
@@ -171,15 +171,21 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="5种基本数据类型"><a href="#5种基本数据类型" class="headerlink" title="5种基本数据类型"></a>5种基本数据类型</h2><h3 id="String-字符串"><a href="#String-字符串" class="headerlink" title="String(字符串)"></a>String(字符串)</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; keys *  # 查看所有的key</span><br><span class="line">(empty list or set)</span><br><span class="line">127.0.0.1:6379&gt; set name chen33 # set key</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set age 18</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) "age"</span><br><span class="line">2) "name"</span><br><span class="line">127.0.0.1:6379&gt; exists name # 判断当前key是否存在</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; exists name1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; del name # 移除当前的key</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) "age"</span><br><span class="line">127.0.0.1:6379&gt; set name coderchen33</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) "age"</span><br><span class="line">2) "name"</span><br><span class="line">127.0.0.1:6379&gt; get name</span><br><span class="line">"coderchen33"</span><br><span class="line">127.0.0.1:6379&gt; expire name 10 # 设置key的过期时间，单位是秒</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; ttl name # 查看当前key的剩余时间</span><br><span class="line">(integer) 7</span><br><span class="line">127.0.0.1:6379&gt; ttl name</span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; ttl name</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; ttl name</span><br><span class="line">(integer) -2</span><br><span class="line">127.0.0.1:6379&gt; get name</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) "age"</span><br><span class="line">127.0.0.1:6379&gt; type name # 查看当前key的类型</span><br><span class="line">none</span><br><span class="line">127.0.0.1:6379&gt; type age</span><br><span class="line">string</span><br></pre></td></tr></table></figure>
-
-<h3 id="List-列表"><a href="#List-列表" class="headerlink" title="List(列表)"></a>List(列表)</h3><h3 id="Set-集合"><a href="#Set-集合" class="headerlink" title="Set(集合)"></a>Set(集合)</h3><h3 id="Hash-哈希"><a href="#Hash-哈希" class="headerlink" title="Hash(哈希)"></a>Hash(哈希)</h3><h3 id="Zset-有序集合"><a href="#Zset-有序集合" class="headerlink" title="Zset(有序集合)"></a>Zset(有序集合)</h3><h2 id="3种特殊数据类型"><a href="#3种特殊数据类型" class="headerlink" title="3种特殊数据类型"></a>3种特殊数据类型</h2><h3 id="Geospatial"><a href="#Geospatial" class="headerlink" title="Geospatial"></a>Geospatial</h3><h3 id="Hyperloglog"><a href="#Hyperloglog" class="headerlink" title="Hyperloglog"></a>Hyperloglog</h3><h3 id="Bitmap"><a href="#Bitmap" class="headerlink" title="Bitmap"></a>Bitmap</h3>
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>五种基本数据类型常用API及应用场景</li>
+<li>三种特殊数据类型常用API及应用场景</li>
+</ol>
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/06/18/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -336,7 +342,7 @@
                 <span class="level-item">计算机基础</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">36</span>
+                <span class="level-item tag">37</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-linux/">
@@ -352,7 +358,7 @@
                 <span class="level-item">数据库(MySQL)</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">8</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">
@@ -474,7 +480,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.43px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 12.86px;">JVM</a> <a href="/tags/Java/" style="font-size: 18.57px;">Java</a> <a href="/tags/MySQL/" style="font-size: 14.29px;">MySQL</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/algorithm/" style="font-size: 20px;">algorithm</a> <a href="/tags/leetcode/" style="font-size: 17.14px;">leetcode</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 15.71px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15.71px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 14.29px;">计算机网络</a>
+        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.43px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 12.86px;">JVM</a> <a href="/tags/Java/" style="font-size: 18.57px;">Java</a> <a href="/tags/MySQL/" style="font-size: 15.71px;">MySQL</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/algorithm/" style="font-size: 20px;">algorithm</a> <a href="/tags/leetcode/" style="font-size: 17.14px;">leetcode</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 15.71px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15.71px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 14.29px;">计算机网络</a>
     </div>
 </div>
         
@@ -593,7 +599,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.43px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 12.86px;">JVM</a> <a href="/tags/Java/" style="font-size: 18.57px;">Java</a> <a href="/tags/MySQL/" style="font-size: 14.29px;">MySQL</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/algorithm/" style="font-size: 20px;">algorithm</a> <a href="/tags/leetcode/" style="font-size: 17.14px;">leetcode</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 15.71px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15.71px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 14.29px;">计算机网络</a>
+        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.43px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 12.86px;">JVM</a> <a href="/tags/Java/" style="font-size: 18.57px;">Java</a> <a href="/tags/MySQL/" style="font-size: 15.71px;">MySQL</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/algorithm/" style="font-size: 20px;">algorithm</a> <a href="/tags/leetcode/" style="font-size: 17.14px;">leetcode</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 15.71px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15.71px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 14.29px;">计算机网络</a>
     </div>
 </div>
     
