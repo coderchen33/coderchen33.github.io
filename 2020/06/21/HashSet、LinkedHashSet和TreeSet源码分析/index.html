@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-06-21T01:35:38.000Z">
-<meta property="article:modified_time" content="2020-06-23T03:10:20.356Z">
+<meta property="article:modified_time" content="2020-06-23T12:01:47.254Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 14 个字)
+                    5 分钟 读完 (大约 706 个字)
                 </span>
                 
                 
@@ -177,6 +177,56 @@
 <a id="more"></a>
 
 
+
+<h2 id="HashSet源码分析"><a href="#HashSet源码分析" class="headerlink" title="HashSet源码分析"></a>HashSet源码分析</h2><div align="center"><img src="http://coderchen33.life/2020-06-21-HashSet、LinkedHashSet和TreeSet源码分析-2020-06-23-18-42-18"></div><br>
+
+
+<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HashSet</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">AbstractSet</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">//底层由HashMap组成</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> HashMap&lt;E,Object&gt; map;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//value处存放的对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object PRESENT = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HashSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HashSet</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">        map = <span class="keyword">new</span> HashMap&lt;&gt;(Math.max((<span class="keyword">int</span>) (c.size()/.<span class="number">75f</span>) + <span class="number">1</span>, <span class="number">16</span>));</span><br><span class="line">        addAll(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HashSet</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor)</span> </span>&#123;</span><br><span class="line">        map = <span class="keyword">new</span> HashMap&lt;&gt;(initialCapacity, loadFactor);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HashSet</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</span><br><span class="line">        map = <span class="keyword">new</span> HashMap&lt;&gt;(initialCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    HashSet(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor, <span class="keyword">boolean</span> dummy) &#123;</span><br><span class="line">        map = <span class="keyword">new</span> LinkedHashMap&lt;&gt;(initialCapacity, loadFactor);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>从构造方法中我们可以看到，HashSet底层实际是由HashMap组成的。</p>
+<h3 id="add方法"><a href="#add方法" class="headerlink" title="add方法"></a>add方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到add()方法是把set中的元素放到了key处，value处是一个空的Object对象</p>
+<h3 id="remove方法"><a href="#remove方法" class="headerlink" title="remove方法"></a>remove方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.remove(o)==PRESENT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样是HashMap的remove方法。</p>
+<h3 id="HashSet总结"><a href="#HashSet总结" class="headerlink" title="HashSet总结"></a>HashSet总结</h3><p>到这里我们就知道了:</p>
+<ol>
+<li><strong>HashSet底层由HashMap组成</strong></li>
+<li><strong>set中的数据存放在key处，value处存放的是一个空的Object对象</strong></li>
+</ol>
+<h2 id="LinkedHashSet源码分析"><a href="#LinkedHashSet源码分析" class="headerlink" title="LinkedHashSet源码分析"></a>LinkedHashSet源码分析</h2><div align="center"><img src="http://coderchen33.life/2020-06-21-HashSet、LinkedHashSet和TreeSet源码分析-2020-06-23-18-43-39"></div><br>
+
+<p>从类结构图我们知道和LinkedHashMap继承自HashMap一样，<strong>LinkedHashSet也继承自HashSet</strong></p>
+<h3 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedHashSet</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">HashSet</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedHashSet</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(initialCapacity, loadFactor, <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedHashSet</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(initialCapacity, .<span class="number">75f</span>, <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedHashSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(<span class="number">16</span>, .<span class="number">75f</span>, <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedHashSet</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(Math.max(<span class="number">2</span>*c.size(), <span class="number">11</span>), .<span class="number">75f</span>, <span class="keyword">true</span>);</span><br><span class="line">        addAll(c);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的构造方法中我们可以知道，实际上都是调用的HashSet中的构造方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HashSet(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor, <span class="keyword">boolean</span> dummy) &#123;</span><br><span class="line">        map = <span class="keyword">new</span> LinkedHashMap&lt;&gt;(initialCapacity, loadFactor);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>所以从上面我们就知道了：</p>
+<ol>
+<li><strong>LikedHashSet继承自HashSet,并且底层是LinkedHashMap构成</strong>。</li>
+<li>LinkedHashSet没有add和remove方法，说明使用的是继承自HashSet的方法。</li>
+</ol>
+<h2 id="TreeSet源码分析"><a href="#TreeSet源码分析" class="headerlink" title="TreeSet源码分析"></a>TreeSet源码分析</h2><div align="center"><img src="http://coderchen33.life/2020-06-21-HashSet、LinkedHashSet和TreeSet源码分析-2020-06-23-18-44-19"></div><br>
+
+<p>知道了前两个，这个TreeSet我不用说，估计各位也能猜到了，它底层是TreeMap并且value处存放的也是空的Object对象。我们照例贴下它的源代码看下是不是吧。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeSet</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractSet</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">NavigableSet</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> NavigableMap&lt;E,Object&gt; m;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//value处存放的object对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object PRESENT = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line">    TreeSet(NavigableMap&lt;E,Object&gt; m) &#123;</span><br><span class="line">        <span class="keyword">this</span>.m = m;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TreeSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(<span class="keyword">new</span> TreeMap&lt;E,Object&gt;());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TreeSet</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> E&gt; comparator)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(<span class="keyword">new</span> TreeMap&lt;&gt;(comparator));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TreeSet</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>();</span><br><span class="line">        addAll(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TreeSet</span><span class="params">(SortedSet&lt;E&gt; s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(s.comparator());</span><br><span class="line">        addAll(s);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的构造方法中可以看到我们的猜想是没有错的，TreeSet底层由TreeMap构成。</p>
+<h3 id="add-方法"><a href="#add-方法" class="headerlink" title="add()方法"></a>add()方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> m.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="remove-方法"><a href="#remove-方法" class="headerlink" title="remove()方法"></a>remove()方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> m.remove(o)==PRESENT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>TreeSet底层是由TreeMap组成</li>
+<li>和HashSet一样，value处存放的是空的object对象。</li>
+</ol>
+<p>综上，我们就知道了：</p>
+<ol>
+<li>HashSet、LinkedHashSet和TreeSet底层都是由对应的HashMap、LinkedHashMap和TreeMap组成</li>
+<li>Set中的元素存放在key处，value处存放的都是空的Object对象。</li>
+</ol>
 
         </div>
         
@@ -351,6 +401,65 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#HashSet源码分析">
+        <span class="has-mr-6">1</span>
+        <span>HashSet源码分析</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#构造方法">
+        <span class="has-mr-6">1.1</span>
+        <span>构造方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#add方法">
+        <span class="has-mr-6">1.2</span>
+        <span>add方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#remove方法">
+        <span class="has-mr-6">1.3</span>
+        <span>remove方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#HashSet总结">
+        <span class="has-mr-6">1.4</span>
+        <span>HashSet总结</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#LinkedHashSet源码分析">
+        <span class="has-mr-6">2</span>
+        <span>LinkedHashSet源码分析</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#构造方法-1">
+        <span class="has-mr-6">2.1</span>
+        <span>构造方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#总结">
+        <span class="has-mr-6">2.2</span>
+        <span>总结</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#TreeSet源码分析">
+        <span class="has-mr-6">3</span>
+        <span>TreeSet源码分析</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#add-方法">
+        <span class="has-mr-6">3.1</span>
+        <span>add()方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#remove-方法">
+        <span class="has-mr-6">3.2</span>
+        <span>remove()方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#总结-1">
+        <span class="has-mr-6">3.3</span>
+        <span>总结</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
 
     
     
