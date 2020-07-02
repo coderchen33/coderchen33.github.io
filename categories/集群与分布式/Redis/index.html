@@ -151,6 +151,310 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-06-25T08:48:04.000Z">2020-06-25</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/">集群与分布式</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/Redis/">Redis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 分钟 读完 (大约 444 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/06/25/redis%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85/">redis发布订阅Pub/Sub</a>
+            
+        </h1>
+        <div class="content">
+            <a id="more"></a>
+
+<h2 id="什么是发布订阅"><a href="#什么是发布订阅" class="headerlink" title="什么是发布订阅"></a>什么是发布订阅</h2><p>Redis发布订阅(pub/sub)是一种<strong>消息通信模式</strong>：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。</p>
+<p>下图展示了publish1 ，频道 channel1 ， 以及订阅这个频道的三个客户端 —— client1 、 client2 和 client3之间的关系：</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis发布订阅-2020-06-25-18-28-55"></div><br>
+
+
+<p>发布者通过 PUBLISH 命令发送给频道 channel1 新的消息， 这个消息就会被发送给订阅它的三个客户端</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>从上面我们知道发布订阅的关键是：发布者、频道、订阅者,我们看看redis的发布订阅是如何使用的。</p>
+<p>下面是所有关于pub/sub的所有命令：</p>
+<blockquote>
+<ul>
+<li>SUBSCRIBE　　　　订阅频道</li>
+<li>UNSUBSCRIBE 　　取消订阅</li>
+<li>PUBLISH　　　　　发布消息</li>
+<li>PSUBSCRIBE  　　订阅模式匹配的频道</li>
+<li>PUNSUBSCRIBE  　取消订阅模式匹配的所有频道</li>
+<li>PUBSUB  　　　　　列出当前活跃频道</li>
+</ul>
+</blockquote>
+<p>使用其实非常简单：</p>
+<p>订阅端订阅频道后自动进行监听 (这里我们分别设置两名订阅者订阅coderchen33频道)</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis发布订阅-2020-06-25-18-03-35"></div><br>
+
+<p>发送端发送消息 (可以看到发送给的人数是所有订阅人数)</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis发布订阅-2020-06-25-18-06-59"></div><br>
+
+<p>订阅端接收到消息（发送端发送消息后，订阅该频道的订阅者就会接收到消息）</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis发布订阅-2020-06-25-18-07-32"></div><br>
+
+
+<p><strong>使用场景</strong></p>
+<ul>
+<li>1.实时消息系统！</li>
+<li>2.实时聊天！（频道当做聊天室，将信息回显给所有人即可！）</li>
+<li>3.订阅，关注系统都是可以的！</li>
+</ul>
+<p>稍微复杂的场景我们就会使用消息中间件MQ(RocketMQ、RabbitMQ、Kafka等)</p>
+<h2 id="底层实现原理"><a href="#底层实现原理" class="headerlink" title="底层实现原理"></a>底层实现原理</h2>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-06-25T03:07:43.000Z">2020-06-25</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/">集群与分布式</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/Redis/">Redis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    21 分钟 读完 (大约 3123 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/06/25/redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96RDB%E5%92%8CAOF/">redis的持久化RDB和AOF</a>
+            
+        </h1>
+        <div class="content">
+            <a id="more"></a>
+
+<h2 id="Redis的持久化"><a href="#Redis的持久化" class="headerlink" title="Redis的持久化"></a>Redis的持久化</h2><p>我们知道Redis是在内存中工作的数据库，如果不将内存中的数据库状态保存到磁盘，那么一旦服务器进程退出，服务器中的数据库状态也会消失。所以 Redis为提供了持久化功能！</p>
+<p>Redis为我们提供了不同级别的持久化方式:</p>
+<ul>
+<li><strong>RDB</strong>持久化方式能够<strong>在指定的时间间隔对数据进行快照存储，恢复时将快照直接读取到内存</strong>.</li>
+<li><strong>AOF</strong>持久化方式<strong>记录每次对服务器写的操作,当服务器重启的时候会重新执行这些命令来恢复原始的数据</strong>。AOF命令以redis协议追加保存每次写的操作到文件末尾。</li>
+<li>如果只希望你的数据在服务器运行的时候存在,则可以不使用任何持久化方式。</li>
+<li>也可以同时开启两种持久化方式, 在这种情况下, 当redis重启的时候会优先载入AOF文件来恢复原始的数据。因为在通常情况下AOF文件保存的数据集要比RDB文件保存的数据集要完整。</li>
+</ul>
+<p>从上面我们知道最重要的还是了解RDB和AOF持久化方式的不同,让我们以RDB持久化方式开始吧。</p>
+<h2 id="RDB-Redis-DataBase"><a href="#RDB-Redis-DataBase" class="headerlink" title="RDB(Redis DataBase)"></a>RDB(Redis DataBase)</h2><p>可以把RDB简单理解为是一台给Redis内存数据存储拍照的照相机，并且生成快照保存到磁盘的过程。Redis重启读取RDB速度快，但是无法做到实时持久化，因此一般用于<strong>数据冷备</strong>和<strong>复制传输</strong>。</p>
+<h3 id="RDB持久化配置"><a href="#RDB持久化配置" class="headerlink" title="RDB持久化配置"></a>RDB持久化配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 时间策略</span></span><br><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 持久化文件名称</span></span><br><span class="line">dbfilename dump.rdb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件保存路径</span></span><br><span class="line">dir ./</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果持久化出错，主进程是否停止写入</span></span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否压缩</span></span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入时是否检查</span></span><br><span class="line">rdbchecksum yes</span><br></pre></td></tr></table></figure>
+<p>配置其实非常简单，这里说一下持久化的时间策略具体是什么意思。</p>
+<ul>
+<li><code>save 900 1</code> 表示900s内如果有1条是写入命令，就触发产生一次快照，可以理解为就进行一次备份</li>
+<li><code>save 300 10</code> 表示300s内有10条写入，就产生快照</li>
+</ul>
+<p>下面的类似，那么为什么需要配置这么多条规则呢？因为Redis每个时段的读写请求肯定不是均衡的，为了平衡性能与数据安全，我们可以自由定制什么情况下触发备份。所以这里就是根据自身Redis写入情况来进行合理配置。</p>
+<p><code>stop-writes-on-bgsave-error yes</code> 这个配置也是非常重要的一项配置，这是当备份进程出错时，主进程就停止接受新的写入操作，是为了保护持久化的数据一致性问题。<strong>如果自己的业务有完善的监控系统，可以禁止此项配置</strong>， 否则请开启。</p>
+<p>关于压缩的配置<code>rdbcompression yes</code>，建议<strong>没有必要开启</strong>，毕竟Redis本身就属于CPU密集型服务器，再开启压缩会带来更多的CPU消耗，相比硬盘成本，CPU更值钱。</p>
+<p>当然<strong>如果想要禁用RDB配置</strong>，也是非常容易的，只需要在save的最后一行写上：<code>save &quot;&quot;</code></p>
+<h3 id="RDB文件恢复"><a href="#RDB文件恢复" class="headerlink" title="RDB文件恢复"></a>RDB文件恢复</h3><p>1、只需要将rdb文件放在我们redis启动目录就可以，redis启动的时候会自动检查dump.rdb 恢复其中的数据！</p>
+<p>2、查看需要存在的位置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; config get dir</span><br><span class="line">1) <span class="string">"dir"</span></span><br><span class="line">2) <span class="string">"/usr/local/bin"</span>  <span class="comment"># 如果在这个目录下存在 dump.rdb 文件，启动就会自动恢复其中的数据</span></span><br></pre></td></tr></table></figure>
+
+<p>可以知道，如果我们没有修改配置文件中<code>dir ./</code>选项，那么dump.rdb默认存储到我们的启动目录下，也就是<code>/usr/local/bin</code>目录下。</p>
+<blockquote>
+<p>所以我们几乎不需要配置什么，redis自己默认的配置就够用了！</p>
+</blockquote>
+<h3 id="RDB工作原理"><a href="#RDB工作原理" class="headerlink" title="RDB工作原理"></a>RDB工作原理</h3><p>在Redis中RDB持久化的触发分为两种：<strong>手动触发</strong>与<strong>Redis定时触发</strong>。</p>
+<p><strong>手动触发</strong></p>
+<ul>
+<li><code>save</code>：会阻塞当前Redis服务器，直到持久化完成，<strong>线上应该禁止使用</strong>。</li>
+<li><code>bgsave</code>：该触发方式会fork一个子进程，由子进程负责持久化过程，因此<strong>阻塞只会发生在fork子进程的时候</strong>，所以Redis内部涉及到RDB都采用bgsave命令。</li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis的持久化RDB和AOF-2020-06-25-15-46-41"></div><br>
+
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis的持久化RDB和AOF-2020-06-25-15-46-59"></div><br>
+
+<p><strong>自动触发</strong></p>
+<p>一般我们是不会直接用命令生成RDB文件的，Redis支持自动触发RDB持久化机制。自动触发的场景主要是有以下几点：</p>
+<ul>
+<li>根据我们的 <code>save m n</code> 配置规则自动触发；</li>
+<li>从节点全量复制时，主节点发送rdb文件给从节点完成复制操作，主节点会触发 bgsave；</li>
+<li>执行<code>debug reload</code>时；</li>
+<li>执行<code>shutdown</code>时，如果没有开启aof，也会触发。</li>
+</ul>
+<p>但是看过redis的源码后，其实发现在rdb.c文件中redis的自动触发<strong>底层子进程名为”redis-rdb-bgsave”</strong></p>
+<p>所以我们看一下RDB的工作流程:</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis的持久化RDB和AOF-2020-06-25-15-52-12"></div><br>
+
+
+<ul>
+<li>1.redis执行bgsave命令，父进程判断当前是否存在正在进行执行的子进程，如RDB/AOF子进程，存在则bgsave命令直接返回</li>
+<li>2.不存在则父进程<code>fork</code>出子进程，<code>fork操作中Redis父进程会阻塞</code></li>
+<li>3.父进程fork完成后，bgsave命令返回“Background saving started”信息并不再阻塞父进程，可以继续响应其他命令。</li>
+<li>4.子进程创建RDB文件，根据父进程内存生成<strong>临时快照文件</strong>，完成后 对原有文件进行原子替换</li>
+<li>5.进程发送信号给父进程表示完成，父进程更新统计信息</li>
+</ul>
+<h3 id="RDB优缺点"><a href="#RDB优缺点" class="headerlink" title="RDB优缺点"></a>RDB优缺点</h3><p>优点：</p>
+<ul>
+<li>RDB是一个紧凑压缩的二进制文件，代表Redis在某个时间点上的数据快照。非常适合备份和全量复制</li>
+<li>Redis加载RDB恢复数据远远快于AOF的方式</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>RDB方式没有办法做到实时持久化。因为bgsave每次运 行都要执行fork操作创建子进程，属于重量级操作，频繁执行成本过高。</li>
+<li>RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个格式 的RDB版本，存在老版本Redis服务无法兼容新版RDB格式的问题。</li>
+</ul>
+<h2 id="AOF-Append-Only-File"><a href="#AOF-Append-Only-File" class="headerlink" title="AOF(Append Only File)"></a>AOF(Append Only File)</h2><p>RDB方式不能提供强一致性，如果Redis进程崩溃，那么<code>两次RDB之间的数据也随之消失</code>。而AOF的出现很好的解决了数据持久化的实时性。</p>
+<p>AOF以独立日志的方式记录每次写命令，重启时再重新执行AOF文件中的命令来恢复数据。<strong>AOF会先把命令追加在AOF缓冲区，然后根据对应策略写入硬盘（appendfsync）</strong></p>
+<h3 id="AOF持久化配置"><a href="#AOF持久化配置" class="headerlink" title="AOF持久化配置"></a>AOF持久化配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 是否开启aof  默认是no如果需要手动设置为yes</span></span><br><span class="line">appendonly yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># aof文件名称</span></span><br><span class="line">appendfilename <span class="string">"appendonly.aof"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 同步频率</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"></span><br><span class="line"><span class="comment"># aof重写期间是否同步</span></span><br><span class="line">no-appendfsync-on-rewrite no</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重写触发配置</span></span><br><span class="line"><span class="comment"># 第一行的意思是 Redis记录最近的一次AOF操作的文件大小，如果当前AOF文件大小增长超过这个百分比则触发一次重写，默认100</span></span><br><span class="line"><span class="comment"># 第二行的意思是如果文件大小大于此值则会触发AOF，默认64MB</span></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载aof时如果有错如何处理</span></span><br><span class="line">aof-load-truncated yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件重写策略</span></span><br><span class="line">aof-rewrite-incremental-fsync yes</span><br></pre></td></tr></table></figure>
+
+<p>还是重点解释一些关键的配置：</p>
+<p><code>appendfsync everysec</code>它其实有三种模式:</p>
+<ul>
+<li>always：命令写入aof缓冲区后，每一次写入都需要同步，<code>直到写入磁盘（阻塞，系统调用fsync）结束后返回</code>。显然和Redis高性能背道而驰，不建议配置</li>
+<li>everysec：命令写入aof缓冲区后，<code>在写入系统缓冲区直接返回（系统调用write），然后有专门线程每秒执行写入磁盘（阻塞，系统调用fsync）后返回</code></li>
+<li>no：命令写入aof缓冲区后，<code>在写入系统缓冲区直接返回（系统调用write）</code>。之后写入磁盘（阻塞，系统调用fsync）的操作由操作系统负责，通常最长30s</li>
+</ul>
+<p>一般情况下都采用<strong>everysec</strong>配置，这样可以兼顾速度与安全，最多损失1s的数据。</p>
+<p><code>aof-load-truncated yes</code> 如果该配置启用，在加载时发现aof尾部不正确时，会向客户端写入一个log，但是会继续执行，如果设置为 no ，发现错误就会停止，必须修复后才能重新加载。</p>
+<h3 id="AOF工作原理"><a href="#AOF工作原理" class="headerlink" title="AOF工作原理"></a>AOF工作原理</h3><p>和RDB方式一样，AOF持久化方式也支持<strong>自动触发</strong>和<strong>手动触发</strong>两种方式:</p>
+<p><strong>手动触发</strong></p>
+<p>使用<code>bgrewriteaof</code>命令：<code>Redis主进程fork子进程来执行AOF重写，这个子进程创建新的AOF文件来存储重写结果，防止影响旧文件</code>。<strong><code>因为fork采用了写时复制机制，子进程不能访问在其被创建出来之后产生的新数据</code></strong>。<code>Redis使用</code> <strong><code>AOF重写缓冲区</code></strong> <code>保存这部分新数据，最后父进程将AOF重写缓冲区的数据写入新的AOF文件中然后使用新AOF文件替换老文件</code>。</p>
+<p><strong>自动触发</strong><br>和RDB一样，配置在redis.conf文件里，当然你也可以通过调用CONFIG SET命令设置。</p>
+<p>同样看过aof.c的代码后，我们知道fork出名为”redis-aof-rewrite”的子进程</p>
+<p>我们看一下aof的工作流程：</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis的持久化RDB和AOF-2020-06-25-16-36-54"></div><br>
+
+<ul>
+<li>1.所有的写入命令追加到aof缓冲区</li>
+<li>2.AOF缓冲区根据对应appendfsync配置向硬盘做同步操作</li>
+<li>3.定期对AOF文件进行重写</li>
+<li>4.Redis重启时，可以加载AOF文件进行数据恢复</li>
+</ul>
+<p>我们可以看下重写的流程：</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis的持久化RDB和AOF-2020-06-25-16-40-05"></div><br>
+
+<p>对于上图有四个关键点补充一下：</p>
+<ul>
+<li>在重写期间，由于主进程依然在响应命令，为了保证最终备份的完整性；因此它依然会写入旧的AOF file中，如果重写失败，能够保证数据不丢失。</li>
+<li>为了把重写期间响应的写入信息也写入到新的文件中，因此也会为子进程保留一个buf，防止新写的file丢失数据。</li>
+<li>重写是直接把当前内存的数据生成对应命令，并不需要读取老的AOF文件进行分析、命令合并。</li>
+<li>AOF文件直接采用的文本协议，主要是兼容性好、追加方便、可读性高可认为修改修复。</li>
+</ul>
+<h3 id="AOF优缺点"><a href="#AOF优缺点" class="headerlink" title="AOF优缺点"></a>AOF优缺点</h3><p>优点：</p>
+<ul>
+<li>做到最多丢失1-2s内的数据（<strong>最多丢失2s数据，因为AOF追加阻塞</strong>）</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>AOF文件比RDB文件大</li>
+<li>可能导致<strong>追加阻塞</strong></li>
+</ul>
+<h2 id="RDB和AOF的对比和选择"><a href="#RDB和AOF的对比和选择" class="headerlink" title="RDB和AOF的对比和选择"></a>RDB和AOF的对比和选择</h2><p>因为两个持久化机制你明白了，剩下的就是看自己的需求了，需求不同选择的也不一定，但是通常都是结合使用。有一张图可供总结：</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis的持久化RDB和AOF-2020-06-25-16-01-10"></div><br>
+
+<p>对比了这几个特性，剩下的就是看结合具体情况使用了。当然两个一块用肯定是好的了，不过在文章开头也提到了如果两个一块用的话，redis重启的时候会优先载入AOF文件来恢复原始的数据。（因为在通常情况下AOF文件保存的数据集要比RDB文件保存的数据集要完整。）</p>
+<div align="center"><img src="http://coderchen33.life/2020-06-25-redis的持久化RDB和AOF-2020-06-25-16-42-58"></div><br>
+
+<p>如果两种方式一起使用，在进行数据恢复时流程如上图所示。所以一定要注意。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-06-24T08:24:49.000Z">2020-06-24</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/">集群与分布式</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/Redis/">Redis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分钟 读完 (大约 893 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/06/24/redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6redis-conf%E8%AF%A6%E8%A7%A3/">redis配置文件redis.conf详解</a>
+            
+        </h1>
+        <div class="content">
+            <p>redis.conf中的常用的也是比较重要的配置项进行了说明</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/06/24/redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6redis-conf%E8%AF%A6%E8%A7%A3/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2020-06-20T00:48:33.000Z">2020-06-20</time>
                 
                 <div class="level-item">
@@ -161,7 +465,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 448 个字)
+                    7 分钟 读完 (大约 1002 个字)
                 </span>
                 
                 
@@ -179,7 +483,7 @@
 <li>Jedis的基本使用</li>
 <li>Springboot整合redis</li>
 <li>Springboot整合redis源码分析</li>
-</ol>
+<li>自定义redisTemplate类
         </div>
         
         
@@ -365,7 +669,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            73
+                            77
                         </p>
                     </a>
                 </div>
@@ -389,7 +693,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            16
+                            17
                         </p>
                     </a>
                 </div>
@@ -431,7 +735,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.11px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.11px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 13.33px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/MySQL/" style="font-size: 16.67px;">MySQL</a> <a href="/tags/Redis/" style="font-size: 12.22px;">Redis</a> <a href="/tags/SQL/" style="font-size: 14.44px;">SQL</a> <a href="/tags/Springboot/" style="font-size: 10px;">Springboot</a> <a href="/tags/algorithm/" style="font-size: 18.89px;">algorithm</a> <a href="/tags/leetcode/" style="font-size: 17.78px;">leetcode</a> <a href="/tags/linux/" style="font-size: 11.11px;">linux</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 15.56px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 15.56px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 14.44px;">计算机网络</a>
+        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 13px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/MySQL/" style="font-size: 17px;">MySQL</a> <a href="/tags/Redis/" style="font-size: 14px;">Redis</a> <a href="/tags/SQL/" style="font-size: 15px;">SQL</a> <a href="/tags/Springboot/" style="font-size: 10px;">Springboot</a> <a href="/tags/algorithm/" style="font-size: 19px;">algorithm</a> <a href="/tags/leetcode/" style="font-size: 18px;">leetcode</a> <a href="/tags/linux/" style="font-size: 12px;">linux</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 16px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 16px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 15px;">计算机网络</a>
     </div>
 </div>
     
@@ -509,7 +813,7 @@
                 <span class="level-item">工具与环境配置</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/%E5%B7%A5%E5%85%B7%E4%B8%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
@@ -517,7 +821,7 @@
                 <span class="level-item">软件安装和环境配置</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">
@@ -565,7 +869,7 @@
                 <span class="level-item">集群与分布式</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/Redis/">
@@ -573,7 +877,7 @@
                 <span class="level-item">Redis</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">6</span>
             </span>
         </a></li></ul></li>
             </ul>
@@ -638,7 +942,7 @@
                 <span class="level-item">工具与环境配置</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/%E5%B7%A5%E5%85%B7%E4%B8%8E%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E5%92%8C%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
@@ -646,7 +950,7 @@
                 <span class="level-item">软件安装和环境配置</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li></ul></li><li>
         <a class="level is-marginless" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">
@@ -694,7 +998,7 @@
                 <span class="level-item">集群与分布式</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">6</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/Redis/">
@@ -702,7 +1006,7 @@
                 <span class="level-item">Redis</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">6</span>
             </span>
         </a></li></ul></li>
             </ul>
