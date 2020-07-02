@@ -10,16 +10,16 @@
 <title>redis发布订阅Pub/Sub - chen33的个人博客</title>
 
 
-    <meta name="description" content="什么是发布订阅Redis发布订阅(pub&#x2F;sub)是一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。 下图展示了publish1 ，频道 channel1 ， 以及订阅这个频道的三个客户端 —— client1 、 client2 和 client3之间的关系：    发布者通过 PUBLISH 命令发送给频道 channel1">
+    <meta name="description" content="主要内容 redis的pub&#x2F;sub模型和原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis发布订阅Pub&#x2F;Sub">
 <meta property="og:url" content="http://coderchen33.life/2020/06/25/redis%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="什么是发布订阅Redis发布订阅(pub&#x2F;sub)是一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。 下图展示了publish1 ，频道 channel1 ， 以及订阅这个频道的三个客户端 —— client1 、 client2 和 client3之间的关系：    发布者通过 PUBLISH 命令发送给频道 channel1">
+<meta property="og:description" content="主要内容 redis的pub&#x2F;sub模型和原理">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-06-25T08:48:04.000Z">
-<meta property="article:modified_time" content="2020-06-25T10:31:49.964Z">
+<meta property="article:modified_time" content="2020-07-02T10:47:23.995Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 444 个字)
+                    3 分钟 读完 (大约 457 个字)
                 </span>
                 
                 
@@ -173,7 +173,9 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
+            <p><strong>主要内容</strong></p>
+<p>redis的pub/sub模型和原理</p>
+<a id="more"></a>
 
 <h2 id="什么是发布订阅"><a href="#什么是发布订阅" class="headerlink" title="什么是发布订阅"></a>什么是发布订阅</h2><p>Redis发布订阅(pub/sub)是一种<strong>消息通信模式</strong>：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。</p>
 <p>下图展示了publish1 ，频道 channel1 ， 以及订阅这个频道的三个客户端 —— client1 、 client2 和 client3之间的关系：</p>

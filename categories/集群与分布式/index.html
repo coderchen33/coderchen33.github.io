@@ -159,7 +159,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 444 个字)
+                    3 分钟 读完 (大约 457 个字)
                 </span>
                 
                 
@@ -172,47 +172,18 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
-
-<h2 id="什么是发布订阅"><a href="#什么是发布订阅" class="headerlink" title="什么是发布订阅"></a>什么是发布订阅</h2><p>Redis发布订阅(pub/sub)是一种<strong>消息通信模式</strong>：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。</p>
-<p>下图展示了publish1 ，频道 channel1 ， 以及订阅这个频道的三个客户端 —— client1 、 client2 和 client3之间的关系：</p>
-<div align="center"><img src="http://coderchen33.life/2020-06-25-redis发布订阅-2020-06-25-18-28-55"></div><br>
-
-
-<p>发布者通过 PUBLISH 命令发送给频道 channel1 新的消息， 这个消息就会被发送给订阅它的三个客户端</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>从上面我们知道发布订阅的关键是：发布者、频道、订阅者,我们看看redis的发布订阅是如何使用的。</p>
-<p>下面是所有关于pub/sub的所有命令：</p>
-<blockquote>
-<ul>
-<li>SUBSCRIBE　　　　订阅频道</li>
-<li>UNSUBSCRIBE 　　取消订阅</li>
-<li>PUBLISH　　　　　发布消息</li>
-<li>PSUBSCRIBE  　　订阅模式匹配的频道</li>
-<li>PUNSUBSCRIBE  　取消订阅模式匹配的所有频道</li>
-<li>PUBSUB  　　　　　列出当前活跃频道</li>
-</ul>
-</blockquote>
-<p>使用其实非常简单：</p>
-<p>订阅端订阅频道后自动进行监听 (这里我们分别设置两名订阅者订阅coderchen33频道)</p>
-<div align="center"><img src="http://coderchen33.life/2020-06-25-redis发布订阅-2020-06-25-18-03-35"></div><br>
-
-<p>发送端发送消息 (可以看到发送给的人数是所有订阅人数)</p>
-<div align="center"><img src="http://coderchen33.life/2020-06-25-redis发布订阅-2020-06-25-18-06-59"></div><br>
-
-<p>订阅端接收到消息（发送端发送消息后，订阅该频道的订阅者就会接收到消息）</p>
-<div align="center"><img src="http://coderchen33.life/2020-06-25-redis发布订阅-2020-06-25-18-07-32"></div><br>
-
-
-<p><strong>使用场景</strong></p>
-<ul>
-<li>1.实时消息系统！</li>
-<li>2.实时聊天！（频道当做聊天室，将信息回显给所有人即可！）</li>
-<li>3.订阅，关注系统都是可以的！</li>
-</ul>
-<p>稍微复杂的场景我们就会使用消息中间件MQ(RocketMQ、RabbitMQ、Kafka等)</p>
-<h2 id="底层实现原理"><a href="#底层实现原理" class="headerlink" title="底层实现原理"></a>底层实现原理</h2>
+            <p><strong>主要内容</strong></p>
+<p>redis的pub/sub模型和原理</p>
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/06/25/redis%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
