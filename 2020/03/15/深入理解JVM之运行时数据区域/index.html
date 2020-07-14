@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-15T12:26:05.000Z">
-<meta property="article:modified_time" content="2020-03-16T03:37:20.960Z">
+<meta property="article:modified_time" content="2020-07-09T00:57:20.708Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="JVM">
@@ -156,7 +156,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 747 个字)
+                    6 分钟 读完 (大约 940 个字)
                 </span>
                 
                 
@@ -223,6 +223,11 @@
 <li>Java堆中会存放访问<b>类元数据(类模板信息)</b>的地址，</li>
 <li>reference存储的就直接是对象的地址</li>
 </ul>
+<h4>运行时常量池和字符串常量池傻傻分不清</h4>
+
+<p>在<strong>JDK1.7之前运行时常量池逻辑包含字符串常量池存放在方法区</strong>, 此时hotspot虚拟机对方法区的实现为永久代</p>
+<p>在<strong>JDK1.7 字符串常量池被从方法区拿到了堆中, 这里没有提到运行时常量池,也就是说字符串常量池被单独拿到堆,运行时常量池剩下的东西还在方法区</strong>, 也就是hotspot中的永久代</p>
+<p>在<strong>JDK1.8 hotspot移除了永久代用元空间(Metaspace)取而代之, 这时候字符串常量池还在堆, 运行时常量池还在方法区, 只不过方法区的实现从永久代变成了元空间(Metaspace)</strong></p>
 
         </div>
         
@@ -344,7 +349,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            78
+                            79
                         </p>
                     </a>
                 </div>
@@ -439,6 +444,10 @@
         <a class="is-flex" href="#undefined">
         <span class="has-mr-6">1.6</span>
         <span>栈、堆、方法区关系</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">1.7</span>
+        <span>运行时常量池和字符串常量池傻傻分不清</span>
         </a></li></ul></li></ul>
             </div>
         </div>

@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-16T09:54:25.000Z">
-<meta property="article:modified_time" content="2020-03-16T09:59:08.665Z">
+<meta property="article:modified_time" content="2020-07-08T13:56:32.082Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="JVM">
@@ -156,7 +156,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3126 个字)
+                    20 分钟 读完 (大约 2994 个字)
                 </span>
                 
                 
@@ -195,7 +195,6 @@
 <li>优点：实现简单、判定效率高</li>
 <li>缺点：无法解决循环引用的问题。</li>
 </ul>
-<p>demo</p>
 <h4><strong>可达性分析算法</strong></h4>
 
 <p>以一系列GC Roots 为起始点进行搜索，可达的对象都是存活的，不可达的对象可被回收。</p>
@@ -270,14 +269,7 @@
 <h2 id="七大垃圾收集器"><a href="#七大垃圾收集器" class="headerlink" title="七大垃圾收集器"></a>七大垃圾收集器</h2><p>上面我们介绍的是垃圾收集的算法，具体实现则是通过垃圾收集器来实现的。</p>
 <div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-17-2-32"></div><br>
 
-<p>以上是 HotSpot 虚拟机中的 7 个垃圾收集器，连线表示垃圾收集器可以配合使用。</p>
-<ul>
-<li><p>单线程与多线程：单线程指的是垃圾收集器只使用一个线程，而多线程使用多个线程；</p>
-</li>
-<li><p>串行与并行：串行指的是垃圾收集器与用户程序交替执行，这意味着在执行垃圾收集的时候需要停顿用户程序；并行指的是垃圾收集器和用户程序同时执行。除了 CMS 和 G1 之外，其它垃圾收集器都是以串行的方式执行。</p>
-</li>
-</ul>
-<p>这里我们重点关注CMS垃圾收集器和G1垃圾收集器，其他的简单了解即可。</p>
+<p>以上是 HotSpot 虚拟机中的 7 个垃圾收集器，连线表示垃圾收集器可以配合使用。这里我们重点关注CMS垃圾收集器和G1垃圾收集器，其他的简单了解即可。</p>
 <ul>
 <li><strong>Serial 收集器</strong>   单线程收集器、Client场景下默认新生代收集器</li>
 <li><strong>ParNew 收集器</strong> Serial 收集器的多线程版本、 Server 场景下默认的新生代收集器</li>
@@ -289,9 +281,9 @@
 <h4><strong>CMS收集器</strong></h4>
 
 <ul>
-<li>CMS收集器是一种以<strong>获得最短回收停顿时间</strong>为目标的收集器。</li>
+<li>第一款并发的垃圾收集器(用户线程和收集器线程线程同时进行)</li>
+<li>CMS收集器是一种老年代收集器，以<strong>获得最短回收停顿时间</strong>为目标。</li>
 <li>CMS收集器是<strong>基于标记-清除算法</strong>实现的。</li>
-<li>收集器线程都可以与用户线程一起工作，不需要进行停顿</li>
 </ul>
 <div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-17-25-43"></div><br>
 
@@ -319,9 +311,9 @@
 <p>每个 Region 都有一个 Remembered Set，用来记录该 Region 对象的引用对象所在的 Region。通过使用 Remembered Set，在做可达性分析的时候就可以避免全堆扫描</p>
 <p><strong>G1垃圾收集器的优点</strong></p>
 <ul>
-<li><strong>并行与并发</strong>  通过并发方式让Java程序在垃圾收集时期继续执行</li>
+<li><strong>并发</strong>  通过并发方式让Java程序在垃圾收集时期继续执行</li>
 <li><strong>分代收集</strong> 虽然可以将新生代和老年代一同收集，但是分代的概念依然在G1中保留。仍然能够采用不同的方式去处理新创建的对象和已经存活一段时间的旧对象</li>
-<li><strong>空间整合</strong> G1从<strong>整体来看是基于标记-整理算法</strong>，<strong>局部(两个Region间)是基于复制算法</strong>实现的。两种算法都意味着G1运行期间不会昌盛内存空间碎片</li>
+<li><strong>空间整合</strong> G1从<strong>整体来看是基于标记-整理算法</strong>，<strong>局部(两个Region间)是基于复制算法</strong>实现的。两种算法都意味着G1运行期间不会产生内存空间碎片</li>
 <li><strong>可预测停顿</strong> 能让使用者明确指定在一个长度为 M 毫秒的时间片段内，消耗在 GC 上的时间不得超过 N 毫秒。</li>
 </ul>
 <div align="center"><img src="http://coderchen33.life/2020-03-16-深入理解JVM之内存分配和垃圾回收-2020-3-16-17-39-55"></div><br>
@@ -455,7 +447,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            78
+                            79
                         </p>
                     </a>
                 </div>
