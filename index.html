@@ -395,7 +395,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 285 个字)
+                    2 分钟 读完 (大约 295 个字)
                 </span>
                 
                 
@@ -408,65 +408,17 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
-
-<h2 id="软件说明"><a href="#软件说明" class="headerlink" title="软件说明"></a>软件说明</h2><ul>
-<li>CentOS 7 64位</li>
-<li>redis5.0.8</li>
-<li>Xshell 6</li>
-<li>Xftp 6</li>
-</ul>
-<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><p><strong>1.使用远程连接工具将redis的压缩包上传到linux主机的<code>/opt</code>文件夹下</strong></p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-19-06"></div><br>
-
-<p><strong>2.使用命令<code>tar -zxvf redis-5.0.8.tar.gz</code>将压缩包文件进行解压</strong></p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-21-36"></div><br>
-
-<p>进入到解压后的文件夹，可以看到redis的配置文件</p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-28-22"></div><br>
-
-<p><strong>3.查看是否安装gcc编译器，没有则直接安装</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcc -v <span class="comment"># 查看是否安装gcc编译器</span></span><br><span class="line"></span><br><span class="line">yum install gcc-c++  <span class="comment"># 没有安装的话直接进行安装</span></span><br></pre></td></tr></table></figure>
-
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-22-25"></div><br>
-
-<p>安装完成后，检查是否安装成功</p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-29-36"></div><br>
-
-<p><strong>4.进入到解压后的redis文件中进行编译安装</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> redis-5.0.8/</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后如下图所示：</p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-33-33"></div><br>
-
-<p><strong>5.redis的默认安装路径<code>/usr/local/bin</code></strong></p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-36-05"></div><br>
-
-
-<p><strong>6.将redis默认配置文件复制到默认安装路径下</strong></p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-38-22"></div><br>
-
-
-<p><strong>7.修改redis为默认后台启动</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim cconfig/redis.conf</span><br></pre></td></tr></table></figure>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-40-30"></div><br>
-
-
-<p><strong>8.通过制定redis文件启动redis服务</strong></p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-43-56"></div><br>
-
-
-<p><strong>9.使用redis-cli进行连接测试</strong></p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-44-57"></div><br>
-
-<p><strong>10.如何关闭redis服务</strong></p>
-<div align="center"><img src="http://coderchen33.life/2020-06-24-CentOS7环境下安装redis-2020-06-24-15-45-50"></div><br>
-
-
-<p>到这里redis已经安装完成，之后要设置linux集群则可以在redis的配置文件redis.conf中进行修改。</p>
-
+            <p>CentOS7环境下redis的安装教程</p>
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/06/24/CentOS7%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%AE%89%E8%A3%85redis/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
