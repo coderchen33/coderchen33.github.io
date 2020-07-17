@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-06-21T01:33:41.000Z">
-<meta property="article:modified_time" content="2020-06-22T08:20:25.553Z">
+<meta property="article:modified_time" content="2020-07-16T09:32:26.733Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    40 分钟 读完 (大约 5974 个字)
+                    1 小时 读完 (大约 6862 个字)
                 </span>
                 
                 
@@ -363,12 +363,8 @@
 <li>初始容量过⼤，那么遍历时我们的速度就会受影响~</li>
 <li>初始容量过⼩，散列表再散列(扩容的次数)可能就变得多，扩容也是⼀件⾮常耗费性能的⼀件事</li>
 </ul>
-<p>链表转红黑树为什么是8？</p>
-<p>因为红黑树需要进行左旋，右旋操作， 而单链表不需要。</p>
-<ul>
-<li>如果元素小于8个，查询成本高，新增成本低</li>
-<li>如果元素大于8个，查询成本低，新增成本高</li>
-</ul>
+<p>Hashmap中的链表大小超过8个时会自动转化为红黑树，当删除小于6时重新变为链表，为啥呢？</p>
+<p>根据泊松分布，在负载因子默认为0.75的时候，单个hash槽内元素个数为8的概率小于百万分之一，所以将7作为一个分水岭，等于7的时候不转换，大于等于8的时候才进行转换，小于等于6的时候就化为链表。</p>
 <h4><strong>3.为什么HashMap存放自定义对象时需要重写hashCode和equals方法</strong></h4>
 
 <ol>
@@ -389,6 +385,26 @@
 <p>AVL树规定每一个结点的左右结点之差不超过1，追求绝对的平衡。在插入之后进行调整的次数不能确定。因此插入和删除较慢，而查找较快。</p>
 <p>而红黑树的平衡条件不是那么严格，而且插入之后的调整在3次以内，保证其效率为O(logn)，所以红黑树添加、删除相对较快，查找相对较慢。但整体性能上还是红黑树更好一些。</p>
 <p><strong>不用B/B+树的原因</strong><br>B和B+树主要用于数据存储在磁盘上的场景，比如数据库索引就是用B+树实现的。这两种数据结构的特点就是树比较矮胖，每个结点存放一个磁盘大小的数据，这样一次可以把一个磁盘的数据读入内存，减少磁盘转动的耗时，提高效率。而红黑树多用于内存中排序，也就是内部排序，因此HashMap使用红黑树作为它的一种数据结构。</p>
+<h4><strong>6.HashMap和HashTable的区别</strong></h4>
+
+<ol>
+<li>最重要的区别在于HashMap是线程不安全的，而HashTable是线程安全的。 (这个可以展开很多，这里就不描述了)</li>
+<li>Hashtable 是不允许键或值为 null 的，HashMap 的键值则都可以为 null。(Hashtable在我们put空值的时候会直接抛空指针异常，但是HashMap对于null它的hash值为0)  </li>
+<li>初始化容量不同：HashMap 的初始容量为：16，Hashtable 初始容量为：11，两者的负载因子默认都是：0.75。</li>
+<li>扩容机制不同：当现有容量大于总容量 * 负载因子时，HashMap 扩容规则为当前容量翻倍，Hashtable 扩容规则为当前容量翻倍 + 1。</li>
+<li>迭代器不同：HashMap 中的 Iterator 迭代器是 fail-fast 的，而 Hashtable 的 Enumerator 不是 fail-fast 的</li>
+</ol>
+<p>为什么HashMap允许为null而HashTable不允许呢? </p>
+<p>主要原因是<strong>HashTable使用的是安全失败机制(fail-safe)而HashMap使用的是快速失败机制(fail-fast)</strong></p>
+<p><strong>快速失败（fail—fast)</strong>：是java集合中的一种机制， 在用迭代器遍历一个集合对象时，如果遍历过程中对集合对象的内容进行了修改（增加、删除、修改），则会抛出<code>Concurrent Modification Exception</code>。</p>
+<p>原理:<strong>迭代器在遍历时直接访问集合中的内容，并且在遍历过程中使用一个 modCount 变量</strong>。集合在被遍历期间如果内容发生变化，就会改变modCount的值。每当迭代器使用hashNext()/next()遍历下一个元素之前，都会检测modCount变量是否为expectedmodCount值，是的话就返回遍历；否则抛出异常，终止遍历。</p>
+<p>Tip：这里异常的抛出条件是检测到 modCount！=expectedmodCount 这个条件。如果集合发生变化时修改modCount值刚好又设置为了expectedmodCount值，则异常不会抛出。(有点类似于CAS)</p>
+<p>因此，不能依赖于这个异常是否抛出而进行并发操作的编程，这个异常只建议用于检测并发修改的bug。</p>
+<p>场景：<strong>java.util包下的集合类都是快速失败的</strong>，不能在多线程下发生并发修改（迭代过程中被修改）算是一种安全机制吧。</p>
+<p><strong>安全失败（fail—safe)</strong> :<strong>在遍历时不是直接在集合内容上访问的，而是先复制原有集合内容，在拷贝的集合上进行遍历</strong>。</p>
+<p>原理：由于迭代时是对原集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到，所以不会触发Concurrent Modification Exception。</p>
+<p><strong>缺点</strong>：基于拷贝内容的优点是避免了Concurrent Modification Exception，但同样地，迭代器并不能访问到修改后的内容，即：<strong>迭代器遍历的是开始遍历那一刻拿到的集合拷贝，在遍历期间原集合发生的修改迭代器是不知道的</strong>。</p>
+<p>场景：<strong>java.util.concurrent包下的容器都是安全失败</strong>，可以在多线程下并发使用，并发修改。</p>
 
         </div>
         
@@ -637,6 +653,10 @@
         <a class="is-flex" href="#undefined">
         <span class="has-mr-6">7.1.5</span>
         <span>5.为什么使用红黑树而不是二叉查找树或者AVL树或者B树或者B+树</span>
+        </a></li><li>
+        <a class="is-flex" href="#undefined">
+        <span class="has-mr-6">7.1.6</span>
+        <span>6.HashMap和HashTable的区别</span>
         </a></li></ul></li></ul></li></ul>
             </div>
         </div>

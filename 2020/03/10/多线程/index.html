@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-10T07:13:10.000Z">
-<meta property="article:modified_time" content="2020-03-26T11:55:33.832Z">
+<meta property="article:modified_time" content="2020-07-16T02:26:30.346Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="多线程">
@@ -157,7 +157,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分钟 读完 (大约 1529 个字)
+                    10 分钟 读完 (大约 1573 个字)
                 </span>
                 
                 
@@ -269,6 +269,7 @@
 <ul>
 <li>call方法可以有泛型返回值(获取返回结果需要借助FutureTask类)</li>
 <li>call方法可以抛出异常</li>
+<li>可以使用工具类<code>Executors</code>实现Runnable接口和Callable 接口之间的相互转换。<code>（Executors.callable（Runnable task）</code>或 <code>Executors.callable（Runnable task，Object resule））</code>。</li>
 </ul>
 <p>Runnable接口源代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
