@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-17T22:36:28.000Z">
-<meta property="article:modified_time" content="2020-07-17T12:39:41.737Z">
+<meta property="article:modified_time" content="2020-07-20T00:40:30.660Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="多线程">
@@ -157,7 +157,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7230 个字)
+                    1 小时 读完 (大约 7480 个字)
                 </span>
                 
                 
@@ -421,7 +421,13 @@
 </blockquote>
 <p><strong>字节码层面：增加了一个ACC_VOLATILE标志</strong></p>
 <p><strong>JVM/汇编层面：依赖于汇编指令<code>lock;addl</code></strong></p>
-<p>详细参考文章:<a href="http://polynomial.cc/articles/2020/03/02/1583128027059.html">http://polynomial.cc/articles/2020/03/02/1583128027059.html</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写操作</span></span><br><span class="line"><span class="number">0x01a3de1d</span>: movb $<span class="number">0</span>×<span class="number">0</span>,<span class="number">0</span>×<span class="number">1104800</span>(%esi);</span><br><span class="line"><span class="comment">// 内存屏障</span></span><br><span class="line"><span class="number">0x01a3de24</span>: lock addl $<span class="number">0</span>×<span class="number">0</span>,(%esp);</span><br></pre></td></tr></table></figure>
+
+<p>详细参考文章:<a href="https://www.pianshen.com/article/81043901/">https://www.pianshen.com/article/81043901/</a> 简单的说<code>lock addl</code>的作用就是：</p>
+<ul>
+<li><strong>锁总线</strong>：  LOCK有效时表示CPU不允许其它总线主控者占用总线而CPU与内存等硬件之前的通信需要经过总线。因此会阻止其它主控者使用总线。说白了就是<strong>LOCK前缀只保证对当前指令要访问的内存互斥</strong>。</li>
+<li><strong>锁缓存</strong>： 由于锁总线开销较大，因此在之后的处理器中，LOCK#用来锁缓存而不是总线。在所有的 X86 CPU 上都具有锁定一个特定内存地址的能力，当这个特定内存地址被锁定后，它就可以阻止其它的系统总线读取或修改这个内存地址。这种能力是通过 LOCK 指令前缀再加上具体操作（如ADD）的汇编指令来实现的。</li>
+</ul>
 <hr>
 <h2 id="显式Lock锁"><a href="#显式Lock锁" class="headerlink" title="显式Lock锁"></a>显式Lock锁</h2><p>显式Lock锁是JDK1.5之后才有的位于java.util.concurrent（J.U.C）包中。</p>
 <p>读一下源码注释，简单了解下Lock锁：</p>
