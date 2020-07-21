@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>redis数据结构底层实现原理 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容 redis5种基本数据结构的底层实现原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis数据结构底层实现原理">
+<meta property="og:url" content="http://coderchen33.life/2020/07/21/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容 redis5种基本数据结构的底层实现原理">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-07-21T13:59:10.000Z">
+<meta property="article:modified_time" content="2020-07-21T14:01:41.911Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="redis数据结构底层实现原理" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-07-21T13:59:10.000Z">2020-07-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/">集群与分布式</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/Redis/">Redis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    37 分钟 读完 (大约 5574 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                redis数据结构底层实现原理
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<p>redis5种基本数据结构的底层实现原理</p>
+<a id="more"></a>
+
+
+<h2 id="1-String"><a href="#1-String" class="headerlink" title="1.String"></a>1.String</h2><p>Redis中的字符串是由 <strong>简单动态字符串SDS(Simple Dynamic String)</strong> 实现的。它的底层实现有点类似于 Java 中的 ArrayList，我们从源码的 <code>sds.h/sdshdr</code> 文件中可以看到 Redis底层对于字符串的定义结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//小于1字节</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">attribute__</span> ((__<span class="title">packed__</span>)) <span class="title">sdshdr5</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> flags; <span class="comment">/* 低3位用来存储类型，高5位用来存储字符串长度 */</span></span><br><span class="line">    <span class="keyword">char</span> buf[];</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//1字节</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">attribute__</span> ((__<span class="title">packed__</span>)) <span class="title">sdshdr8</span> &#123;</span></span><br><span class="line">    <span class="keyword">uint8_t</span> len; <span class="comment">/* 字符串在buf中实际占用的字节数(不包括\0) */</span></span><br><span class="line">    <span class="keyword">uint8_t</span> alloc; <span class="comment">/* 给buf分配的实际空间大小（见后面的空间预分配）减去一个字节的'\0'，所以剩余可用空间的大小就等于alloc-len */</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> flags; <span class="comment">/* 低位的3个bit位用来表示结构类型，其余5个bit位未使用 */</span></span><br><span class="line">    <span class="keyword">char</span> buf[];  <span class="comment">//真正存放字符串是使用字节数组</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//2字节</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">attribute__</span> ((__<span class="title">packed__</span>)) <span class="title">sdshdr16</span> &#123;</span></span><br><span class="line">    <span class="keyword">uint16_t</span> len; <span class="comment">/* used */</span></span><br><span class="line">    <span class="keyword">uint16_t</span> alloc; <span class="comment">/* excluding the header and null terminator */</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> flags; <span class="comment">/* 3 lsb of type, 5 unused bits */</span></span><br><span class="line">    <span class="keyword">char</span> buf[];</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//4字节</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">attribute__</span> ((__<span class="title">packed__</span>)) <span class="title">sdshdr32</span> &#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> len; <span class="comment">/* used */</span></span><br><span class="line">    <span class="keyword">uint32_t</span> alloc; <span class="comment">/* excluding the header and null terminator */</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> flags; <span class="comment">/* 3 lsb of type, 5 unused bits */</span></span><br><span class="line">    <span class="keyword">char</span> buf[];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//8字节</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">attribute__</span> ((__<span class="title">packed__</span>)) <span class="title">sdshdr64</span> &#123;</span></span><br><span class="line">    <span class="keyword">uint64_t</span> len; <span class="comment">/* used */</span></span><br><span class="line">    <span class="keyword">uint64_t</span> alloc; <span class="comment">/* excluding the header and null terminator */</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> flags; <span class="comment">/* 3 lsb of type, 5 unused bits */</span></span><br><span class="line">    <span class="keyword">char</span> buf[];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>从上面源码中可以看到同样是字符串，Redis使用泛型定义了好多次，为什么不直接使用int类型呢？这其实是<strong>Redis为了对内存做极致的优化，不同长度的字符串使用不同的结构体来表示</strong>。</p>
+<h3 id="SDS与C字符串对比"><a href="#SDS与C字符串对比" class="headerlink" title="SDS与C字符串对比"></a>SDS与C字符串对比</h3><p>我们知道redis中没有使用C自带的字符串，而是自己封装了SDS，存储结构在上面的源码中已经给出，这里就通过一个图示例：</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-16-50-18"></div><br>
+
+<p><strong>SDS对于C字符串优点</strong></p>
+<ul>
+<li><p><strong>获取字符串长度的时间复杂度O(1)</strong>： C字符串由于没有记录字符串长度，因此获得字符串长度时要进行数组的遍历，时间复杂度为O(n)。而SDS由于记录了字符串长度时间复杂度为O(1)</p>
+</li>
+<li><p><strong>杜绝缓冲区溢出问题</strong>： C字符串由于没有记录字符串长度，所以使用strcat进行字符串拼接时，可能会出现目标分配内存不够的情况导致缓冲区溢出。  而SDS的<strong>空间分配策略</strong>则会先检查SDS空间是否满足要求，不满足则扩容至所需大小，再执行响应操作</p>
+</li>
+<li><p><strong>减少修改字符串时带来的内存重分配次数</strong>： 还是由于C字符串由于没有记录字符串长度，所以对于一个包含N个字符的C字符串底层总是一个N+1的数组，如果对C字符串进行了增加或减少程序总是要进行内存的重新分配。如果没有重新分配，则增加字符串出现缓冲区溢出、减少字符串出现内存泄露的问题。而SDS通过<strong>空间分配策略</strong>解决这个问题。</p>
+</li>
+<li><p><strong>二进制安全</strong> ：  C字符串中字符必须符合某种编码格式，并且除了字符串的末尾，字符串中不能包含空字符，因此只能用来保存文本数据。而redis中则可以保存任何二进制文件，如图像、音频、视频、压缩文件等</p>
+</li>
+<li><p><strong>兼容部分C字符串函数</strong>： 因为redis中的字符串末尾和C字符串一样，也是有’\0’的，因此可以使用C语言中的部分C字符串函数操作我们的redis中的SDS。</p>
+</li>
+</ul>
+<p>可以简单总结为下表</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-16-16-02"></div><br>
+
+<h3 id="空间分配策略"><a href="#空间分配策略" class="headerlink" title="空间分配策略"></a>空间分配策略</h3><p>上面一直提到内存分配策略，但是一直没有详细描述，这里就对空间分配策略做一个简单介绍。</p>
+<p><strong>1.空间预分配</strong></p>
+<p>空间预分配用于优化 sds 的字符串增长操作：当 sds 的 API 对一个 sds 进行修改，并且需要对 sds 进行空间扩展的时候，<strong>程序不仅会为 sds 分配修改所必须要的空间，还会为 sds 分配额外的未使用空间</strong>，并根据新分配的空间重新定义 sds 的 header。这一部分代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Return ASAP if there is enough space left. */</span></span><br><span class="line">    <span class="keyword">if</span> (avail &gt;= addlen) <span class="keyword">return</span> s;</span><br><span class="line"></span><br><span class="line">    len = sdslen(s);</span><br><span class="line">    sh = (<span class="keyword">char</span>*)s-sdsHdrSize(oldtype);</span><br><span class="line">    newlen = (len+addlen);</span><br><span class="line">    <span class="keyword">if</span> (newlen &lt; SDS_MAX_PREALLOC)</span><br><span class="line">        newlen *= <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        newlen += SDS_MAX_PREALLOC;</span><br><span class="line"></span><br><span class="line">    type = sdsReqType(newlen);</span><br></pre></td></tr></table></figure>
+<p>简单来说就是：</p>
+<ul>
+<li>如果对 sds 进行修改之后，sds的长度（也即是 len 属性的值）将小于 1 MB ，那么程序分配和len 属性同样大小的未使用空间，这时 SDSsdsalloc属性的值将正好为 len 属性的值的两倍。举个例子，如果进行修改之后，sds的len将变成 13 字节，那么程序也会分配 13 字节的未使用空间，alloc 属性将变成 13字节，sds 的 buf 数组的实际长度将变成 13 + 13 + 1 = 27 字节（额外的一字节用于保存空字符）。</li>
+<li>如果对 sds 进行修改之后，sds 的长度将大于等于 1 MB ，那么程序会分配 1 MB 的未使用空间。举个例子， 如果进行修改之后，sds 的 len 将变成 30 MB，那么程序会分配 1 MB 的未使用空间，alloc 属性将变成 31 MB ，sds 的 buf 数组的实际长度将为 30 MB + 1 MB + 1 byte。</li>
+</ul>
+<p>通过空间预分配策略，Redis 可以减少连续执行字符串增长操作所需的内存重分配次数。通过这种空间换时间的预分配策略，sds 将连续增长 N 次字符串所需的内存重分配次数从必定 N 次降低为最多 N 次。内存预分配策略仅在 sds 扩展的时候才触发，而新创建的 sds 长度和 C 字符串一致，是长度 + 1byte。</p>
+<p><strong>2.惰性空间释放</strong><br>惰性空间释放用于优化 sds 的字符串缩短操作：当 sds 的 API 需要缩短 sds 保存的字符串时， 程序并不立即使用内存重分配来回收缩短后多出来的字节，而是使用 free 属性（数组中的神谕部分）将这些字节的数量记录起来， 并等待将来使用。</p>
+<p>通过惰性空间释放策略，sds 避免了缩短字符串时所需的内存重分配操作， 并为将来可能有的增长操作提供了优化。与此同时，sds 也提供了相应的 API sdsfree，让我们可以在有需要时， 真正地释放 sds 里面的未使用空间，所以不用担心惰性空间释放策略会造成内存浪费。</p>
+<h2 id="2-List"><a href="#2-List" class="headerlink" title="2.List"></a>2.List</h2><p>由于C语言中没有内置链表这种数据结构，所以redis构建了自己的链表实现。类似于Java中的LinkedList是一个双向链表。这意味着 list 的插入和删除操作非常快，时间复杂度为 O(1)，但是索引定位很慢，时间复杂度为 O(n)。</p>
+<p>我们可以从源码的<code>adlist.h/listNode</code>来看到对其的定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Node, List, and Iterator are the only data structures used currently. */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> *<span class="title">prev</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> *<span class="title">next</span>;</span></span><br><span class="line">    <span class="keyword">void</span> *value;</span><br><span class="line">&#125; listNode;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，多个 listNode 可以通过 prev 和 next 指针组成双向链表：</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-17-05-56"></div><br>
+
+
+<p>虽然仅仅使用多个 listNode 结构就可以组成链表，但是使用<code>adlist.h/list</code>结构来持有链表的话，操作起来会更加方便：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">list</span> &#123;</span></span><br><span class="line">    listNode *head;</span><br><span class="line">    listNode *tail;</span><br><span class="line">    <span class="keyword">void</span> *(*dup)(<span class="keyword">void</span> *ptr);</span><br><span class="line">    <span class="keyword">void</span> (*<span class="built_in">free</span>)(<span class="keyword">void</span> *ptr);</span><br><span class="line">    <span class="keyword">int</span> (*match)(<span class="keyword">void</span> *ptr, <span class="keyword">void</span> *key);</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> len;</span><br><span class="line">&#125; <span class="built_in">list</span>;</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-17-13-49"></div><br>
+
+
+<p><strong>所以从上面可以看到，在redis实现的链表有如下特点</strong>：</p>
+<ol>
+<li><strong>双向无环链表</strong>：  每个链表节点都有prev和next指针。 并且表头结点的prev指针和表尾结点的next指针都指向NULL。</li>
+<li><strong>带表头指针和表尾指针</strong> ：  list结构的head指针和tail指针。 因此获取表头节点和表尾结点的复杂度为O（1）</li>
+<li><strong>带链表长度计数器</strong>  即上面的len属性</li>
+<li><strong>多态</strong>  可以使用void*指针保存节点值，并且通过dup、free、match竖向为节点设置特定类型函数。</li>
+</ol>
+<h2 id="3-Hash"><a href="#3-Hash" class="headerlink" title="3.Hash"></a>3.Hash</h2><p>由于C语言中没有内置map这种数据结构，所以redis构建了自己的map实现。相当于 Java 中的 HashMap，内部实现也差不多类似，都是通过 “数组 + 链表” 的链地址法来解决部分哈希冲突。</p>
+<p>哈希表源码 <code>dict.h/dictht</code> 定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictht</span> &#123;</span></span><br><span class="line">    <span class="comment">// 哈希表数组</span></span><br><span class="line">    dictEntry **table;</span><br><span class="line">    <span class="comment">// 哈希表大小</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="built_in">size</span>;</span><br><span class="line">    <span class="comment">// 哈希表大小掩码，用于计算索引值，总是等于 size - 1</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> sizemask;</span><br><span class="line">    <span class="comment">// 该哈希表已有节点的数量</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> used;</span><br><span class="line">&#125; dictht;</span><br></pre></td></tr></table></figure>
+
+<p>table 属性是一个数组，数组中的每个元素都是一个指向 <code>dict.h/dictEntry</code> 结构的指针，而每个 <code>dictEntry</code> 结构保存着一个键值对：</p>
+<p>哈希表节点定义:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span> &#123;</span></span><br><span class="line">    <span class="comment">// 键</span></span><br><span class="line">    <span class="keyword">void</span> *key;</span><br><span class="line">    <span class="comment">// 值</span></span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line">        <span class="keyword">void</span> *val;</span><br><span class="line">        <span class="keyword">uint64_t</span> u64;</span><br><span class="line">        <span class="keyword">int64_t</span> s64;</span><br><span class="line">        <span class="keyword">double</span> d;</span><br><span class="line">    &#125; v;</span><br><span class="line">    <span class="comment">// 指向下个哈希表节点，形成链表</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">dictEntry</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125; dictEntry;</span><br></pre></td></tr></table></figure>
+
+<p>下图就是redis中哈希表的示意图：</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-17-22-51"></div><br>
+
+<p>但其实这里还没有结束，实际上redis中整个hash的构成还包括字典的定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">dict</span> &#123;</span></span><br><span class="line">    <span class="comment">//上面两个属性用来实现多态</span></span><br><span class="line">    dictType *type;</span><br><span class="line">    <span class="keyword">void</span> *privdata;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 内部有两个哈希表结构</span></span><br><span class="line">    dictht ht[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//rehash索引</span></span><br><span class="line">    <span class="comment">//当rehash不再进行时，值为-1</span></span><br><span class="line">    <span class="keyword">long</span> rehashidx; <span class="comment">/* rehashing not in progress if rehashidx == -1 */</span></span><br><span class="line">&#125; dict;</span><br></pre></td></tr></table></figure>
+
+
+<p>从上面dict的源码中注意到，<strong>实际上字典结构的内部包含两个 hashtable</strong>，通常情况下只有一个 hashtable 是有值的，但是在字典扩容缩容时，需要使用ht[1]，然后进行<strong>渐进式搬迁</strong> (下面说原因)。</p>
+<p>普通状态下没有进行rehash的字典结构示意图：</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-17-38-58"></div><br>
+
+<p><strong>添加元素和扩容</strong></p>
+<p>在我们的字典中添加元素时和我们Java中的HashMap一样，也是通过hash值判断位置后添加元素，并且解决Hash冲突时同样是使用的链地址法。但是当元素较多的时候，也需要对字典进行扩容。</p>
+<p>什么时候扩容呢?首先我们定义下<strong>负载因子</strong></p>
+<blockquote>
+<p>负载因子=哈希表已保存节点数量/哈希表大小<br>即load_factor = ht[0].used/ht[0].size</p>
+</blockquote>
+<p>当一下条件中的任意一个被满足时，程序会自动开始对哈希表进行扩展操作：</p>
+<ul>
+<li>服务器目前没有在执行BGSAVE或者BGREWRITEAOF命令，并且哈希表的负载因子大于等于1.</li>
+<li>服务器正在执行BGSAVE或者BGREWRITEAOF命令，并且哈希表的负载因子大于等于5</li>
+</ul>
+<p>为什么需要根据是否执行BGSAVE和BGREWRITEAOF命令来进行区别呢？  因为在执行上述命令的过程中，redis需要创建当前服务器进程的子进程，而大多数操作系统都采用写时复制(copy-on-write)来优化子进程的使用效率，所以在子进程存在期间，服务器会提高扩展所必须的负载因子，从而尽可能的避免在子进程存在期间进行哈希表的扩展操作，这颗避免不必要的内存写入操作，尽最大限度的节约内存。</p>
+<p><strong>redis中的字典扩容过程</strong>：</p>
+<ol>
+<li><p>为字典的ht[1]哈希表分配空间，这个大小取决于操作类型和ht[0]中包含的键值对数量(即used属性)</p>
+<ul>
+<li>扩展操作  ht[1]的大小为第一个大于等于ht[0].used*2的2的n次方</li>
+<li>收缩操作   ht[1]的大小为第一个大于等于ht[0].used的2的n次方</li>
+</ul>
+</li>
+<li><p>将保存在ht[0]中的所有键值对rehash(全部移动)到ht[1]上。</p>
+</li>
+<li><p>rehash完成后，释放ht[0],将ht[1]设置为ht[0],并且在ht[1]新建一个空白哈希表，为下次rehash做准备。</p>
+</li>
+</ol>
+<p><strong>渐进式 rehash</strong></p>
+<p>上面我们只是说进行rehash就是将ht[0]中的元素移动到ht[1]中，但是如果直接一次性完成的话，是一个 O(n) 级别的操作，作为单线程的 Redis 很难承受这样耗时的过程，所以 Redis使用渐进式 rehash小步搬迁：</p>
+<ol>
+<li>为ht[1]分配空间，让字典同时持有ht[0]和ht[1]两个哈希表</li>
+<li>在字典中维持一个索引计数器变脸rehashidx，并将它的值设置为0，表示rehash正式开始</li>
+<li>每次对字典执行添加、删除、查找、更新操作时，程序除了执行指定的操作外，还会将ht[0]在rehashidx索引上的所有键值对rehash到ht[1]上，当rehash完成后，程序将rehashidx属性值加1</li>
+<li>随着字典操作的不断执行，最终在某个时间点上，ht[0]的值全部被rehash到h[1]上，这时将rehashidx设置为-1，表示rehash完成。</li>
+</ol>
+<p>另外，在rehash过程中，字典会同时使用两个哈希表，删除、查找、更新等操作会在两个哈希表上进行。 先找ht[0]再找ht[1]。  并且插入操作会直接保存到ht[1]</p>
+<p><strong>总结</strong></p>
+<ol>
+<li><strong>redis中hash底层是使用了两个哈希表(数组加链表)，一个平时使用，另一个仅在rehash时使用</strong></li>
+<li><strong>rehash是将ht[0]上的元素全部rehash到ht[1]上</strong>，使用的是MurmurHash2算法计算哈希值</li>
+<li><strong>rehash是渐进式的，每次插入、删除、更新操作时会将ht[0]中的一个元素rehash到ht[1]上，最终完成rehash</strong>。</li>
+</ol>
+<h2 id="4-Set"><a href="#4-Set" class="headerlink" title="4.Set"></a>4.Set</h2><p>Redis的集合相当于Java 语言中的 HashSet，它内部的键值对是无序、唯一的。<strong>它的内部实现相当于一个特殊的字典，字典中所有的 value 都是一个值 NULL</strong>。</p>
+<p>上面已经详细介绍了字典，这里就不介绍了。</p>
+<h2 id="5-Zset"><a href="#5-Zset" class="headerlink" title="5.Zset"></a>5.Zset</h2><p>这可能是 Redis 最具特色的一个数据结构了，它类似于 Java中SortedSet 和 HashMap 的结合体，一方面它是一个set，保证了内部 value 的唯一性，另一方面它可以为每个 value 赋予一个 score 值，用来代表排序的权重。</p>
+<p>它的内部实现用的是一种叫做 <strong>跳跃表(skipList)</strong> 的数据结构。我们先来看看什么是跳跃表。</p>
+<h3 id="跳跃表"><a href="#跳跃表" class="headerlink" title="跳跃表"></a>跳跃表</h3><p><strong>什么是跳跃表?</strong></p>
+<p>首先我们考虑一个问题，对于一个单链表来讲，即便链表中存储的数据是有序的，如果我们要想在其中查找某个数据，也只能从头到尾遍历链表。这样查找效率就会很低，时间复杂度是O(n)。</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-21-39-47"></div><br>
+
+<p>但假如我们每相邻两个节点之间就增加一个指针，让指针指向下一个节点，如下图：</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-21-40-51"></div><br>
+这样所有新增的指针连成了一个新的链表，但它包含的数据却只有原来的一半 （图中的为 3，11，15，19）。
+
+<p>现在假设我们想要查找数据时，可以根据这条新的链表查找，如果碰到比待查找数据大的节点时，再回到原来的链表中进行查找，比如，我们想要查找 13，查找的路径则是沿着下图中标注出的红色指针所指向的方向进行的：</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-21-48-40"></div><br>
+
+<p>这是一个略微极端的例子，但我们仍然可以看到，通过新增加的指针查找，我们不再需要与链表上的每一个节点逐一进行比较，这样改进之后需要比较的节点数大概只有原来的一半。</p>
+<p>利用同样的方式，我们可以在新产生的链表上，继续为每两个相邻的节点增加一个指针，从而产生第三层链表：</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-21-40-28"></div><br>
+
+<p>在这个新的三层链表结构中，我们继续试着 查找 13，那么沿着最上层链表首先比较的是11，发现11比13 小，于是我们就知道只需要到11后面继续查找，从而一下子跳过了 11 前面的所有节点。</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-21-50-45"></div><br>
+
+<p>可以想象，当链表足够长，这样的多层链表结构可以帮助我们跳过很多下层节点，从而加快查找的效率。</p>
+<p><strong>更进一步的跳跃表</strong><br><strong>跳跃表 skiplist</strong>就是受到这种多层链表结构的启发而设计出来的。按照上面生成链表的方式，上面每一层链表的节点个数，是下面一层的节点个数的一半，这样查找过程就非常类似于一个二分查找，<strong>使得查找的时间复杂度可以降低到 O(logn)</strong>。</p>
+<p>但是，这种方法在插入数据的时候有很大的问题。<strong>新插入一个节点之后，就会打乱上下相邻两层链表上节点个数严格的 2:1 的对应关系</strong>。如果要维持这种对应关系，就必须把新插入的节点后面的所有节点 （也包括新插入的节点） 重新进行调整，这会让时间复杂度重新蜕化成 O(n)。删除数据也有同样的问题。</p>
+<p><strong>skiplist为了避免这一问题，它不要求上下相邻两层链表之间的节点个数有严格的对应关系，而是 为每个节点随机出一个层数(level)</strong>。比如，一个节点随机出的层数是 3，那么就把它链入到第 1 层到第 3 层这三层链表中。为了表达清楚，下图展示了如何通过一步步的插入操作从而形成一个 skiplist 的过程：</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-21-45-29"></div><br>
+
+<p>从上面的创建和插入的过程中可以看出，<strong>每一个节点的层数（level）是随机出来的，而且新插入一个节点并不会影响到其他节点的层数，因此，插入操作只需要修改节点前后的指针，而不需要对多个节点都进行调整</strong>，这就降低了插入操作的复杂度。</p>
+<p><strong>为什么要跳跃表</strong></p>
+<p>从上面我们也可以知道，跳跃表可以使得我们的<strong>查询的时间复杂度平均值从O(n)提高到了O(logn),并且通过随机层数的方法也解决了插入的问题</strong>，因此我们可以使用跳跃表。</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-20-13-25"></div><br>
+
+
+<p><strong>二叉查找树、AVL树、红黑树查找的时间复杂度也是Olog(n),为什么不用他们呢？</strong></p>
+<p>对于二叉查找树而言，可能我们直接插入的数据就是按score排序的，因此二叉查找树会退化为单链表，时间复杂度还是O(n)</p>
+<p>对于AVL树和红黑树而言，插入和删除结点时，是通过调整结构来保持树的平衡，比起跳跃表直接通过一个随机数来决定跨越几层，在时间复杂度的花销上是要高于跳跃表的。</p>
+<h3 id="Redis中实现的跳跃表"><a href="#Redis中实现的跳跃表" class="headerlink" title="Redis中实现的跳跃表"></a>Redis中实现的跳跃表</h3><p>Redis 中的跳跃表由<code>server.h/zskiplistNode</code>和 <code>server.h/zskiplist</code>两个结构定义，前者为跳跃表节点，后者则保存了跳跃节点的相关信息，同之前的 集合 list 结构类似，其实只有 zskiplistNode 就可以实现了，但是引入后者是为了更加方便的操作</p>
+<p>跳表节点：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ZSETs use a specialized version of Skiplists */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> &#123;</span></span><br><span class="line">    <span class="comment">// 节点的成员对象，指向一个字符串对象</span></span><br><span class="line">    sds ele;</span><br><span class="line">    <span class="comment">// 分值  就是我们排序时的依据</span></span><br><span class="line">    <span class="keyword">double</span> score;</span><br><span class="line">    <span class="comment">// 后退指针  用于从表尾向头结点方向访问节点，每次只能后退一个节点</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">backward</span>;</span></span><br><span class="line">    <span class="comment">// 层 第一层level[0]、第二层level[1],依次类推</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistLevel</span> &#123;</span></span><br><span class="line">        <span class="comment">// 前进指针  指向表尾方向的指针</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">forward</span>;</span></span><br><span class="line">        <span class="comment">// 跨度   用于记录两个节点之间的距离，用来计算排位</span></span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">long</span> span;</span><br><span class="line">    &#125; level[];</span><br><span class="line">&#125; zskiplistNode;</span><br></pre></td></tr></table></figure>
+
+<p>下图就是一个高度分别为1层、3层和5层的节点</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-20-49-10"></div><br>
+
+<p>由多个节点构成的跳跃表</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-20-55-29"></div><br>
+
+
+<p>如上图所示，仅靠多个跳跃表节点，就可以组成一个跳跃表，但是通过使用一个zskiplist来持有这些节点，可以更方便的对跳跃表进行处理。</p>
+<p><code>server.h/zskiplist</code>文件下的zskipList定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">zskiplist</span> &#123;</span></span><br><span class="line">    <span class="comment">// header： 指向跳跃表的头结点</span></span><br><span class="line">    <span class="comment">//tail： 指向跳跃表的尾结点</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">header</span>, *<span class="title">tail</span>;</span></span><br><span class="line">    <span class="comment">// 跳跃表长度，即跳跃表中目前包含节点的数量</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> length;</span><br><span class="line">    <span class="comment">// 记录目前跳跃表中层数最大的节点的层数</span></span><br><span class="line">    <span class="keyword">int</span> level;</span><br><span class="line">&#125; zskiplist;</span><br></pre></td></tr></table></figure>
+
+<p>带有zskipList结构的跳跃表</p>
+<div align="center"><img src="http://coderchen33.life/redis底层实现原理-2020-07-21-20-54-08"></div><br>
+
+
+<p><strong>总结</strong></p>
+<ol>
+<li><strong>zset底层通过跳跃表实现</strong>。其中zskipListNode用于表示跳跃表节点，zskiplist用于保存跳跃表信息(表头表尾结点、长度等)。</li>
+<li>每个跳跃表节点的层高都是<strong>1-32</strong>之间的随机数。</li>
+<li>在同一个跳跃表中，<strong>多个节点可以包含相同的分值，但是每个节点的成员对象必须唯一</strong>。</li>
+<li>跳跃表中的节点按照分值大小进行排序，<strong>当分值相同时，节点按照成员对象大小进行排序</strong>。</li>
+</ol>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Redis/" rel="tag">Redis</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/07/03/redis%E7%9A%84%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F-redis-Sentinel/">
+                <span class="level-item">redis的哨兵模式redis Sentinel</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            81
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            13
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            17
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-String">
+        <span class="has-mr-6">1</span>
+        <span>1.String</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#SDS与C字符串对比">
+        <span class="has-mr-6">1.1</span>
+        <span>SDS与C字符串对比</span>
+        </a></li><li>
+        <a class="is-flex" href="#空间分配策略">
+        <span class="has-mr-6">1.2</span>
+        <span>空间分配策略</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#2-List">
+        <span class="has-mr-6">2</span>
+        <span>2.List</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-Hash">
+        <span class="has-mr-6">3</span>
+        <span>3.Hash</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-Set">
+        <span class="has-mr-6">4</span>
+        <span>4.Set</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-Zset">
+        <span class="has-mr-6">5</span>
+        <span>5.Zset</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#跳跃表">
+        <span class="has-mr-6">5.1</span>
+        <span>跳跃表</span>
+        </a></li><li>
+        <a class="is-flex" href="#Redis中实现的跳跃表">
+        <span class="has-mr-6">5.2</span>
+        <span>Redis中实现的跳跃表</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="redis数据结构底层实现原理" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
