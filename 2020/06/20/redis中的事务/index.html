@@ -10,16 +10,16 @@
 <title>redis中的事务 - chen33的个人博客</title>
 
 
-    <meta name="description" content="123456789101112131415161718127.0.0.1:6379&gt; multiOK127.0.0.1:6379&gt; set k1 v1QUEUED127.0.0.1:6379&gt; set k2 v2QUEUED127.0.0.1:6379&gt; set k3 v3QUEUED127.0.0.1:6379&gt; get k2QUEUED127.0.0.1:6">
+    <meta name="description" content="Redis事务的基本概念Redis事务本质：一组命令的集合！ 一个事务中的所有命令都会被序列化，在事务执行过程的中，会按照顺序执行！ redis事务的特点:  Redis单条命令式保存原子性的，但是事务不保证原子性！（发生运行时异常时其他命令可以成功执行） Redis事务没有隔离级别的概念！： 所有的指令在 exec 之前不执行，而是缓存在服务器的一个事务队列中，服务器一旦收到 exec 指令">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis中的事务">
 <meta property="og:url" content="http://coderchen33.life/2020/06/20/redis%E4%B8%AD%E7%9A%84%E4%BA%8B%E5%8A%A1/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="123456789101112131415161718127.0.0.1:6379&gt; multiOK127.0.0.1:6379&gt; set k1 v1QUEUED127.0.0.1:6379&gt; set k2 v2QUEUED127.0.0.1:6379&gt; set k3 v3QUEUED127.0.0.1:6379&gt; get k2QUEUED127.0.0.1:6">
+<meta property="og:description" content="Redis事务的基本概念Redis事务本质：一组命令的集合！ 一个事务中的所有命令都会被序列化，在事务执行过程的中，会按照顺序执行！ redis事务的特点:  Redis单条命令式保存原子性的，但是事务不保证原子性！（发生运行时异常时其他命令可以成功执行） Redis事务没有隔离级别的概念！： 所有的指令在 exec 之前不执行，而是缓存在服务器的一个事务队列中，服务器一旦收到 exec 指令">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-06-20T00:47:28.000Z">
-<meta property="article:modified_time" content="2020-06-20T00:50:22.553Z">
+<meta property="article:modified_time" content="2020-07-21T14:40:47.375Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Redis">
 <meta property="article:tag" content="Springboot">
@@ -156,7 +156,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 分钟 读完 (大约 190 个字)
+                    6 分钟 读完 (大约 872 个字)
                 </span>
                 
                 
@@ -176,21 +176,47 @@
         <div class="content">
             <a id="more"></a>
 
-
+<h2 id="Redis事务的基本概念"><a href="#Redis事务的基本概念" class="headerlink" title="Redis事务的基本概念"></a>Redis事务的基本概念</h2><p>Redis事务本质：一组命令的集合！ 一个事务中的所有命令都会被序列化，在事务执行过程的中，会按照顺序执行！</p>
+<p><strong>redis事务的特点</strong>:</p>
+<ul>
+<li><strong>Redis单条命令式保存原子性的，但是事务不保证原子性！</strong>（发生运行时异常时其他命令可以成功执行）</li>
+<li><strong>Redis事务没有隔离级别的概念！</strong>： 所有的指令在 exec 之前不执行，而是缓存在服务器的一个事务队列中，服务器一旦收到 exec 指令，才开执行整个事务队列，执行完毕后一次性返回所有指令的运行结果。</li>
+</ul>
+<h2 id="Redis事务的使用"><a href="#Redis事务的使用" class="headerlink" title="Redis事务的使用"></a>Redis事务的使用</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">开启事务（multi）</span><br><span class="line">命令入队（......）</span><br><span class="line">提交事务（exec） / 丢弃事务(discard)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>正常提交</p>
+</blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k1 v1</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k2 v2</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k3 v3</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; get k2</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k4 v4</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">1) OK</span><br><span class="line">2) OK</span><br><span class="line">3) OK</span><br><span class="line">4) <span class="string">"v2"</span></span><br><span class="line">5) OK</span><br></pre></td></tr></table></figure>
-
+<blockquote>
+<p>丢弃事务</p>
+</blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k1 v1</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k2 v2</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k5 v5</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; discard</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get k5</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编译型异常（代码有问题！ 命令有错！） ，事务中所有的命令都不会被执行！</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k1 v1</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k2 v2</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; getset k2</span><br><span class="line">(error) ERR wrong number of arguments <span class="keyword">for</span> <span class="string">'getset'</span> <span class="built_in">command</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k3 v3</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">(error) EXECABORT Transaction discarded because of previous errors.</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; get k3</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k1 v1</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k2 v2</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; getset k2</span><br><span class="line">(error) ERR wrong number of arguments <span class="keyword">for</span> <span class="string">'getset'</span> <span class="built_in">command</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k3 v3</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">(error) EXECABORT Transaction discarded because of previous errors.</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; get k3</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k1 <span class="string">"v1"</span></span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incr k1</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k2 v2</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> k3 v3</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">1) OK</span><br><span class="line">2) (error) ERR value is not an <span class="built_in">integer</span> or out of range</span><br><span class="line">3) OK</span><br><span class="line">4) OK</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line"><span class="string">"v1"</span></span><br><span class="line">127.0.0.1:6379&gt; get k3</span><br><span class="line"><span class="string">"v3"</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>运行时异常（1/0）， 如果事务队列中存在语法性，那么执行命令的时候，其他命令是可以正常执行的，错误命令抛出异常！</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 &quot;v1&quot;  # 字符串无法进行+-操作</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incr k1</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; set k2 v2</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; set k3 v3</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; exec</span><br><span class="line">1) OK</span><br><span class="line">2) (error) ERR value is not an integer or out of range</span><br><span class="line">3) OK</span><br><span class="line">4) OK</span><br><span class="line">127.0.0.1:6379&gt; get k1  # 可以看到其他语句执行成功了</span><br><span class="line">&quot;v1&quot;</span><br><span class="line">127.0.0.1:6379&gt; get k3 # 可以看到其他语句执行成功了</span><br><span class="line">&quot;v3&quot;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> money 100</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> out 0</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; watch money</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; decrby money 20</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incrby out 20</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">1) (<span class="built_in">integer</span>) 80</span><br><span class="line">2) (<span class="built_in">integer</span>) 20</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; watch money</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; decrby money 10</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incrby out 10</span><br><span class="line">QUEUED</span><br><span class="line"><span class="comment">####################</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; get money</span><br><span class="line"><span class="string">"200"</span></span><br><span class="line">127.0.0.1:6379&gt; get out</span><br><span class="line"><span class="string">"20"</span></span><br></pre></td></tr></table></figure>
+<h2 id="Watch"><a href="#Watch" class="headerlink" title="Watch"></a>Watch</h2><p>考虑到一个转账的业务场景，Redis 存储了我们的账户余额数据，它是一个整数。现在我们要进行转账操作，首先整个转账流程因为是原子性的需要放到事务中处理。但是如果这个时候有两个并发的客户端要对账户余额进行修改操作，这时就会出现<strong>并发问题</strong>。</p>
+<p>因为有多个客户端会并发进行操作。我们可以通过 Redis 的分布式锁来避免冲突，这是一个很好的解决方案。 但是分布式锁是一种悲观锁，那是不是可以使用乐观锁的方式来解决冲突呢？</p>
+<p><strong>Redis 提供了乐观锁<code>watch</code>来解决并发修改问题</strong></p>
+<p>首先我们看下watch的使用方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> money 100</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> out 0</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; watch money <span class="comment"># 监视money对象</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi  <span class="comment"># 事务正常结束，数据期间没有发生变动，这个时候就正常执行成功！</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; decrby money 20</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incrby out 20</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">1) (<span class="built_in">integer</span>) 80</span><br><span class="line">2) (<span class="built_in">integer</span>) 20</span><br></pre></td></tr></table></figure>
 
+<p>演示watch解决并发修改问题</p>
+<p>事务1</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; watch money</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; decrby money 10</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incrby out 10</span><br><span class="line">QUEUED</span><br><span class="line"><span class="comment">####################  这时候事务2对money进行了改动</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">(nil)  <span class="comment"># 可以看到，事务执行失败</span></span><br></pre></td></tr></table></figure>
+
+<p>事务2对money进行了修改</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get money</span><br><span class="line"><span class="string">"80"</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> money 200</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>事务1</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; unwatch  <span class="comment"># 发现事务执行失败，我们需要先解锁</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; watch money  <span class="comment"># 解锁后重新对money进行监视</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; decrby money 15</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incrby out 15</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">1) (<span class="built_in">integer</span>) 185</span><br><span class="line">2) (<span class="built_in">integer</span>) 35</span><br></pre></td></tr></table></figure>
 
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; unwatch</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; watch money</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; decrby money 15</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; incrby out 15</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">exec</span></span><br><span class="line">1) (<span class="built_in">integer</span>) 185</span><br><span class="line">2) (<span class="built_in">integer</span>) 35</span><br></pre></td></tr></table></figure>
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -311,7 +337,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            81
+                            82
                         </p>
                     </a>
                 </div>
@@ -371,6 +397,29 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#Redis事务的基本概念">
+        <span class="has-mr-6">1</span>
+        <span>Redis事务的基本概念</span>
+        </a></li><li>
+        <a class="is-flex" href="#Redis事务的使用">
+        <span class="has-mr-6">2</span>
+        <span>Redis事务的使用</span>
+        </a></li><li>
+        <a class="is-flex" href="#Watch">
+        <span class="has-mr-6">3</span>
+        <span>Watch</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
 
     
     
