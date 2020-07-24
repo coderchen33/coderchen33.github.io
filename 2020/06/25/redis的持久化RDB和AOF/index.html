@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-06-25T03:07:43.000Z">
-<meta property="article:modified_time" content="2020-07-02T10:23:18.972Z">
+<meta property="article:modified_time" content="2020-07-24T03:21:33.470Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3156 个字)
+                    23 分钟 读完 (大约 3412 个字)
                 </span>
                 
                 
@@ -185,7 +185,7 @@
 <p>Redis为我们提供了不同级别的持久化方式:</p>
 <ul>
 <li><strong>RDB</strong>持久化方式能够<strong>在指定的时间间隔对数据进行快照存储，恢复时将快照直接读取到内存</strong>.</li>
-<li><strong>AOF</strong>持久化方式<strong>记录每次对服务器写的操作,当服务器重启的时候会重新执行这些命令来恢复原始的数据</strong>。AOF命令以redis协议追加保存每次写的操作到文件末尾。</li>
+<li><strong>AOF</strong>持久化方式<strong>记录每次对服务器写的操作命令,当服务器重启的时候会重新执行这些命令来恢复原始的数据</strong>。AOF命令以redis协议追加保存每次写的操作到文件末尾。</li>
 <li>如果只希望你的数据在服务器运行的时候存在,则可以不使用任何持久化方式。</li>
 <li>也可以同时开启两种持久化方式, 在这种情况下, 当redis重启的时候会优先载入AOF文件来恢复原始的数据。因为在通常情况下AOF文件保存的数据集要比RDB文件保存的数据集要完整。</li>
 </ul>
@@ -209,7 +209,7 @@
 <blockquote>
 <p>所以我们几乎不需要配置什么，redis自己默认的配置就够用了！</p>
 </blockquote>
-<h3 id="RDB工作原理"><a href="#RDB工作原理" class="headerlink" title="RDB工作原理"></a>RDB工作原理</h3><p>在Redis中RDB持久化的触发分为两种：<strong>手动触发</strong>与<strong>Redis定时触发</strong>。</p>
+<h3 id="RDB工作流程"><a href="#RDB工作流程" class="headerlink" title="RDB工作流程"></a>RDB工作流程</h3><p>在Redis中RDB持久化的触发分为两种：<strong>手动触发</strong>与<strong>Redis定时触发</strong>。</p>
 <p><strong>手动触发</strong></p>
 <ul>
 <li><code>save</code>：会阻塞当前Redis服务器，直到持久化完成，<strong>线上应该禁止使用</strong>。</li>
@@ -223,7 +223,7 @@
 <p>一般我们是不会直接用命令生成RDB文件的，Redis支持自动触发RDB持久化机制。自动触发的场景主要是有以下几点：</p>
 <ul>
 <li>根据我们的 <code>save m n</code> 配置规则自动触发；</li>
-<li>从节点全量复制时，主节点发送rdb文件给从节点完成复制操作，主节点会触发 bgsave；</li>
+<li>从节点全量同步时，主节点发送rdb文件给从节点完成复制操作，主节点会触发 bgsave；</li>
 <li>执行<code>debug reload</code>时；</li>
 <li>执行<code>shutdown</code>时，如果没有开启aof，也会触发。</li>
 </ul>
@@ -239,17 +239,24 @@
 <li>4.子进程创建RDB文件，根据父进程内存生成<strong>临时快照文件</strong>，完成后 对原有文件进行原子替换</li>
 <li>5.进程发送信号给父进程表示完成，父进程更新统计信息</li>
 </ul>
+<h3 id="RDB工作原理"><a href="#RDB工作原理" class="headerlink" title="RDB工作原理"></a>RDB工作原理</h3><p>了解了上面RDB的工作流程，工作原理就非常简单了。给出两个词汇就可以了，<strong>fork</strong>和<strong>cow</strong>。</p>
+<ul>
+<li><strong>fork是指上面的redis通过创建子进程来进行RDB操作</strong>。</li>
+<li><strong>cow</strong>指的是<strong>copy on write</strong>，子进程创建后，父子进程共享数据段，父进程继续提供读写服务。写服务会对数据段进行不断的修改。这时候<strong>cow机制会进行数据段页面的分离</strong>。当父进程对其中一个页面的数据进行修改时，会将被共享的页面复 制一份分离出来，然后 对这个复制的页面进行修改。这时 子进程 相应的页面是 没有变化的，还是进程产生时那一瞬间的数据。</li>
+</ul>
 <h3 id="RDB优缺点"><a href="#RDB优缺点" class="headerlink" title="RDB优缺点"></a>RDB优缺点</h3><p>优点：</p>
 <ul>
-<li>RDB是一个紧凑压缩的二进制文件，代表Redis在某个时间点上的数据快照。非常适合备份和全量复制</li>
-<li>Redis加载RDB恢复数据远远快于AOF的方式</li>
+<li><p>RDB会生成很多的数据文件，每个数据文件分别代表了Redis在某个时间点上的数据快照。因此<strong>非常适合冷备和全量同步</strong></p>
+</li>
+<li><p>Redis加载RDB恢复数据远远快于AOF的方式</p>
+</li>
 </ul>
 <p>缺点：</p>
 <ul>
-<li>RDB方式没有办法做到实时持久化。因为bgsave每次运 行都要执行fork操作创建子进程，属于重量级操作，频繁执行成本过高。</li>
-<li>RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个格式 的RDB版本，存在老版本Redis服务无法兼容新版RDB格式的问题。</li>
+<li><strong>RDB方式数据完整性无法保证</strong>。因为是每隔一段时间才生成一次，<strong>可能会造成一段时间的数据丢失</strong>。而AOF最多丢失1秒钟的数据。</li>
+<li>RDB在生成数据快照的时候，如果文件比较大，会导致客户端暂停几ms。</li>
 </ul>
-<h2 id="AOF-Append-Only-File"><a href="#AOF-Append-Only-File" class="headerlink" title="AOF(Append Only File)"></a>AOF(Append Only File)</h2><p>RDB方式不能提供强一致性，如果Redis进程崩溃，那么<code>两次RDB之间的数据也随之消失</code>。而AOF的出现很好的解决了数据持久化的实时性。</p>
+<h2 id="AOF-Append-Only-File"><a href="#AOF-Append-Only-File" class="headerlink" title="AOF(Append Only File)"></a>AOF(Append Only File)</h2><p>上面提到过<code>两次RDB之间的数据可能会丢失消失</code>。而AOF的出现很好的解决了数据持久化的实时性。</p>
 <p>AOF以独立日志的方式记录每次写命令，重启时再重新执行AOF文件中的命令来恢复数据。<strong>AOF会先把命令追加在AOF缓冲区，然后根据对应策略写入硬盘（appendfsync）</strong></p>
 <h3 id="AOF持久化配置"><a href="#AOF持久化配置" class="headerlink" title="AOF持久化配置"></a>AOF持久化配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 是否开启aof  默认是no如果需要手动设置为yes</span></span><br><span class="line">appendonly yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># aof文件名称</span></span><br><span class="line">appendfilename <span class="string">"appendonly.aof"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 同步频率</span></span><br><span class="line">appendfsync everysec</span><br><span class="line"></span><br><span class="line"><span class="comment"># aof重写期间是否同步</span></span><br><span class="line">no-appendfsync-on-rewrite no</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重写触发配置</span></span><br><span class="line"><span class="comment"># 第一行的意思是 Redis记录最近的一次AOF操作的文件大小，如果当前AOF文件大小增长超过这个百分比则触发一次重写，默认100</span></span><br><span class="line"><span class="comment"># 第二行的意思是如果文件大小大于此值则会触发AOF，默认64MB</span></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载aof时如果有错如何处理</span></span><br><span class="line">aof-load-truncated yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件重写策略</span></span><br><span class="line">aof-rewrite-incremental-fsync yes</span><br></pre></td></tr></table></figure>
 
@@ -262,7 +269,7 @@
 </ul>
 <p>一般情况下都采用<strong>everysec</strong>配置，这样可以兼顾速度与安全，最多损失1s的数据。</p>
 <p><code>aof-load-truncated yes</code> 如果该配置启用，在加载时发现aof尾部不正确时，会向客户端写入一个log，但是会继续执行，如果设置为 no ，发现错误就会停止，必须修复后才能重新加载。</p>
-<h3 id="AOF工作原理"><a href="#AOF工作原理" class="headerlink" title="AOF工作原理"></a>AOF工作原理</h3><p>和RDB方式一样，AOF持久化方式也支持<strong>自动触发</strong>和<strong>手动触发</strong>两种方式:</p>
+<h3 id="AOF工作流程"><a href="#AOF工作流程" class="headerlink" title="AOF工作流程"></a>AOF工作流程</h3><p>和RDB方式一样，AOF持久化方式也支持<strong>自动触发</strong>和<strong>手动触发</strong>两种方式:</p>
 <p><strong>手动触发</strong></p>
 <p>使用<code>bgrewriteaof</code>命令：<code>Redis主进程fork子进程来执行AOF重写，这个子进程创建新的AOF文件来存储重写结果，防止影响旧文件</code>。<strong><code>因为fork采用了写时复制机制，子进程不能访问在其被创建出来之后产生的新数据</code></strong>。<code>Redis使用</code> <strong><code>AOF重写缓冲区</code></strong> <code>保存这部分新数据，最后父进程将AOF重写缓冲区的数据写入新的AOF文件中然后使用新AOF文件替换老文件</code>。</p>
 <p><strong>自动触发</strong><br>和RDB一样，配置在redis.conf文件里，当然你也可以通过调用CONFIG SET命令设置。</p>
@@ -288,11 +295,12 @@
 </ul>
 <h3 id="AOF优缺点"><a href="#AOF优缺点" class="headerlink" title="AOF优缺点"></a>AOF优缺点</h3><p>优点：</p>
 <ul>
-<li>做到最多丢失1-2s内的数据（<strong>最多丢失2s数据，因为AOF追加阻塞</strong>）</li>
+<li><strong>保证了数据的完整性，做到最多丢失1s内的数据</strong></li>
+<li><strong>AOF文件写入性能高，文件不易损坏</strong> AOF在对日志文件进行操作的时候是以append-only的方式去写的，他只是追加的方式写数据，自然就少了很多磁盘寻址的开销了</li>
 </ul>
 <p>缺点：</p>
 <ul>
-<li>AOF文件比RDB文件大</li>
+<li><strong>AOF文件比RDB文件还要大</strong></li>
 <li>可能导致<strong>追加阻塞</strong></li>
 </ul>
 <h2 id="RDB和AOF的对比和选择"><a href="#RDB和AOF的对比和选择" class="headerlink" title="RDB和AOF的对比和选择"></a>RDB和AOF的对比和选择</h2><p>因为两个持久化机制你明白了，剩下的就是看自己的需求了，需求不同选择的也不一定，但是通常都是结合使用。有一张图可供总结：</p>
@@ -507,12 +515,16 @@
         <span class="has-mr-6">2.2</span>
         <span>RDB文件恢复</span>
         </a></li><li>
-        <a class="is-flex" href="#RDB工作原理">
+        <a class="is-flex" href="#RDB工作流程">
         <span class="has-mr-6">2.3</span>
+        <span>RDB工作流程</span>
+        </a></li><li>
+        <a class="is-flex" href="#RDB工作原理">
+        <span class="has-mr-6">2.4</span>
         <span>RDB工作原理</span>
         </a></li><li>
         <a class="is-flex" href="#RDB优缺点">
-        <span class="has-mr-6">2.4</span>
+        <span class="has-mr-6">2.5</span>
         <span>RDB优缺点</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#AOF-Append-Only-File">
@@ -523,9 +535,9 @@
         <span class="has-mr-6">3.1</span>
         <span>AOF持久化配置</span>
         </a></li><li>
-        <a class="is-flex" href="#AOF工作原理">
+        <a class="is-flex" href="#AOF工作流程">
         <span class="has-mr-6">3.2</span>
-        <span>AOF工作原理</span>
+        <span>AOF工作流程</span>
         </a></li><li>
         <a class="is-flex" href="#AOF优缺点">
         <span class="has-mr-6">3.3</span>
