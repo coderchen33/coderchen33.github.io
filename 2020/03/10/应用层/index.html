@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-10T06:09:08.000Z">
-<meta property="article:modified_time" content="2020-03-10T07:08:12.950Z">
+<meta property="article:modified_time" content="2020-07-27T08:47:22.108Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1096 个字)
+                    10 分钟 读完 (大约 1499 个字)
                 </span>
                 
                 
@@ -184,7 +184,7 @@
 </li>
 </ol>
 <p>使用TCP和UDP的各种常见应用层协议</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE.png"></div><br>
+<div align="center"><img src="http://coderchen33.life/2020-03-10-应用层-2020-07-27-16-46-56"></div><br>
 
 <h2 id="域名系统DNS"><a href="#域名系统DNS" class="headerlink" title="域名系统DNS"></a>域名系统DNS</h2><p>DNS 是一个通过分层服务器实现的分布式数据库，<strong>提供了主机名和 IP 地址之间相互转换的服务</strong>。这里的分布式数据库是指，每个站点只保留与它相关的那部分数据。</p>
 <p>DNS可以使用UDP或者TCP进行传输，使用的端口号都为 53。<strong>大多数情况下DNS使用UDP进行传输</strong>，这就要求域名解析器和域名服务器都必须自己处理超时和重传从而保证可靠性。</p>
@@ -193,9 +193,14 @@
 <li>如果返回的响应超过的 512 字节（UDP 最大只支持512字节的数据）。</li>
 <li>区域传送（区域传送是主域名服务器向辅助域名服务器传送变化的那部分数据）。</li>
 </ul>
-<p>DNS工作流程：<br>本地域名服务器采用<strong>递归查询</strong></p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/DNS%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png"></div><br>
+<p>DNS工作流程如下：<br>本地域名服务器采用<strong>递归查询</strong></p>
+<div align="center"><img src="http://coderchen33.life/2020-03-10-应用层-2020-07-27-16-34-43"></div><br>
 
+<p>需要注意两点：</p>
+<ul>
+<li>主机向本地域名服务器进行查询一般是采用<strong>递归查询</strong>，递归查询就是说如果主机所询问的本地域名服务器不知道被查询域名的IP地址，那么本地域名服务器就以DNS客户的身份向其他根域名服务器发送查询请求报文(即替主机进行查询)，而不是让该主机自己进行下一步查询，因此递归查询返回的结果要么是所查询的IP地址，要么是报错，表示没有对应的IP地址。</li>
+<li>本地域名服务器向根域名服务器进行查询通常是进行迭代查询(即上图a，当然也可以像图b那样使用递归查询)  迭代查询就是当根域名服务器收到本地域名服务器发送的请求报文后，要么给出所要查询的IP，要么告诉本地域名服务器向哪个域名服务器进行查询(而不是替本地域名服务器进行后续查询)，通常是告诉本地域名服务器自己知道的顶级域名服务器的IP地址，本地域名服务器向顶级域名服务器进行查询，顶级域名服务器要么告诉IP地址，要么告诉本地域名服务器向哪个根域名服务器进行查询，最后查到IP后，将结果返回个主机。</li>
+</ul>
 <hr>
 <h2 id="文件传送协议-FTP"><a href="#文件传送协议-FTP" class="headerlink" title="文件传送协议 FTP"></a>文件传送协议 FTP</h2><p>文件传送协议 FTP (File Transfer Protocol) 是互联网上使用得最广泛的文件传送协议。</p>
 <p>FTP 提供交互式的访问，允许客户指明文件的类型与格式，并允许文件具有存取权限</p>
@@ -212,12 +217,12 @@
 <p><strong>FTP是使用了两个TCP连接</strong>的。好处：</p>
 <ul>
 <li>使协议更加简单和更容易实现。</li>
-<li>在传输文件时还可以利用控制连接（例如，客户发送请求终止传输）。</li>
-</ul>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/FTP.png"></div><br>
+<li>在传输文件时还可以利用控制连接（例如，客户发送请求终止传输）。<div align="center"><img src="http://coderchen33.life/2020-03-10-应用层-2020-07-27-16-43-39"></div><br>
 
+</li>
+</ul>
 <hr>
-<h2 id="电子邮件协议SMTP、POP3、IMAP"><a href="#电子邮件协议SMTP、POP3、IMAP" class="headerlink" title="电子邮件协议SMTP、POP3、IMAP"></a>电子邮件协议SMTP、POP3、IMAP</h2><div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E5%8D%8F%E8%AE%AE.png"></div><br>
+<h2 id="电子邮件协议SMTP、POP3、IMAP"><a href="#电子邮件协议SMTP、POP3、IMAP" class="headerlink" title="电子邮件协议SMTP、POP3、IMAP"></a>电子邮件协议SMTP、POP3、IMAP</h2><div align="center"><img src="http://coderchen33.life/2020-03-10-应用层-2020-07-27-16-44-35"></div><br>
 
 <p>注意：</p>
 <ul>
@@ -229,7 +234,7 @@
 <h2 id="DHCP协议"><a href="#DHCP协议" class="headerlink" title="DHCP协议"></a>DHCP协议</h2><p>为了将软件协议做成通用的和便于移植，协议软件的编写者把协议软件参数化。在软件协议运行之前，必须给每一个参数赋值。<br>在协议软件中给这些参数赋值的动作叫做协议配置。</p>
 <p>互联网广泛使用的<strong>动态主机配置协议 DHCP (Dynamic Host Configuration Protocol)</strong> 提供了<strong>即插即用连网</strong>(plug-and-play networking) 的机制。</p>
 <p>并不是每个网络上都有 DHCP 服务器，这样会使 DHCP 服务器的数量太多。现在是每一个网络至少有一个 DHCP 中继代理，它配置了 DHCP 服务器的 IP 地址信息。</p>
-<div align="center"> <img src="http://q6rfyn8ub.bkt.clouddn.com/DHCP%E5%8D%8F%E8%AE%AE.png"></div><br>
+<div align="center"><img src="http://coderchen33.life/2020-03-10-应用层-2020-07-27-16-45-26"></div><br>
 
 
 <p>注意：</p>
