@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-10T07:09:58.000Z">
-<meta property="article:modified_time" content="2020-03-11T04:05:19.476Z">
+<meta property="article:modified_time" content="2020-08-06T03:20:02.427Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="计算机网络">
 <meta property="article:tag" content="HTTP">
@@ -156,7 +156,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2455 个字)
+                    16 分钟 读完 (大约 2457 个字)
                 </span>
                 
                 
@@ -279,8 +279,8 @@
 </ol>
 <p>对于第2点补充下安全和幂等的概念：</p>
 <ul>
-<li>在 HTTP 协议里，所谓的「安全」是指请求方法不会「破坏」服务器上的资源。</li>
-<li>所谓的「幂等」，意思是多次执行相同的操作，结果都是「相同」的。</li>
+<li>在 HTTP 协议里，所谓的「<strong>安全</strong>」是指请求方法不会「修改」服务器上的资源状态。</li>
+<li>所谓的「<strong>幂等</strong>」，意思是方法执行多次，得到的结果都是「相同」的。</li>
 </ul>
 <p>那么很明显 GET方法就是安全且幂等的，因为它是「只读」操作，无论操作多少次，服务器上的数据都是安全的，且每次的结果都是相同的。</p>
 <p>POST 因为是「新增或提交数据」的操作，会修改服务器上的资源，所以是不安全的，且多次提交数据就会创建多个资源，所以不是幂等的。</p>
