@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-03-17T22:36:28.000Z">
-<meta property="article:modified_time" content="2020-07-20T00:40:30.660Z">
+<meta property="article:modified_time" content="2020-08-14T08:18:55.625Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="多线程">
@@ -157,7 +157,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7480 个字)
+                    1 小时 读完 (大约 7655 个字)
                 </span>
                 
                 
@@ -417,7 +417,17 @@
 <p><strong>JMM层面:在volatile的操作前后需要加入内存屏障</strong></p>
 <blockquote>
 <p>LoadLoad 屏障，读操作与读操作不可重排序。<br>LoadStore 屏障，读操作与写操作不可重排序。<br>StoreLoad 屏障，写操作与读操作不可重排序。<br>StoreStore 屏障，写操作与写操作不可重排序。</p>
-<p>具体在 volatile 这里，内存屏障是这样加入的：<br>LoadLoad -&gt; volatile 读 -&gt; LoadStore<br>StoreStore -&gt; volatile 写 -&gt; StoreLoad</p>
+<p>具体在 volatile 这里，内存屏障是这样加入的：</p>
+<ul>
+<li><p>在每一个volatile写操作前面插入一个StoreStore屏障。这确保了在进行volatile写之前前面的所有普通的写操作都已经刷新到了内存。</p>
+</li>
+<li><p>在每一个volatile写操作后面插入一个StoreLoad屏障。这样可以避免volatile写操作与后面可能存在的volatile读写操作发生重排序。</p>
+</li>
+<li><p>在每一个volatile读操作后面插入一个LoadLoad屏障。这样可以避免volatile读操作和后面普通的读操作进行重排序。</p>
+</li>
+<li><p>在每一个volatile读操作后面插入一个LoadStore屏障。这样可以避免volatile读操作和后面普通的写操作进行重排序。</p>
+</li>
+</ul>
 </blockquote>
 <p><strong>字节码层面：增加了一个ACC_VOLATILE标志</strong></p>
 <p><strong>JVM/汇编层面：依赖于汇编指令<code>lock;addl</code></strong></p>
