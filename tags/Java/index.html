@@ -148,7 +148,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-08-17T03:47:03.000Z">2020-08-17</time>
+                <time class="level-item has-text-grey" datetime="2020-08-17T08:08:05.000Z">2020-08-17</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
@@ -167,16 +167,269 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2020/08/17/%E5%8D%95%E4%BE%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">单例设计模式</a>
+                <a class="has-link-black-ter" href="/2020/08/17/%E4%BB%A3%E7%90%86%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">代理设计模式</a>
             
         </h1>
         <div class="content">
             <a id="more"></a>
 
 
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-17T03:47:18.000Z">2020-08-17</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    13 分钟 读完 (大约 1904 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/17/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">工厂方法模式</a>
+            
+        </h1>
+        <div class="content">
+            <a id="more"></a>
+
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>工厂模式一共有下面三种：</p>
+<ul>
+<li>简单工厂模式</li>
+<li>工厂方法模式</li>
+<li>抽象工厂模式</li>
+</ul>
+<p>其中，<strong>简单工厂模式严格的说并不是23种常用的设计模式之一，它只算工厂模式的一个特殊实现</strong>。简单工厂模式在实际中的应用相对于其他2个工厂模式用的还是相对少得多，因为它只适应很多简单的情况。不过很多时候都会问到，这里也讲一下吧。</p>
+<h3 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h3><blockquote>
+<p>1.什么是简单工厂模式</p>
+</blockquote>
+<p>简单工厂模式(Simple Factory Pattern)：又称为静态工厂方法(Static Factory Method)模式。<strong>它可以根据参数的不同返回不同类的实例</strong>。简单工厂模式专门定义一个类来负责创建其他类的实例，被创建的实例通常都具有共同的父类。</p>
+<p>总结：</p>
+<ul>
+<li>将对象的创建和对象本身业务处理分离可以降低系统的耦合度，使得两者修改起来都相对容易。</li>
+<li>我们只需要传入相应的参数，就可以获得所需要的对象，而无须知道其创建细节。</li>
+</ul>
+<blockquote>
+<p>2.为什么要有简单工厂模式</p>
+</blockquote>
+<p>考虑一个简单的软件应用场景，一个软件系统可以提供多个外观不同的按钮（如圆形按钮、矩形按钮、菱形按钮等）， 这些按钮都源自同一个基类，不过在继承基类后不同的子类修改了部分属性从而使得它们可以呈现不同的外观，如果我们希望在使用这些按钮时，不需要知道这些具体按钮类的名字，只需要知道表示该按钮类的一个参数，并提供一个调用方便的方法，把该参数传入方法即可返回一个相应的按钮对象，此时，就可以使用简单工厂模式。</p>
+<blockquote>
+<p>3.工厂模式实现</p>
+</blockquote>
+<p>简单工厂模式包含如下角色：</p>
+<ul>
+<li><strong>Factory：工厂角色</strong>  工厂角色负责实现创建所有实例的内部逻辑</li>
+<li><strong>Product：抽象产品角色</strong>  抽象产品角色是所创建的所有对象的父类，负责描述所有实例所共有的公共接口</li>
+<li><strong>ConcreteProduct：具体产品角色</strong>  具体产品角色是创建目标，所有创建的对象都充当这个角色的某个具体类的实例。</li>
+</ul>
+<p>UML图如下所示：</p>
+<div align="center"><img src="http://coderchen33.life/2020-08-17-工厂模式-2020-08-17-16-19-16"></div><br>
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Product</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteProduct</span> <span class="keyword">implements</span> <span class="title">Product</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteProductA</span> <span class="keyword">implements</span> <span class="title">Product</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteProductB</span> <span class="keyword">implements</span> <span class="title">Product</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Product <span class="title">createProduct</span><span class="params">(String type)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (type == <span class="string">"A"</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProductA();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type == <span class="string">"B"</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProduct2();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProduct();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端使用时就可以像下面这样使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SimpleFactory simpleFactory = <span class="keyword">new</span> SimpleFactory();</span><br><span class="line">        Product productA = simpleFactory.createProduct(<span class="string">"A"</span>);</span><br><span class="line">        Product productB = simpleFactory.createProduct(<span class="string">"B"</span>);</span><br><span class="line">        <span class="comment">// do something with the product</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h3><blockquote>
+<p>1.什么是工厂方法模式</p>
+</blockquote>
+<p>工厂方法模式(Factory Method Pattern)：在工厂方法模式中，<strong>工厂父类负责定义创建产品对象的公共接口，而工厂子类则负责生成具体的产品对象，将产品类的实例化操作延迟到工厂子类中完成，即通过工厂子类来确定究竟应该实例化哪一个具体产品类</strong>。</p>
+<blockquote>
+<p>2.为什么要有工厂方法模式</p>
+</blockquote>
+<p>现在对该系统进行修改，不再设计一个按钮工厂类来统一负责所有产品的创建，而是将具体按钮的创建过程交给专门的工厂子类去完成，我们先定义一个抽象的按钮工厂类，再定义具体的工厂类来生成圆形按钮、矩形按钮、菱形按钮等，它们实现在抽象按钮工厂类中定义的方法。<strong>这种抽象化的结果使这种结构可以在不修改具体工厂类的情况下引进新的产品，如果出现新的按钮类型，只需要为这种新类型的按钮创建一个具体的工厂类就可以获得该新按钮的实例</strong>，这一特点无疑使得工厂方法模式具有超越简单工厂模式的优越性，更加符合“开闭原则”。</p>
+<blockquote>
+<p>3.具体实现</p>
+</blockquote>
+<p>工厂方法模式包含如下角色：</p>
+<ul>
+<li>Factory：抽象工厂</li>
+<li>ConcreteFactory：具体工厂</li>
+<li>Product：抽象产品</li>
+<li>ConcreteProduct：具体产品</li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-08-17-工厂模式-2020-08-17-16-30-42"></div><br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//抽象产品：提供了产品的接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Product</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//具体产品A：实现抽象产品中的抽象方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteProductA</span> <span class="keyword">implements</span> <span class="title">Product</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"具体产品A显示..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//具体产品B：实现抽象产品中的抽象方法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConcreteProductB</span> <span class="keyword">implements</span> <span class="title">Product</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"具体产品B显示..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//抽象工厂：提供了厂品的生成方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AbstractFactory</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Product <span class="title">newProduct</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//具体工厂A：实现了厂品的生成方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFactoryA</span> <span class="keyword">implements</span> <span class="title">AbstractFactory</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Product <span class="title">newProduct</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"具体工厂A生成--&gt;具体产品A..."</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProductA();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//具体工厂B：实现了产品B的生成方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFactoryB</span> <span class="keyword">implements</span> <span class="title">AbstractFactory</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Product <span class="title">newProduct</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"具体工厂B生成--&gt;具体产品B..."</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProductB();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        AbstractFactory factory = <span class="keyword">new</span> ConcreteFactoryA();</span><br><span class="line">        Product productA = factory.newProduct();</span><br><span class="line">        <span class="comment">// do something with the product</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><blockquote>
+<p>1.什么是抽象工厂模式</p>
+</blockquote>
+<p>抽象工厂模式(Abstract Factory Pattern)：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类</strong>。抽象工厂模式又称为Kit模式，属于对象创建型模式。</p>
+<blockquote>
+<p>2.为什么要有抽象工厂模式</p>
+</blockquote>
+<p>前面介绍的工厂方法模式中考虑的是一类产品的生产，如畜牧场只养动物、电视机厂只生产电视机、计算机软件学院只培养计算机软件专业的学生等。</p>
+<p>同种类称为同等级，也就是说：工厂方法模式只考虑生产同等级的产品，但是在现实生活中许多工厂是综合型的工厂，能生产多等级（种类） 的产品，如农场里既养动物又种植物，电器厂既生产电视机又生产洗衣机或空调，大学既有软件专业又有生物专业等。</p>
+<p>当系统所提供的工厂所需生产的具体产品并不是一个简单的对象，而是多个位于不同产品等级结构中属于不同类型的具体产品时需要使用抽象工厂模式。</p>
+<blockquote>
+<p>3.抽象工厂模式的实现</p>
+</blockquote>
+<p>抽象工厂模式包含如下角色：</p>
+<ul>
+<li>AbstractFactory：抽象工厂</li>
+<li>ConcreteFactory：具体工厂</li>
+<li>AbstractProduct：抽象产品</li>
+<li>Product：具体产品</li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-08-17-工厂模式-2020-08-17-17-16-44"></div><br>
+
+<p>(1) 抽象工厂：提供了产品的生成方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AbstractFactory</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ProductA <span class="title">newProductA</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ProductB <span class="title">newProductB</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(2) 具体工厂：实现了产品的生成方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFactory1</span> <span class="keyword">implements</span> <span class="title">AbstractFactory</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ProductA <span class="title">newProductA</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"具体工厂 1 生成--&gt;具体产品 A..."</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProductA();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ProductB <span class="title">newProductB</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"具体工厂 1 生成--&gt;具体产品 B..."</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcreteProductB();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其他的抽象和具体Product对象和方法和上面相同。</p>
 
         </div>
         
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-17T03:47:18.000Z">2020-08-17</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    几秒 读完 (大约 1 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/17/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/">工厂方法模式</a>
+            
+        </h1>
+        <div class="content">
+            <a id="more"></a>
+
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-17T03:47:03.000Z">2020-08-17</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1312 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/17/%E5%8D%95%E4%BE%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">单例设计模式</a>
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>单例模式的基本概念和使用场景</li>
+<li>单例模式的5种实现方式</li>
+</ol>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/08/17/%E5%8D%95%E4%BE%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -512,177 +765,6 @@
 
 
 
-    
-<div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-06-21T01:29:49.000Z">2020-06-21</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88%E7%B1%BB/">集合类</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    10 分钟 读完 (大约 1481 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2020/06/21/ArrayList%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ArrayList源码分析</a>
-            
-        </h1>
-        <div class="content">
-            <p>基于JDK1.8的ArrayList源码分析</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2020/06/21/ArrayList%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    
-<div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-06-20T00:48:33.000Z">2020-06-20</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/">集群与分布式</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/Redis/">Redis</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 分钟 读完 (大约 1002 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2020/06/20/Java%E8%BF%9E%E6%8E%A5redis%E7%9A%84Jedis%E4%BB%A5%E5%8F%8ASpringboot%E6%95%B4%E5%90%88redis/">Java连接redis的Jedis以及Springboot整合redis</a>
-            
-        </h1>
-        <div class="content">
-            <p><strong>主要内容</strong></p>
-<ol>
-<li>Jedis的基本使用</li>
-<li>Springboot整合redis</li>
-<li>Springboot整合redis源码分析</li>
-<li>自定义redisTemplate类
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2020/06/20/Java%E8%BF%9E%E6%8E%A5redis%E7%9A%84Jedis%E4%BB%A5%E5%8F%8ASpringboot%E6%95%B4%E5%90%88redis/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    
-<div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-31T13:43:01.000Z">2020-03-31</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Java%E5%9F%BA%E7%A1%80/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    32 分钟 读完 (大约 4739 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2020/03/31/Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E3%80%81CyclicBarrier%E3%80%81Semaphore/">Java并发工具类CountDownLatch、CyclicBarrier、Semaphore</a>
-            
-        </h1>
-        <div class="content">
-            <p><strong>主要内容</strong></p>
-<ol>
-<li>CountDownLatch(闩锁)</li>
-<li>CyclicBarrier(屏障)</li>
-<li>Semaphore(信号量)</li>
-<li>CountDownLatch源码分析</li>
-<li>CyclicBarrier源码分析</li>
-<li>Semaphore源码分析
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2020/03/31/Java%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BBCountDownLatch%E3%80%81CyclicBarrier%E3%80%81Semaphore/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -749,7 +831,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            86
+                            89
                         </p>
                     </a>
                 </div>
@@ -815,7 +897,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.25px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.25px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 13.75px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/MySQL/" style="font-size: 16.25px;">MySQL</a> <a href="/tags/Redis/" style="font-size: 16.25px;">Redis</a> <a href="/tags/SQL/" style="font-size: 15px;">SQL</a> <a href="/tags/Springboot/" style="font-size: 10px;">Springboot</a> <a href="/tags/algorithm/" style="font-size: 18.75px;">algorithm</a> <a href="/tags/leetcode/" style="font-size: 17.5px;">leetcode</a> <a href="/tags/linux/" style="font-size: 12.5px;">linux</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 17.5px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 17.5px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 15px;">计算机网络</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 11.25px;">设计模式</a>
+        <a href="/tags/AQS/" style="font-size: 10px;">AQS</a> <a href="/tags/ConcurrentHashMap/" style="font-size: 10px;">ConcurrentHashMap</a> <a href="/tags/HTTP/" style="font-size: 11.25px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 11.25px;">HTTPS</a> <a href="/tags/JVM/" style="font-size: 13.75px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/MySQL/" style="font-size: 16.25px;">MySQL</a> <a href="/tags/Redis/" style="font-size: 16.25px;">Redis</a> <a href="/tags/SQL/" style="font-size: 15px;">SQL</a> <a href="/tags/Springboot/" style="font-size: 10px;">Springboot</a> <a href="/tags/algorithm/" style="font-size: 18.75px;">algorithm</a> <a href="/tags/leetcode/" style="font-size: 17.5px;">leetcode</a> <a href="/tags/linux/" style="font-size: 12.5px;">linux</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 17.5px;">多线程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 17.5px;">并发</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 15px;">计算机网络</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 13.75px;">设计模式</a>
     </div>
 </div>
     
@@ -861,7 +943,7 @@
                 <span class="level-item">Java基础</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">24</span>
+                <span class="level-item tag">27</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Java%E5%9F%BA%E7%A1%80/JVM/">
@@ -885,7 +967,7 @@
                 <span class="level-item">设计模式</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88%E7%B1%BB/">
@@ -998,7 +1080,7 @@
                 <span class="level-item">Java基础</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">24</span>
+                <span class="level-item tag">27</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Java%E5%9F%BA%E7%A1%80/JVM/">
@@ -1022,7 +1104,7 @@
                 <span class="level-item">设计模式</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88%E7%B1%BB/">
