@@ -148,7 +148,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 864 个字)
+                    6 分钟 读完 (大约 884 个字)
                 </span>
                 
                 
@@ -161,40 +161,21 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
-
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><blockquote>
-<p>1.什么是模板方法模式</p>
-</blockquote>
-<p>模板方法（Template Method）模式：<strong>定义一个操作中的算法骨架，而将算法的一些步骤延迟到子类中，使得子类可以不改变该算法结构的情况下重定义该算法的某些特定步骤</strong>。它是一种类行为型模式。</p>
-<blockquote>
-<p>2.为什么要有模板方法模式</p>
-</blockquote>
-<p>例如，去银行办理业务一般要经过以下4个流程：取号、排队、办理具体业务、对银行工作人员进行评分等，其中取号、排队和对银行工作人员进行评分的业务对每个客户是一样的，可以在父类中实现，但是办理具体业务却因人而异，它可能是存款、取款或者转账等，可以延迟到子类中实现。</p>
-<p>这样的例子在生活中还有很多，例如，一个人每天会起床、吃饭、做事、睡觉等，其中“做事”的内容每天可能不同。我们把这些规定了流程或格式的实例定义成模板，允许使用者根据自己的需求去更新它，例如，简历模板、论文模板、Word 中模板文件等。</p>
-<p>模板方法模式的主要优点如下。</p>
-<ul>
-<li>封装了不变部分，扩展可变部分。它把认为是不变部分的算法封装到父类中实现，而把可变部分算法由子类继承实现，便于子类继续扩展。</li>
-<li>它在父类中提取了公共的部分代码，便于代码复用。</li>
-<li>部分方法是由子类实现的，因此子类可以通过扩展方式增加相应的功能，符合开闭原则。</li>
-</ul>
-<h2 id="模板方法模式的实现"><a href="#模板方法模式的实现" class="headerlink" title="模板方法模式的实现"></a>模板方法模式的实现</h2><p>模板方法模式包含以下主要角色。</p>
-<p>(1) 抽象类（Abstract Class）：负责给出一个算法的轮廓和骨架。它由一个模板方法和若干个基本方法构成。这些方法的定义如下：</p>
-<ul>
-<li>① 模板方法：定义了算法的骨架，按某种顺序调用其包含的基本方法。</li>
-<li>② 基本方法：是整个算法中的一个步骤，包含以下几种类型。<ul>
-<li>抽象方法：在抽象类中申明，由具体子类实现。</li>
-<li>具体方法：在抽象类中已经实现，在具体子类中可以继承或重写它。</li>
-<li>钩子方法：在抽象类中已经实现，包括用于判断的逻辑方法和需要子类重写的空方法两种。</li>
-</ul>
-</li>
-</ul>
-<p>(2) 具体子类（Concrete Class）：实现抽象类中所定义的抽象方法和钩子方法，它们是一个顶级逻辑的一个组成步骤。</p>
-<div align="center"><img src="http://coderchen33.life/2020-08-17-模板方法模式-2020-08-17-19-12-45"></div><br>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TemplateMethodPattern</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        AbstractClass tm=<span class="keyword">new</span> ConcreteClass();</span><br><span class="line">        tm.TemplateMethod();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//抽象类</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractClass</span></span>&#123;</span><br><span class="line">     <span class="comment">//模板方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TemplateMethod</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SpecificMethod();</span><br><span class="line">        abstractMethod1();          </span><br><span class="line">         abstractMethod2();</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">//具体方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SpecificMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"抽象类中的具体方法被调用..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//抽象方法1</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">abstractMethod1</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//抽象方法2</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">abstractMethod2</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//具体子类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConcreteClass</span> <span class="keyword">extends</span> <span class="title">AbstractClass</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">abstractMethod1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"抽象方法1的实现被调用..."</span>);</span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">abstractMethod2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"抽象方法2的实现被调用..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <p><strong>主要内容</strong></p>
+<ol>
+<li>模板方法模式概述</li>
+<li>模板方法模式实现</li>
+</ol>
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/08/17/%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -397,7 +378,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    14 分钟 读完 (大约 2138 个字)
+                    14 分钟 读完 (大约 2158 个字)
                 </span>
                 
                 
