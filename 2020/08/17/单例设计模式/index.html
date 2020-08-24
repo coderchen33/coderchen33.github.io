@@ -10,16 +10,16 @@
 <title>单例设计模式 - chen33的个人博客</title>
 
 
-    <meta name="description" content="主要内容  单例模式的基本概念和使用场景 单例模式的5种实现方式">
+    <meta name="description" content="主要内容  单例模式的基本概念和使用场景 单例模式的5种实现方式 反射机制和反序列化的方式破解单例和预防">
 <meta property="og:type" content="article">
 <meta property="og:title" content="单例设计模式">
 <meta property="og:url" content="http://coderchen33.life/2020/08/17/%E5%8D%95%E4%BE%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
-<meta property="og:description" content="主要内容  单例模式的基本概念和使用场景 单例模式的5种实现方式">
+<meta property="og:description" content="主要内容  单例模式的基本概念和使用场景 单例模式的5种实现方式 反射机制和反序列化的方式破解单例和预防">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-08-17T03:47:03.000Z">
-<meta property="article:modified_time" content="2020-08-17T07:57:04.363Z">
+<meta property="article:modified_time" content="2020-08-24T08:46:11.242Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="设计模式">
@@ -156,7 +156,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分钟 读完 (大约 1312 个字)
+                    14 分钟 读完 (大约 2032 个字)
                 </span>
                 
                 
@@ -178,6 +178,7 @@
 <ol>
 <li>单例模式的基本概念和使用场景</li>
 <li>单例模式的5种实现方式</li>
+<li>反射机制和反序列化的方式破解单例和预防</li>
 </ol>
 <a id="more"></a>
 
@@ -234,6 +235,31 @@
 
 <h3 id="5-枚举式"><a href="#5-枚举式" class="headerlink" title="5.枚举式"></a>5.枚举式</h3><p><strong>要点：枚举本身就是单例，由JVM从根本上进行保障，避免通过反射和反序列化的漏洞</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//定义一个枚举元素，它就代表了一个Singleton的一个实例</span></span><br><span class="line">    INSTANCE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//单例可以有自己的操作</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">singletonOperation</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//功能处理</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Singleton sd = Singleton.INSTANCE;</span><br><span class="line">        Singleton sd2 = Singleton.INSTANCE;</span><br><span class="line">        System.out.println(sd==sd2);  <span class="comment">//true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="反射和反序列化破解单例"><a href="#反射和反序列化破解单例" class="headerlink" title="反射和反序列化破解单例"></a>反射和反序列化破解单例</h2><h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>可以破解上面几种(不包含枚举)实现方式<br>防止破解：可以在构造方法中手动抛出异常控制</p>
+<p>以懒汉式为例：</p>
+<p>使用反射机制获得单例的私有构造器来创建对象，或破坏单例模式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Singleton s1 = Singleton.getInstance();</span><br><span class="line">        Singleton s2 = Singleton.getInstance();</span><br><span class="line">        System.out.println(s1==s2);  <span class="comment">//true  同一对象</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//1.使用反射的方式获得私有构造器创建对象</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//加载Singleton类</span></span><br><span class="line">        <span class="comment">//Class.forName中使用的是类的全限定名</span></span><br><span class="line">        Class&lt;Singleton&gt; clazz = (Class&lt;Singleton&gt;) Class.forName(<span class="string">"com.company.Sort.Singleton"</span>);</span><br><span class="line">        <span class="comment">//获得私有构造器</span></span><br><span class="line">        Constructor&lt;Singleton&gt; constructor = clazz.getDeclaredConstructor();</span><br><span class="line">        <span class="comment">//跳过权限检查</span></span><br><span class="line">        constructor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过构造器构建对象</span></span><br><span class="line">        Singleton s3 = constructor.newInstance();</span><br><span class="line">        Singleton s4 = constructor.newInstance();</span><br><span class="line">        System.out.println(s3==s4);  <span class="comment">//false  说明单例模式已经被破坏了</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>防止反射破解： 在构造方法中手动抛出异常控制</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//构造方法中手动抛出异常防止反射机制破解</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance==<span class="keyword">null</span>) instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再去执行上面的破解程序则会直接抛出异常<code>java.lang.reflect.InvocationTargetException</code></p>
+<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p>可以破解面几种(不包含枚举)实现方式<br>防止破解：可以通过定义readResolve（）防止获得不同对象，反序列化时，如果对象所在类定义了readResolve()(实际是一种回调)定义返回哪个对象</p>
+<p>还是以懒汉式为例，通过反序列化的方式来破坏单例模式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Singleton s1 = Singleton.getInstance();</span><br><span class="line">        Singleton s2 = Singleton.getInstance();</span><br><span class="line">        System.out.println(s1==s2);  <span class="comment">//true  同一对象</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.通过反序列化的方式构造多个对象</span></span><br><span class="line">        <span class="comment">//当前前提是我们的Singleton类实现了Serializable接口</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//序列化</span></span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"d:/a.txt"</span>));</span><br><span class="line">        oos.writeObject(s1);</span><br><span class="line">        oos.close();</span><br><span class="line">        <span class="comment">//反序列化</span></span><br><span class="line">        ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"d:a.txt"</span>));</span><br><span class="line">        Singleton s3 = (Singleton) ois.readObject();</span><br><span class="line">        System.out.println(s3==s2);  <span class="comment">//false 新的对象</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>防止反序列化破解：  可以通过定义readResolve()方法防止获得不同对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"> </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 懒汉式单例模式（如何防止反射和反序列化漏洞）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonDemo06</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingletonDemo06 instance;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingletonDemo06</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//在构造器中加入判断，多次调用直接抛出异常，防止反射破解</span></span><br><span class="line">        <span class="keyword">if</span>(instance != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> SingletonDemo06 <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            instance = <span class="keyword">new</span> SingletonDemo06();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"> 	</span><br><span class="line">    <span class="comment">//防止反序列化的方式直接破解</span></span><br><span class="line">    <span class="comment">//反序列化时，如果定义了readResolve()方法则直接返回此方法指定的对象，不需要再重新创建对象</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Object <span class="title">readResolve</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
 
 
         </div>
@@ -451,6 +477,18 @@
         <a class="is-flex" href="#5-枚举式">
         <span class="has-mr-6">2.5</span>
         <span>5.枚举式</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#反射和反序列化破解单例">
+        <span class="has-mr-6">3</span>
+        <span>反射和反序列化破解单例</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#反射">
+        <span class="has-mr-6">3.1</span>
+        <span>反射</span>
+        </a></li><li>
+        <a class="is-flex" href="#反序列化">
+        <span class="has-mr-6">3.2</span>
+        <span>反序列化</span>
         </a></li></ul></li></ul>
             </div>
         </div>
