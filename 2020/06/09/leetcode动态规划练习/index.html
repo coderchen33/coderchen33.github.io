@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-06-09T01:14:14.000Z">
-<meta property="article:modified_time" content="2020-08-08T03:42:02.652Z">
+<meta property="article:modified_time" content="2020-09-03T07:03:48.768Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="algorithm">
 <meta property="article:tag" content="leetcode">
@@ -156,7 +156,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    27 分钟 读完 (大约 4015 个字)
+                    28 分钟 读完 (大约 4238 个字)
                 </span>
                 
                 
@@ -360,6 +360,23 @@
 
 <h3 id="4-只能进行-k-次的股票交易"><a href="#4-只能进行-k-次的股票交易" class="headerlink" title="4.只能进行 k 次的股票交易"></a>4.只能进行 k 次的股票交易</h3><p><a href="">188. Best Time to Buy and Sell Stock IV (Hard)</a></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span> k, <span class="keyword">int</span>[] prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = prices.length;</span><br><span class="line">        <span class="keyword">if</span> (k &gt;= n / <span class="number">2</span>) &#123;   <span class="comment">// 这种情况下该问题退化为普通的股票交易问题</span></span><br><span class="line">            <span class="keyword">int</span> maxProfit = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (prices[i] &gt; prices[i - <span class="number">1</span>]) &#123;</span><br><span class="line">                    maxProfit += prices[i] - prices[i - <span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> maxProfit;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[k + <span class="number">1</span>][n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= k; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> localMax = dp[i - <span class="number">1</span>][<span class="number">0</span>] - prices[<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">                dp[i][j] = Math.max(dp[i][j - <span class="number">1</span>], prices[j] + localMax);</span><br><span class="line">                localMax = Math.max(localMax, dp[i - <span class="number">1</span>][j] - prices[j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[k][n - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="整数分割"><a href="#整数分割" class="headerlink" title="整数分割"></a>整数分割</h2><h3 id="1-分割整数的最大乘积"><a href="#1-分割整数的最大乘积" class="headerlink" title="1. 分割整数的最大乘积"></a>1. 分割整数的最大乘积</h3><p><a href="https://leetcode.com/problems/integer-break/">343.Integer Break(Medium)</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">integerBreak</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=i-<span class="number">1</span>;j++)&#123;</span><br><span class="line">                dp[i] = Math.max(dp[i],Math.max(j,dp[j])*Math.max(i-j,dp[i-j]));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-按平方数来分割整数"><a href="#2-按平方数来分割整数" class="headerlink" title="2. 按平方数来分割整数"></a>2. 按平方数来分割整数</h3><p><a href="https://leetcode.com/problems/perfect-squares/">279. Perfect Squares(Medium)</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numSquares</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        Arrays.fill(dp,Integer.MAX_VALUE);</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j*j&lt;=i;j++)&#123;</span><br><span class="line">                dp[i] = Math.min(dp[i],dp[i-j*j]+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-分割整数构成字母字符串"><a href="#3-分割整数构成字母字符串" class="headerlink" title="3. 分割整数构成字母字符串"></a>3. 分割整数构成字母字符串</h3><p><a href="https://leetcode.com/problems/decode-ways/">91. Decode Ways (Medium)</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numDecodings</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(s==<span class="keyword">null</span> || s.length()==<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> n = s.length();</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        dp[<span class="number">1</span>] = s.charAt(<span class="number">0</span>)==<span class="string">'0'</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> first = Integer.valueOf(s.substring(i-<span class="number">1</span>,i));</span><br><span class="line">            <span class="keyword">int</span> second = Integer.valueOf(s.substring(i-<span class="number">2</span>,i));</span><br><span class="line">            <span class="keyword">if</span>(first&gt;=<span class="number">1</span> &amp;&amp; first&lt;=<span class="number">9</span>) dp[i] = dp[i] + dp[i-<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">if</span>(second&gt;=<span class="number">10</span> &amp;&amp; second &lt;= <span class="number">26</span>) dp[i] = dp[i]+dp[i-<span class="number">2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 
 <h2 id="字符串编辑"><a href="#字符串编辑" class="headerlink" title="字符串编辑"></a>字符串编辑</h2><h3 id="1-删除两个字符串的字符使它们相等"><a href="#1-删除两个字符串的字符使它们相等" class="headerlink" title="1.删除两个字符串的字符使它们相等"></a>1.删除两个字符串的字符使它们相等</h3><p><a href="https://leetcode.com/problems/delete-operation-for-two-strings/">583. Delete Operation for Two Strings (Medium)</a></p>
 <p>转化为求最长公共子序列</p>
@@ -682,20 +699,36 @@
         <span class="has-mr-6">6.4</span>
         <span>4.只能进行 k 次的股票交易</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#字符串编辑">
+        <a class="is-flex" href="#整数分割">
         <span class="has-mr-6">7</span>
+        <span>整数分割</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-分割整数的最大乘积">
+        <span class="has-mr-6">7.1</span>
+        <span>1. 分割整数的最大乘积</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-按平方数来分割整数">
+        <span class="has-mr-6">7.2</span>
+        <span>2. 按平方数来分割整数</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-分割整数构成字母字符串">
+        <span class="has-mr-6">7.3</span>
+        <span>3. 分割整数构成字母字符串</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#字符串编辑">
+        <span class="has-mr-6">8</span>
         <span>字符串编辑</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#1-删除两个字符串的字符使它们相等">
-        <span class="has-mr-6">7.1</span>
+        <span class="has-mr-6">8.1</span>
         <span>1.删除两个字符串的字符使它们相等</span>
         </a></li><li>
         <a class="is-flex" href="#2-编辑距离">
-        <span class="has-mr-6">7.2</span>
+        <span class="has-mr-6">8.2</span>
         <span>2. 编辑距离</span>
         </a></li><li>
         <a class="is-flex" href="#3-复制粘贴字符">
-        <span class="has-mr-6">7.3</span>
+        <span class="has-mr-6">8.3</span>
         <span>3.复制粘贴字符</span>
         </a></li></ul></li></ul>
             </div>
