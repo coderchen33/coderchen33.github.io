@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>JSP总结 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容1.jsp简介和原理分析2.jsp基础语法和指令3.jsp九大内置对象和作用域4.jsp标签、EL表达式和JSTL表达式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JSP总结">
+<meta property="og:url" content="http://coderchen33.life/2020/11/20/JSP%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容1.jsp简介和原理分析2.jsp基础语法和指令3.jsp九大内置对象和作用域4.jsp标签、EL表达式和JSTL表达式">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-11-20T07:57:38.000Z">
+<meta property="article:modified_time" content="2020-11-26T05:56:57.142Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="JavaWeb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="JSP总结" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-11-20T07:57:38.000Z">2020-11-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/JavaWeb%E5%92%8C%E5%B7%A5%E5%85%B7/">JavaWeb和工具</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/JavaWeb%E5%92%8C%E5%B7%A5%E5%85%B7/JavaWeb/">JavaWeb</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    19 分钟 读完 (大约 2889 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                JSP总结
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong><br>1.jsp简介和原理分析<br>2.jsp基础语法和指令<br>3.jsp九大内置对象和作用域<br>4.jsp标签、EL表达式和JSTL表达式</p>
+<a id="more"></a>
+<h2 id="1-JSP简介"><a href="#1-JSP简介" class="headerlink" title="1.JSP简介"></a>1.JSP简介</h2><h3 id="1-1-什么是JSP"><a href="#1-1-什么是JSP" class="headerlink" title="1.1 什么是JSP"></a>1.1 什么是JSP</h3><p><strong>JSP</strong>（<strong>J</strong>ava<strong>S</strong>erver <strong>P</strong>ages) Java服务器端页面:</p>
+<ul>
+<li>和Servlet一样也是一种动态网页开发技术，使用JSP标签在HTML网页中插入Java代码。</li>
+<li><strong>JSP是一种特殊的Java servlet</strong>，主要用于实现Java web应用程序的用户界面部分。</li>
+<li>网页开发者们通过结合HTML代码、XHTML代码、XML元素以及嵌入JSP操作和命令来编写JSP。</li>
+</ul>
+<blockquote>
+<p>为什么要有JSP？</p>
+</blockquote>
+<p>回想一下，我们在学完servlet后，想要给前端显示html页面是如何做的?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//设置返回给前端的内容格式</span></span><br><span class="line">        resp.setContentType(<span class="string">"text/html"</span>);</span><br><span class="line">        <span class="comment">//设置编码格式  不设置会出现中文乱码 浏览器中文默认使用ISO-8859-1编码  而我们返回的是utf-8</span></span><br><span class="line">        resp.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        PrintWriter out = resp.getWriter();</span><br><span class="line">        out.println(<span class="string">"&lt;html&gt;"</span>);</span><br><span class="line">        out.println(<span class="string">"&lt;head&gt;"</span>);</span><br><span class="line">        out.println(<span class="string">"&lt;title&gt;Hello World!&lt;/title&gt;"</span>);</span><br><span class="line">        out.println(<span class="string">"&lt;/head&gt;"</span>);</span><br><span class="line">        out.println(<span class="string">"&lt;body&gt;"</span>);</span><br><span class="line">        out.println(<span class="string">"&lt;h1&gt;Hello 你好&lt;/h1&gt;"</span>);</span><br><span class="line">        out.println(<span class="string">"&lt;/body&gt;"</span>);</span><br><span class="line">        out.println(<span class="string">"&lt;/html&gt;"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>是不是直接在Servlet中直接写了整个html页面，这样做的问题非常多：一方面，每次都要写out.println非常繁琐，另一方面，如果html页面非常庞大，这样写非常容易出问题，比如少写了&lt;等等。</p>
+<p>为了解决上面这些问题才有了JSP页面，<strong>它用来将servlet和用户界面相互分离。servlet负责处理请求，JSP负责用户页面展示。</strong>比如上面的这个直接使用JSP页面展示:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;Hello World&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;Hello 你好&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>和上面直接使用servlet写的相比，是不是就十分直观和明了了。</p>
+<h3 id="1-3-JSP原理分析"><a href="#1-3-JSP原理分析" class="headerlink" title="1.3 JSP原理分析"></a>1.3 JSP原理分析</h3><p>首先，你一定听过过很多人说<strong>JSP本质上也是Servlet</strong>，那么今天就带你从底层了解下原因。</p>
+<p>在IDEA中使用tomcat时，会在IDEA的tomcat中产生一个work目录。</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-51-14"></div><br>
+
+<p>我们一直往下点，就会看到我们的项目。这里是我电脑的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\chen\.IntelliJIdea2019.1\system\tomcat\Unnamed_jsp-review\work\Catalina\localhost\ROOT\org\apache\jsp</span><br></pre></td></tr></table></figure>
+
+<p>可以看到我们写的Hello.jsp的JSP页面转变为了Java程序！</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-51-33"></div><br>
+我们可以看下它的源码：
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello_jsp</span> <span class="keyword">extends</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">jasper</span>.<span class="title">runtime</span>.<span class="title">HttpJspBase</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">jasper</span>.<span class="title">runtime</span>.<span class="title">JspSourceDependent</span>,</span></span><br><span class="line"><span class="class">                 <span class="title">org</span>.<span class="title">apache</span>.<span class="title">jasper</span>.<span class="title">runtime</span>.<span class="title">JspSourceImports</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先我们看到它继承了<code>HttpJspBase</code>，实现了两个接口。那么既然说jsp就是servlet，那么它应该也是继承自HttpServlet啊。 不急，这时候我们看下HttpJspBase的源码，就能发现：<code>HttpJspBase</code>继承自<code>HttpServlet</code>。</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-51-59"></div><br>
+
+<p>所以，我们现在有理由相信<strong>JSP本质上就是一个servlet了</strong>。</p>
+<p>然后我们接着看它的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">_jspInit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//销毁</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">_jspDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//jsp服务</span></span><br><span class="line"><span class="comment">//可以看到已经和servlet中的service相同了 参数都是request和response</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">_jspService</span><span class="params">(<span class="keyword">final</span> javax.servlet.http.HttpServletRequest request, <span class="keyword">final</span> javax.servlet.http.HttpServletResponse response)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> java.io.IOException, javax.servlet.ServletException</span></span><br></pre></td></tr></table></figure>
+
+<p>我们仔细分析一下<code>_jspService</code>方法。看它主要做了什么：这里只沾关键代码</p>
+<ol>
+<li>判断请求</li>
+<li>内置一些对象  这些对象我们可以在jsp中直接使用</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> javax.servlet.jsp.PageContext pageContext;          <span class="comment">//页面上下文</span></span><br><span class="line">javax.servlet.http.HttpSession session = <span class="keyword">null</span>;            <span class="comment">//session</span></span><br><span class="line"><span class="keyword">final</span> javax.servlet.ServletContext application;           <span class="comment">//applicationContext</span></span><br><span class="line"><span class="keyword">final</span> javax.servlet.ServletConfig config;	          <span class="comment">//config</span></span><br><span class="line">javax.servlet.jsp.JspWriter out = <span class="keyword">null</span>;		          <span class="comment">//out</span></span><br><span class="line"><span class="keyword">final</span> java.lang.Object page = <span class="keyword">this</span>;		          <span class="comment">//page当前</span></span><br><span class="line">javax.servlet.jsp.JspWriter _jspx_out = <span class="keyword">null</span>;		  <span class="comment">//请求</span></span><br><span class="line">javax.servlet.jsp.PageContext _jspx_page_context = <span class="keyword">null</span>;  <span class="comment">//响应</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>输出页面前增加的代码</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">response.setContentType(<span class="string">"text/html;charset=UTF-8"</span>);  <span class="comment">//说明是返回的html页面</span></span><br><span class="line">      pageContext = _jspxFactory.getPageContext(<span class="keyword">this</span>, request, response,</span><br><span class="line">      			<span class="keyword">null</span>, <span class="keyword">true</span>, <span class="number">8192</span>, <span class="keyword">true</span>);</span><br><span class="line">      _jspx_page_context = pageContext;</span><br><span class="line">      application = pageContext.getServletContext();</span><br><span class="line">      config = pageContext.getServletConfig();</span><br><span class="line">      session = pageContext.getSession();</span><br><span class="line">      out = pageContext.getOut();</span><br><span class="line">      _jspx_out = out;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>输出页面 , 也是我们最熟悉的部分了</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">out.write(<span class="string">"\r\n"</span>);</span><br><span class="line">out.write(<span class="string">"&lt;html&gt;\r\n"</span>);</span><br><span class="line">out.write(<span class="string">"&lt;head&gt;\r\n"</span>);</span><br><span class="line">out.write(<span class="string">"    &lt;title&gt;Hello World&lt;/title&gt;\r\n"</span>);</span><br><span class="line">out.write(<span class="string">"&lt;/head&gt;\r\n"</span>);</span><br><span class="line">out.write(<span class="string">"&lt;body&gt;\r\n"</span>);</span><br><span class="line">out.write(<span class="string">"&lt;h1&gt;Hello 你好&lt;/h1&gt;\r\n"</span>);</span><br><span class="line">out.write(<span class="string">"&lt;/body&gt;\r\n"</span>);</span><br><span class="line">out.write(<span class="string">"&lt;/html&gt;\r\n"</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>在JSP页面中:</strong></p>
+<ul>
+<li><strong>如果是java代码会原封不动的输出(下面会讲)</strong></li>
+<li><strong>如果是html代码会被转换为<code>out.write(&quot;&lt;html&gt;\r\n&quot;);</code>这种格式。</strong></li>
+</ul>
+<h2 id="2-JSP基本语法和指令"><a href="#2-JSP基本语法和指令" class="headerlink" title="2. JSP基本语法和指令"></a>2. JSP基本语法和指令</h2><p>从上面我们也知道，<strong>写JSP就和写html代码一样，只要会写html，那么就会写JSP。</strong>但是和html不同的是，html只能给用户提供静态数据，而JSP页面中可以嵌入Java代码，为用户提供动态数据。下面我们就主要学习<strong>如何在jsp页面中嵌入JAVA代码。</strong>  </p>
+<h3 id="2-1-jsp基本语法"><a href="#2-1-jsp基本语法" class="headerlink" title="2.1 jsp基本语法"></a>2.1 jsp基本语法</h3><ul>
+<li>jsp表达式 <code>&lt;%= %&gt;</code></li>
+<li>jsp脚本片段 <code>&lt;% %&gt;</code></li>
+<li>jsp声明<code>&lt;%! %&gt;</code></li>
+</ul>
+<p><strong>jsp表达式</strong></p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;%--jsp表达式--%&gt;</span><br><span class="line">&lt;%= <span class="keyword">new</span> java.util.Date()%&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>jsp脚本片段</strong></p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;%--jsp脚本片段--%&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">        sum += i;</span><br><span class="line">    &#125;</span><br><span class="line">    out.println(<span class="string">"&lt;h2&gt;Sum="</span>+sum+<span class="string">"&lt;/h2&gt;"</span>);</span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%--=======================================--%&gt;</span><br><span class="line">&lt;%--脚本片段的再实现--%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%--java代码中包着html代码--%&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line">    out.println(x);</span><br><span class="line">%&gt;</span><br><span class="line">&lt;p&gt;这是一个jsp文档&lt;/p&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="comment">//int x = 10;  会报错 因为上面已经定义了</span></span><br><span class="line">    out.println(x);  <span class="comment">//可以直接使用上面的x</span></span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%--直接在java代码中嵌入html代码--%&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">%&gt;</span><br><span class="line">&lt;h2&gt;hello world&lt;/h2&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;%--直接在html代码中嵌入java代码--%&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">%&gt;</span><br><span class="line">&lt;h2&gt;hello world &lt;%=i%&gt;&lt;/h2&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>jsp声明</strong></p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;%--jsp声明--%&gt;</span><br><span class="line">&lt;%!</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"Loading Servlet"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> globalVal = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">chen</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"进入了方法chen"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>到这里，我们再去它的源码下看一下，这里只看重点部分。</p>
+<p>首先，因为这几个是写到了一个jsp文件下，所以，所有的片段都是在<code>_jspService</code>方法中</p>
+<p>jsp表达式</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-53-53"></div><br>
+
+<p>jsp代码片段</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-54-03"></div><br>
+
+<p>jsp声明</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-54-18"></div><br>
+
+
+<p>综上：<strong>JSP声明会被编译到jsp生成的java类中。其他的会被编译到<code>_jspService</code>方法中</strong></p>
+<h3 id="2-2jsp指令"><a href="#2-2jsp指令" class="headerlink" title="2.2jsp指令"></a>2.2jsp指令</h3><blockquote>
+<p><strong>@ page 指令</strong></p>
+</blockquote>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-54-42"></div><br>
+
+<p>比如可以直接使用errorpage用来指定错误页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;%--<span class="number">500</span>的错误页面为errro/<span class="number">500</span>.jsp--%&gt;</span><br><span class="line">&lt;%@ page errorPage=<span class="string">"error/500.jsp"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">%&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当然，更加常见的指定错误页面的方法如下：</p>
+<p><strong>1.自定义错误页面</strong></p>
+<p>500的错误页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;500&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;自定义的500的错误界面，没有图片，先将就下&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>404的错误页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;404&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;自定义的404错误界面，没有图片，先将就下&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.在web.xml中配置错误页面</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">web-app</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--自定义错误页面--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">error-page</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">error-code</span>&gt;</span>500<span class="tag">&lt;/<span class="name">error-code</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">location</span>&gt;</span>/error/500.jsp<span class="tag">&lt;/<span class="name">location</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">error-page</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">error-page</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">error-code</span>&gt;</span>404<span class="tag">&lt;/<span class="name">error-code</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">location</span>&gt;</span>/error/404.jsp<span class="tag">&lt;/<span class="name">location</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">error-page</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-55-09"></div><br>
+
+<blockquote>
+<p><strong>@include指令</strong>   类似于导包</p>
+</blockquote>
+<p><strong>通过include指令，引入外部jsp会将三个jsp文件内容<code>融合</code>成一个jsp</strong></p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;%--通过include指令，引入外部jsp</span><br><span class="line">    会将三个jsp文件拼接成一个jsp</span><br><span class="line">--%&gt;</span><br><span class="line">&lt;%<span class="meta">@include</span> file=<span class="string">"common/header.jsp"</span>%&gt;</span><br><span class="line">&lt;h1&gt;网页主体&lt;/h1&gt;</span><br><span class="line">&lt;%<span class="meta">@include</span> file=<span class="string">"common/footer.jsp"</span>%&gt;</span><br></pre></td></tr></table></figure>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-55-32"></div><br>
+
+<p>当然我们也可以使用下面要讲的jsp标签引入，和上面直接使用指令引入的区别在于三个页面<strong><code>拼接</code></strong>成了一个jsp页面。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;%--jsp标签</span><br><span class="line">    jsp:include 本质还是三个页面拼接在了一起</span><br><span class="line">--%&gt;</span><br><span class="line">&lt;jsp:include page="/common/header.jsp"&gt;&lt;/jsp:include&gt;</span><br><span class="line">&lt;h1&gt;网页主体&lt;/h1&gt;</span><br><span class="line">&lt;jsp:include page="/common/footer.jsp"&gt;&lt;/jsp:include&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们看下两者的源码对比就清楚了</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-56-00"></div><br>
+
+<blockquote>
+<p><strong>@taglib指令</strong>  放到下面的jstl表达式讲</p>
+</blockquote>
+<h2 id="3-JSP内置对象和作用域"><a href="#3-JSP内置对象和作用域" class="headerlink" title="3.JSP内置对象和作用域"></a>3.JSP内置对象和作用域</h2><p><strong>九大内置对象</strong></p>
+<table>
+<thead>
+<tr>
+<th>pageContext</th>
+<th><strong>PageContext</strong>类的实例，提供对JSP页面所有对象以及命名空间的访问</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>request</td>
+<td><strong>HttpServletRequest</strong> 接口的实例</td>
+</tr>
+<tr>
+<td>response</td>
+<td><strong>HttpServletResponse</strong> 接口的实例</td>
+</tr>
+<tr>
+<td>session</td>
+<td><strong>HttpSession</strong>类的实例</td>
+</tr>
+<tr>
+<td>application</td>
+<td><strong>ServletContext</strong>类的实例，与应用上下文有关</td>
+</tr>
+<tr>
+<td>config</td>
+<td><strong>ServletConfig</strong>类的实例</td>
+</tr>
+<tr>
+<td>out</td>
+<td><strong>JspWriter</strong>类的实例，用于把结果输出至网页上</td>
+</tr>
+<tr>
+<td>page</td>
+<td>类似于Java类中的this关键字</td>
+</tr>
+<tr>
+<td>Exception</td>
+<td><strong>Exception</strong>类的对象，代表发生错误的JSP页面中对应的异常对象</td>
+</tr>
+</tbody></table>
+<p>这几个对象好多我们已经用过了，这里就介绍下四个存东西对象的作用域，我们之后也是主要使用这几个对象。</p>
+<ul>
+<li><strong>PageContext  保存的数据只在一个页面中有效</strong></li>
+<li><strong>request  保存的数据在一次请求中有效（可以请求转发）</strong></li>
+<li><strong>Session  保存的数据在一次会话中有效 打开浏览器到关闭浏览器</strong></li>
+<li><strong>Application  保存的数据在服务器中有效  打开服务器到关闭服务器</strong></li>
+</ul>
+<p><strong>作用域</strong></p>
+<p><strong><code>PageContext--&gt;request--&gt;session--&gt;application</code>  有点像jjvm中的双亲委派机制。 从pagecontext中找数据时，如果有就找到没有就向上一层一层的找。</strong></p>
+<p>我们写一个jsp页面来设置值和取值来验证下。  </p>
+<p>结果：<strong>四个值都能取到</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;作用域&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;%--内置对象--%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%</span><br><span class="line">    <span class="comment">//存数据</span></span><br><span class="line">    pageContext.setAttribute(<span class="string">"name1"</span>,<span class="string">"coderchen11"</span>);</span><br><span class="line">    request.setAttribute(<span class="string">"name2"</span>,<span class="string">"coderchen22"</span>); </span><br><span class="line">    session.setAttribute(<span class="string">"name3"</span>,<span class="string">"coderchen33"</span>);</span><br><span class="line">    application.setAttribute(<span class="string">"name4"</span>,<span class="string">"coderchen44"</span>);</span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%</span><br><span class="line">    <span class="comment">//取数据  通过寻找的方式来取数据</span></span><br><span class="line">    String name1 = (String)pageContext.findAttribute(<span class="string">"name1"</span>);</span><br><span class="line">    String name2 = (String)pageContext.findAttribute(<span class="string">"name2"</span>);</span><br><span class="line">    String name3 = (String)pageContext.findAttribute(<span class="string">"name3"</span>);</span><br><span class="line">    String name4 = (String)pageContext.findAttribute(<span class="string">"name4"</span>);</span><br><span class="line"></span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%--使用EL表达式输出数据  四个值都能取到--%&gt;</span><br><span class="line">&lt;h1&gt;取出的值为:&lt;/h1&gt;</span><br><span class="line">&lt;h3&gt;$&#123;name1&#125;&lt;/h3&gt;</span><br><span class="line">&lt;h3&gt;$&#123;name2&#125;&lt;/h3&gt;</span><br><span class="line">&lt;h3&gt;$&#123;name3&#125;&lt;/h3&gt;</span><br><span class="line">&lt;h3&gt;$&#123;name4&#125;&lt;/h3&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>再写一个jsp页面来进行取值  </p>
+<p>结果：<strong>只能取到3和4 也就是session中和Application中的值</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;作用域&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="comment">//取数据  通过寻找的方式来取数据</span></span><br><span class="line">    String name1 = (String)pageContext.findAttribute(<span class="string">"name1"</span>);</span><br><span class="line">    String name2 = (String)pageContext.findAttribute(<span class="string">"name2"</span>);</span><br><span class="line">    String name3 = (String)pageContext.findAttribute(<span class="string">"name3"</span>);</span><br><span class="line">    String name4 = (String)pageContext.findAttribute(<span class="string">"name4"</span>);</span><br><span class="line"></span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%--使用EL表达式输出数据--%&gt;</span><br><span class="line">&lt;h1&gt;取出的值为:&lt;/h1&gt;</span><br><span class="line">&lt;h3&gt;$&#123;name1&#125;&lt;/h3&gt;</span><br><span class="line">&lt;h3&gt;$&#123;name2&#125;&lt;/h3&gt;</span><br><span class="line">&lt;h3&gt;$&#123;name3&#125;&lt;/h3&gt;</span><br><span class="line">&lt;h3&gt;$&#123;name4&#125;&lt;/h3&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-JSP标签、JSTL表达式、EL表达式"><a href="#4-JSP标签、JSTL表达式、EL表达式" class="headerlink" title="4.JSP标签、JSTL表达式、EL表达式"></a>4.JSP标签、JSTL表达式、EL表达式</h2><h3 id="4-1-EL表达式"><a href="#4-1-EL表达式" class="headerlink" title="4.1 EL表达式"></a>4.1 EL表达式</h3><p><strong>EL（Expression Language） 是为了使JSP写起来更加简单。</strong> 语法很简单<code>${}</code> 。作用：</p>
+<ul>
+<li><strong>获取数据</strong></li>
+<li><strong>执行运算</strong></li>
+<li><strong>获取web开发的常用对象</strong></li>
+</ul>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$&#123;expr&#125;  变量</span><br><span class="line">$&#123;fn:length(<span class="string">"Get my length"</span>)&#125;  函数</span><br><span class="line">$&#123;pageContext.request.queryString&#125;  常用对象</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-JSP标签"><a href="#4-2-JSP标签" class="headerlink" title="4.2 JSP标签"></a>4.2 JSP标签</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%--引入外部jsp页面,拼接而不是合并--%</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">jsp:include</span> <span class="attr">page</span>=<span class="string">""</span>&gt;</span><span class="tag">&lt;/<span class="name">jsp:include</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">%--页面转发--%</span>&gt;</span></span><br><span class="line">&lt;%--&lt;jsp:forward page=""&gt;&lt;/jsp:forward&gt;--%&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">jsp:forward</span> <span class="attr">page</span>=<span class="string">""</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">jsp:param</span> <span class="attr">name</span>=<span class="string">"name1"</span> <span class="attr">value</span>=<span class="string">"value1"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">jsp:param</span> <span class="attr">name</span>=<span class="string">"name2"</span> <span class="attr">value</span>=<span class="string">"value2"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">jsp:forward</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其他还有很多，但是用的非常少，这里就不列举了。</p>
+<h3 id="4-3-JSTL表达式"><a href="#4-3-JSTL表达式" class="headerlink" title="4.3 JSTL表达式"></a>4.3 JSTL表达式</h3><p>JSTL（Java server pages standarded tag library，即<strong>JSP标准标签库</strong>） 封装了JSP的通用核心功能。可以利用这些标签<strong>取代JSP页面上的Java代码</strong>，从而提高程序的可读性，降低程序的维护难度。</p>
+<p>根据JSTL标签所提供的功能，可以将其分为5个类别。</p>
+<ul>
+<li><strong>核心标签 （只需要掌握部分即可，其他标签都不用了解）</strong></li>
+<li><strong>格式化标签</strong></li>
+<li><strong>SQL 标签</strong></li>
+<li><strong>XML 标签</strong></li>
+<li><strong>JSTL 函数</strong></li>
+</ul>
+<blockquote>
+<p>使用JSTL表达式</p>
+</blockquote>
+<p><strong>1.导入jstl和taglibs的依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--jstl表达式的依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet.jsp.jstl<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- jstl-api --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet.jsp.jstl<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- stl-impl --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.glassfish.web<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl-impl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- standard标签库 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>taglibs<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>standard<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>2.在文件头引入jstl核心标签</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;%--引入jstl核心标签库--%&gt;</span><br><span class="line">&lt;%@ taglib prefix=<span class="string">"c"</span> uri=<span class="string">"http://java.sun.com/jsp/jstl/core"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;jstlTest&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.使用JSTL标签即可</strong></p>
+<p>我们只需要掌握jstl核心标签库里面的一部分东西即可，这里先看下核心标签库都有什么东西。</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-20-JSP总结-2020-11-26-13-56-45"></div><br>
+
+<p><strong>c:if标签测试</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;%--引入jstl核心标签库--%&gt;</span><br><span class="line">&lt;%@ taglib prefix=<span class="string">"c"</span> uri=<span class="string">"http://java.sun.com/jsp/jstl/core"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;cif标签实例&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;c:set <span class="keyword">var</span>=<span class="string">"salary"</span> value=<span class="string">"$&#123;2000*2&#125;"</span>/&gt;</span><br><span class="line">&lt;%--如果工资大于<span class="number">2000</span>则输出--%&gt;</span><br><span class="line">&lt;c:<span class="keyword">if</span> test=<span class="string">"$&#123;salary &gt; 2000&#125;"</span>&gt;</span><br><span class="line">&lt;p&gt;我的工资为: &lt;c:out value=<span class="string">"$&#123;salary&#125;"</span>/&gt;&lt;p&gt;</span><br><span class="line">    &lt;/c:if&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>forEach标签测试</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">"java.util.ArrayList"</span> %&gt;</span><br><span class="line">&lt;%@ page contentType=<span class="string">"text/html;charset=UTF-8"</span> language=<span class="string">"java"</span> %&gt;</span><br><span class="line">&lt;%--引入jstl核心标签库--%&gt;</span><br><span class="line">&lt;%@ taglib prefix=<span class="string">"c"</span> uri=<span class="string">"http://java.sun.com/jsp/jstl/core"</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;cif标签实例&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    ArrayList&lt;String&gt; people = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    people.add(<span class="string">"coderchen11"</span>);</span><br><span class="line">    people.add(<span class="string">"coderchen22"</span>);</span><br><span class="line">    people.add(<span class="string">"coderchen33"</span>);</span><br><span class="line">    people.add(<span class="string">"coderchen44"</span>);</span><br><span class="line">    request.setAttribute(<span class="string">"list"</span>,people);</span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line">&lt;%--</span><br><span class="line"><span class="keyword">var</span> 每一次遍历出来的变量</span><br><span class="line">items 要遍历的对象</span><br><span class="line">--%&gt;</span><br><span class="line">&lt;c:forEach <span class="keyword">var</span>=<span class="string">"people"</span> items=<span class="string">"$&#123;list&#125;"</span>&gt;</span><br><span class="line">    &lt;c:out value=<span class="string">"$&#123;people&#125;"</span>/&gt;&lt;br&gt;</span><br><span class="line">&lt;/c:forEach&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;%--</span><br><span class="line">begin : 开始位置</span><br><span class="line">end  结束位置</span><br><span class="line">step ： 步长</span><br><span class="line">--%&gt;</span><br><span class="line">&lt;c:forEach <span class="keyword">var</span>=<span class="string">"people"</span> items=<span class="string">"$&#123;list&#125;"</span> begin=<span class="string">"1"</span> end=<span class="string">"4"</span> step=<span class="string">"2"</span>&gt;</span><br><span class="line">    &lt;c:out value=<span class="string">"$&#123;people&#125;"</span>/&gt;&lt;br&gt;</span><br><span class="line">&lt;/c:forEach&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/JavaWeb/" rel="tag">JavaWeb</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/11/20/%E8%BF%87%E6%BB%A4%E5%99%A8%E5%92%8C%E7%9B%91%E5%90%AC%E5%99%A8/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">过滤器和监听器</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/11/20/cookie%E5%92%8Csession/">
+                <span class="level-item">cookie和session</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            105
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            20
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            24
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-JSP简介">
+        <span class="has-mr-6">1</span>
+        <span>1.JSP简介</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-1-什么是JSP">
+        <span class="has-mr-6">1.1</span>
+        <span>1.1 什么是JSP</span>
+        </a></li><li>
+        <a class="is-flex" href="#1-3-JSP原理分析">
+        <span class="has-mr-6">1.2</span>
+        <span>1.3 JSP原理分析</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#2-JSP基本语法和指令">
+        <span class="has-mr-6">2</span>
+        <span>2. JSP基本语法和指令</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-1-jsp基本语法">
+        <span class="has-mr-6">2.1</span>
+        <span>2.1 jsp基本语法</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2jsp指令">
+        <span class="has-mr-6">2.2</span>
+        <span>2.2jsp指令</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-JSP内置对象和作用域">
+        <span class="has-mr-6">3</span>
+        <span>3.JSP内置对象和作用域</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-JSP标签、JSTL表达式、EL表达式">
+        <span class="has-mr-6">4</span>
+        <span>4.JSP标签、JSTL表达式、EL表达式</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#4-1-EL表达式">
+        <span class="has-mr-6">4.1</span>
+        <span>4.1 EL表达式</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-2-JSP标签">
+        <span class="has-mr-6">4.2</span>
+        <span>4.2 JSP标签</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-3-JSTL表达式">
+        <span class="has-mr-6">4.3</span>
+        <span>4.3 JSTL表达式</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="JSP总结" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

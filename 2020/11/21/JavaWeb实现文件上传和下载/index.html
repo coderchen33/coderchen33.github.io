@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>JavaWeb实现文件上传和下载 - chen33的个人博客</title>
+
+
+    <meta name="description" content="主要内容1.文件上传2.文件下载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaWeb实现文件上传和下载">
+<meta property="og:url" content="http://coderchen33.life/2020/11/21/JavaWeb%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%92%8C%E4%B8%8B%E8%BD%BD/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容1.文件上传2.文件下载">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2020-11-21T08:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-03T04:49:46.344Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="JavaWeb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="JavaWeb实现文件上传和下载" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-11-21T08:00:00.000Z">2020-11-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/JavaWeb%E5%92%8C%E5%B7%A5%E5%85%B7/">JavaWeb和工具</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/JavaWeb%E5%92%8C%E5%B7%A5%E5%85%B7/JavaWeb/">JavaWeb</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1852 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                JavaWeb实现文件上传和下载
+            
+        </h1>
+        <div class="content">
+            <p><strong>主要内容</strong><br>1.文件上传<br>2.文件下载</p>
+<a id="more"></a>
+
+
+<p>在web应用中，文件上传和下载功能是非常常见的应用，今天就来学习下javaWeb中的文件上传和下载功能实现。</p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>在web应用中，文件上传和下载功能是非常常用的功能，今天就讲一下javaweb中的文件上传和下载功能的实现。</p>
+<h3 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1.准备工作"></a>1.准备工作</h3><p>对于文件上传，浏览器在上传的过程中是将文件以流的形式提交到服务器端的。</p>
+<p>一般选择采用apache的开源工具<code>commopn-fileupload</code>这个文件上传组件。而<code>commopn-fileupload</code>是依赖于<code>common-io</code>这个包的，所以还要下载这个包。</p>
+<p><strong>导入所需jar包</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- commons-fileupload包 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-fileupload<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-fileupload<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- commons-io包 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.8.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-使用类介绍"><a href="#2-使用类介绍" class="headerlink" title="2.使用类介绍"></a>2.使用类介绍</h3><p><strong>【文件上传的注意事项】</strong></p>
+<ol>
+<li>为了保证服务器安全，上传那文件应该放在外界无法直接访问的目录下，比如WEB-INF目录下</li>
+<li>为了防止文件覆盖现象的发生，要为上传文件产生一个唯一的文件名。</li>
+<li>限制上传文件的最大值</li>
+<li>限制上传文件的类型，在收到上传文件名时，判断后缀名是否合法。</li>
+</ol>
+<p><strong>【需要用到的类详解】</strong></p>
+<p><code>ServletFileUpload</code>负责处理上传的文件数据，并将表单中的每个输入项封装成一个<code>FileItem</code>对象，在使用<code>ServletFileUpload</code>对象解析请求时需要<code>DiskFileItemFactory</code>对象。</p>
+<p>所以我们在进行解析工作时提前构建好<code>DiskFileItemFactory</code>对象，通过<code>ServletFileUpload</code>对象的构造方法或<code>setFileItemFacatory()</code>方法设置<code>ServletFileUpload</code>对象的<code>fileItemFactory</code>对象即可。</p>
+<h4 id="2-1FileItem类"><a href="#2-1FileItem类" class="headerlink" title="2.1FileItem类"></a>2.1FileItem类</h4><p>首先我们需要知道，表单如果包含一个文件上传输入项的话，这个表单必须包含属性<code>enctype=&quot;multipart/form-data&quot;</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"$&#123;pageContext.request.contextPath&#125;/upload.do"</span> <span class="attr">enctype</span>=<span class="string">"multipart/form-data"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">    用户名:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"username"</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">name</span>=<span class="string">"file1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">name</span>=<span class="string">"file2"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"reset"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>【常用方法介绍】</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//用于判断FileItem类对象封装的数据是一个普通文本表单还是一个文件表单</span></span><br><span class="line"><span class="comment">//普通表单返回true   否则返回false</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isFormField</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//用于返回表单标签name属性值</span></span><br><span class="line"><span class="function">String <span class="title">getFieldName</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//用于将FileItem对象中保存的数据流内容以一个字符串返回</span></span><br><span class="line"><span class="function">String <span class="title">getString</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获得文件上传的文件名</span></span><br><span class="line"><span class="function">String <span class="title">getName</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//以流的形式返回文件上传内容</span></span><br><span class="line"><span class="function">InputStream <span class="title">getInputStream</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">//用于清空FileItem类对象中存放的主体内容</span></span><br><span class="line"><span class="comment">//如果主体内容被保存在临时文件delete方法将删除该临时文件</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2ServletFileUpload类"><a href="#2-2ServletFileUpload类" class="headerlink" title="2.2ServletFileUpload类"></a>2.2ServletFileUpload类</h4><p>ServletFileUpload负责处理上传的文件数据，并将表单中每个输入项封装成一个FileItem对象中，使用其<code>parseRequest(HttpServletRequest)</code>方法，可以将通过表单中每一个html标签提交的数据封装成一个<code>FileItem</code>对象，然后以List的形式返回。</p>
+<h3 id="3-代码编写"><a href="#3-代码编写" class="headerlink" title="3.代码编写"></a>3.代码编写</h3><p>FileUploadServlet</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileUploadServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doPost(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//判断上传的文件是普通表单还是带文件的表单</span></span><br><span class="line">        <span class="keyword">if</span>(!ServletFileUpload.isMultipartContent(req))&#123;</span><br><span class="line">            <span class="keyword">return</span>; <span class="comment">//普通表单直接返回</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//创建上传文件的保存路径，建议在WEB-INF路径下。用户无法直接访问</span></span><br><span class="line">        String uploadPath = <span class="keyword">this</span>.getServletContext().getRealPath(<span class="string">"/WEB-INF/upload"</span>);</span><br><span class="line">        File uploadFile = <span class="keyword">new</span> File(uploadPath);</span><br><span class="line">        <span class="keyword">if</span>(!uploadFile.exists())&#123;</span><br><span class="line">            uploadFile.mkdir();  <span class="comment">//没有则创建目录</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//临时路径，如果文件超过了预期大小，</span></span><br><span class="line">        <span class="comment">//把它放入临时文件，过几天自动删除或者提醒用户转为永久</span></span><br><span class="line">        String tmpPath = <span class="keyword">this</span>.getServletContext().getRealPath(<span class="string">"/WEB-INF/tmp"</span>);</span><br><span class="line">        File tmpFile = <span class="keyword">new</span> File(tmpPath);</span><br><span class="line">        <span class="keyword">if</span>(!tmpFile.exists())&#123;</span><br><span class="line">            tmpFile.mkdir();  <span class="comment">//没有则创建目录</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//处理上传文件，一般需要通过流来获取。我们可以通过req.getInputStream()原生的来直接获取比较麻烦</span></span><br><span class="line">        <span class="comment">//通常使用common-fileupload来获取</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//1. 创建DiskFileItemFactory对象，来处理文件上传路径或者大小限制</span></span><br><span class="line">        DiskFileItemFactory factory = <span class="keyword">this</span>.getDiskFileItemFactory(tmpFile);</span><br><span class="line">        <span class="comment">//2.获取FileServletUpload</span></span><br><span class="line">        ServletFileUpload upload = <span class="keyword">this</span>.getServletFileUpload(factory);</span><br><span class="line">        <span class="comment">//3.处理上传文件(解析前端请求,封装成一个FileItem对象)</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String msg = <span class="keyword">this</span>.uploadParseRequest(upload, req, uploadPath);</span><br><span class="line">            req.setAttribute(<span class="string">"msg"</span>,msg);</span><br><span class="line">            req.getRequestDispatcher(<span class="string">"info.jsp"</span>).forward(req,resp);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileUploadException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> DiskFileItemFactory <span class="title">getDiskFileItemFactory</span><span class="params">(File tmpFile)</span></span>&#123;</span><br><span class="line">        DiskFileItemFactory factory = <span class="keyword">new</span> DiskFileItemFactory();</span><br><span class="line">        factory.setSizeThreshold(<span class="number">1024</span>*<span class="number">1024</span>);  <span class="comment">//缓存区大小为1M</span></span><br><span class="line">        factory.setRepository(tmpFile);  <span class="comment">//临时目录的保存目录</span></span><br><span class="line">        <span class="keyword">return</span> factory;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ServletFileUpload <span class="title">getServletFileUpload</span><span class="params">(DiskFileItemFactory factory)</span></span>&#123;</span><br><span class="line">        ServletFileUpload upload = <span class="keyword">new</span> ServletFileUpload(factory);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//监听文件上传进度</span></span><br><span class="line">        upload.setProgressListener(<span class="keyword">new</span> ProgressListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="comment">// l  已经读取到的文件大小</span></span><br><span class="line">            <span class="comment">// l1 总文件大小</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(<span class="keyword">long</span> l, <span class="keyword">long</span> l1, <span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"总大小:"</span>+l1+<span class="string">"  已上传:"</span>+l);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//处理乱码问题</span></span><br><span class="line">        upload.setHeaderEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        <span class="comment">//设置单个文件的最大值</span></span><br><span class="line">        upload.setFileSizeMax(<span class="number">1024</span>*<span class="number">1024</span>*<span class="number">10</span>);</span><br><span class="line">        <span class="comment">//设置总共能上传文件大小</span></span><br><span class="line">        upload.setSizeMax(<span class="number">1024</span>*<span class="number">1024</span>*<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span>  upload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">uploadParseRequest</span><span class="params">(ServletFileUpload upload,HttpServletRequest req,String uploadPath)</span> <span class="keyword">throws</span> FileUploadException, IOException </span>&#123;</span><br><span class="line">        String msg = <span class="keyword">null</span>;</span><br><span class="line">        List&lt;FileItem&gt; fileItems = upload.parseRequest(req);</span><br><span class="line">        <span class="keyword">for</span> (FileItem fileItem:fileItems) &#123;</span><br><span class="line">            <span class="comment">//判断上传的文件时普通表单还是带文件的表单</span></span><br><span class="line">            <span class="keyword">if</span>(fileItem.isFormField())&#123; <span class="comment">//普通表单</span></span><br><span class="line">                String name = fileItem.getFieldName();</span><br><span class="line">                String value = fileItem.getString(<span class="string">"utf-8"</span>);</span><br><span class="line">                System.out.println(name+<span class="string">":"</span>+value);</span><br><span class="line"></span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;<span class="comment">//上传的是文件</span></span><br><span class="line">                <span class="comment">//=================处理文件====================//</span></span><br><span class="line">                <span class="comment">//=========1.拿到文件名===========//</span></span><br><span class="line">                String uploadFileName = fileItem.getName();</span><br><span class="line">                System.out.println(<span class="string">"上传的文件名:"</span>+uploadFileName);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span>(uploadFileName.trim().equals(<span class="string">""</span>) || uploadFileName==<span class="keyword">null</span>)&#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">//拿到文件名  images/1.jpg  拿到1.jpg</span></span><br><span class="line">                String fileName = uploadFileName.substring(uploadFileName.lastIndexOf(<span class="string">"/"</span>) + <span class="number">1</span>);</span><br><span class="line">                <span class="comment">//拿到文件后缀名</span></span><br><span class="line">                String fileExtName = uploadFileName.substring(uploadFileName.lastIndexOf(<span class="string">"."</span>) + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//如果文件后缀名不是我们需要的就直接return不处理,告诉用户文件类型不对</span></span><br><span class="line">                System.out.println(<span class="string">"文件信息[文件名："</span> + fileName + <span class="string">"----文件类型"</span> + fileExtName+<span class="string">"]"</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//=========2.存放地址===========//</span></span><br><span class="line">                String uuidPath = UUID.randomUUID().toString();</span><br><span class="line">                String realPath = uploadPath+<span class="string">"/"</span>+uuidPath;</span><br><span class="line">                <span class="comment">//给每个文件创建一个对应的文件夹</span></span><br><span class="line">                File realPathFile = <span class="keyword">new</span> File(realPath);</span><br><span class="line">                <span class="keyword">if</span>(!realPathFile.exists())&#123;</span><br><span class="line">                    realPathFile.mkdir();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//=========3.文件传输===========//</span></span><br><span class="line">                InputStream in = fileItem.getInputStream();</span><br><span class="line">                FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(realPath + <span class="string">"/"</span> + fileName);</span><br><span class="line">                <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">                <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span>((len=in.read(buffer))&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                    fos.write(buffer,<span class="number">0</span>,len);</span><br><span class="line">                &#125;</span><br><span class="line">                in.close();</span><br><span class="line">                fos.flush();</span><br><span class="line">                fos.close();</span><br><span class="line"></span><br><span class="line">                msg = <span class="string">"文件上传成功"</span>;</span><br><span class="line">                fileItem.delete();  <span class="comment">//上传成功，删除临时文件</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问测试</p>
+<div align="center"><img src="http://coderchen33.life/2020-12-03-JavaWeb实现文件上传和下载-2020-12-03-12-49-07"></div><br>
+
+<p>文件存放到了我们项目的tomcat打包的webapp下</p>
+<div align="center"><img src="http://coderchen33.life/2020-12-03-JavaWeb实现文件上传和下载-2020-12-03-12-49-24"></div><br>
+
+<p>点击upload文件夹，即有我们上传的文件</p>
+<div align="center"><img src="http://coderchen33.life/2020-12-03-JavaWeb实现文件上传和下载-2020-12-03-12-49-38"></div><br>
+
+<h2 id="文件下载"><a href="#文件下载" class="headerlink" title="文件下载"></a>文件下载</h2><p>和文件上传相比，因为文件是在我们服务器上进行存储的，所以整个流程就比较简单。核心是使用我们的response对象即可。</p>
+<p>步骤：</p>
+<ul>
+<li>获取下载文件的路径</li>
+<li>获取下载文件的文件名</li>
+<li>让浏览器支持下载我们需要的东西</li>
+<li>IO流操作<ul>
+<li>创建下载文件的输入流</li>
+<li>创建缓冲区</li>
+<li>获取OutputStream对象</li>
+<li>将FileOutputStream流写入到buffer缓冲区</li>
+<li>使用OutPutStream将缓冲区中的数据输出到客户端</li>
+</ul>
+</li>
+</ul>
+<p>接下来我们就直接实践下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">// 1.获取下载文件的路径</span></span><br><span class="line">        String realPath = <span class="string">"E:\\javaProject\\servlet-review\\filedownload\\src\\main\\resources\\1.png"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.获取下载文件的文件名</span></span><br><span class="line">        String fileName = realPath.substring(realPath.lastIndexOf(<span class="string">"\\"</span>) + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 3.让浏览器支持下载我们需要的东西</span></span><br><span class="line">        <span class="comment">//设置编码是解决文件名是中文的情况</span></span><br><span class="line">        resp.setHeader(<span class="string">"Content-disposition"</span>,<span class="string">"attachment;filename"</span>+ URLEncoder.encode(fileName,<span class="string">"utf-8"</span>));</span><br><span class="line">        <span class="comment">// 4.创建下载文件的输入流</span></span><br><span class="line">        FileInputStream in = <span class="keyword">new</span> FileInputStream(realPath);</span><br><span class="line">        <span class="comment">// 5.创建缓冲区</span></span><br><span class="line">        <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">        <span class="comment">// 6.获取OutputStream对象</span></span><br><span class="line">        ServletOutputStream out = resp.getOutputStream();</span><br><span class="line">        <span class="comment">// 7.将FileOutputStream流写入到buffer缓冲区  使用OutPutStream将缓冲区中的数据输出到客户端</span></span><br><span class="line">        <span class="keyword">while</span>((len=in.read(buffer))&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            out.write(buffer,<span class="number">0</span>,len);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        in.close();</span><br><span class="line">        out.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置web.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>FileServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>com.company.servlet.FileServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>FileServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/down<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试即可。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/JavaWeb/" rel="tag">JavaWeb</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/11/27/Mybatis%E5%85%A5%E9%97%A8/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Mybatis入门</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/11/21/JavaWeb%E5%AE%9E%E7%8E%B0%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81/">
+                <span class="level-item">JavaWeb实现邮件发送</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            105
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            20
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            24
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#文件上传">
+        <span class="has-mr-6">1</span>
+        <span>文件上传</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-准备工作">
+        <span class="has-mr-6">1.1</span>
+        <span>1.准备工作</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-使用类介绍">
+        <span class="has-mr-6">1.2</span>
+        <span>2.使用类介绍</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-1FileItem类">
+        <span class="has-mr-6">1.2.1</span>
+        <span>2.1FileItem类</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2ServletFileUpload类">
+        <span class="has-mr-6">1.2.2</span>
+        <span>2.2ServletFileUpload类</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-代码编写">
+        <span class="has-mr-6">1.3</span>
+        <span>3.代码编写</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#文件下载">
+        <span class="has-mr-6">2</span>
+        <span>文件下载</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="JavaWeb实现文件上传和下载" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
