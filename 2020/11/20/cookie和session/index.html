@@ -10,16 +10,19 @@
 <title>cookie和session - chen33的个人博客</title>
 
 
-    <meta property="og:type" content="article">
+    <meta name="description" content="主要内容1.会话的概念2.cookie原理及应用3.session原理及应用4.cookie和session对比">
+<meta property="og:type" content="article">
 <meta property="og:title" content="cookie和session">
 <meta property="og:url" content="http://coderchen33.life/2020/11/20/cookie%E5%92%8Csession/index.html">
 <meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="主要内容1.会话的概念2.cookie原理及应用3.session原理及应用4.cookie和session对比">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://coderchen33.life/images/og_image.png">
 <meta property="article:published_time" content="2020-11-20T07:57:30.000Z">
-<meta property="article:modified_time" content="2021-04-20T02:18:39.474Z">
+<meta property="article:modified_time" content="2021-04-24T14:48:00.483Z">
 <meta property="article:author" content="coderchen33">
 <meta property="article:tag" content="JavaWeb">
+<meta property="article:tag" content="session">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
 
@@ -153,7 +156,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 1 个字)
+                    26 分钟 读完 (大约 3830 个字)
                 </span>
                 
                 
@@ -171,14 +174,204 @@
             
         </h1>
         <div class="content">
-            <a id="more"></a>
+            <p><strong>主要内容</strong><br>1.会话的概念<br>2.cookie原理及应用<br>3.session原理及应用<br>4.cookie和session对比</p>
+<a id="more"></a>
+
+<h2 id="1-会话"><a href="#1-会话" class="headerlink" title="1.会话"></a>1.会话</h2><p><strong>会话（Session）</strong> 用户开一个浏览器，访问一个网站,只要不关闭该浏览器，不管该用户点击多少个超链接，访问多少资源，直到用户关闭浏览器，整个这个过程我们称为一次会话。</p>
+<blockquote>
+<p>为什么要使用会话技术？</p>
+</blockquote>
+<ul>
+<li>在程序中，会话跟踪是很重要的事情。理论上，<strong>一个用户的所有请求操作都应该属于同一个会话</strong>，而另一个用户的所有请求操作则应该属于另一个会话，二者不能混淆。例如，用户A在超市购买的任何商品都应该放在A的购物车内，不论是用户A什么时间购买的，这都是属于同一个会话的，不能放入用户B或用户C的购物车内，这不属于同一个会话。</li>
+<li>而Web应用程序是使用HTTP协议传输数据的。<strong>HTTP协议是无状态的协议。一旦数据交换完毕，客户端与服务器端的连接就会关闭，再次交换数据需要建立新的连接。这就意味着服务器无法从连接上跟踪会话</strong>。即用户A购买了一件商品放入购物车内，当再次购买商品时服务器已经无法判断该购买行为是属于用户A的会话还是用户B的会话了。要跟踪该会话，必须引入一种机制。</li>
+</ul>
+<blockquote>
+<p>会话技术的常见应用?</p>
+</blockquote>
+<ul>
+<li>比如对于一些需要登录的网站，通常我们登录一次后几天之内不需要再次登录</li>
+<li>又或者一些网站根据用户以前浏览过的商品，猜用户喜欢什么商品等等</li>
+</ul>
+<p>常用的会话跟踪技术是<strong>Cookie与Session</strong>。</p>
+<h2 id="2-cookie机制"><a href="#2-cookie机制" class="headerlink" title="2.cookie机制"></a>2.cookie机制</h2><h3 id="2-1-什么是cookie"><a href="#2-1-什么是cookie" class="headerlink" title="2.1 什么是cookie"></a>2.1 什么是cookie</h3><p>Cookie是由W3C组织提出，最早由netscape社区发展的一种机制</p>
+<ul>
+<li>网页之间的<strong>交互是通过HTTP协议传输数据的，</strong>而Http协议是<strong>无状态的协议</strong>。无状态的协议是什么意思呢？<strong>一旦数据提交完后，浏览器和服务器的连接就会关闭，再次交互的时候需要重新建立新的连接</strong>。</li>
+<li>服务器无法确认用户的信息，于是乎，W3C就提出了：<strong>给每一个用户都发一个通行证，无论谁访问的时候都需要携带通行证，这样服务器就可以从通行证上确认用户的信息</strong>。通行证就是Cookie</li>
+</ul>
+<p>核心：<strong>Cookie通过在<code>客户端</code>记录信息确定用户身份</strong></p>
+<h3 id="2-2-cookie的流程"><a href="#2-2-cookie的流程" class="headerlink" title="2.2 cookie的流程"></a>2.2 cookie的流程</h3><p>浏览器访问服务器，如果服务器需要记录该用户的状态，就使用response向浏览器发送一个Cookie，浏览器会把Cookie保存起来。当浏览器再次访问服务器的时候，浏览器会把<strong>请求的网址连同Cookie</strong>一同交给服务器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CookieServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//设置编码</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        resp.setContentType(<span class="string">"text/html"</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line">        PrintWriter out = resp.getWriter();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//从浏览器获取cookie</span></span><br><span class="line">        Cookie[] cookies = req.getCookies();</span><br><span class="line">        <span class="keyword">if</span>(cookies!=<span class="keyword">null</span> &amp;&amp; cookies.length!=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cookies.length; i++) &#123;</span><br><span class="line">                String name = cookies[i].getName();</span><br><span class="line">                String value = cookies[i].getValue();</span><br><span class="line">                out.write(name+<span class="string">" "</span>+value);</span><br><span class="line">                out.write(<span class="string">"       "</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建cookie对象</span></span><br><span class="line">        Cookie cookie = <span class="keyword">new</span> Cookie(<span class="string">"name"</span>,<span class="string">"陈33"</span>);</span><br><span class="line">        <span class="comment">//cookie.setMaxAge();给cookie设置过期时间</span></span><br><span class="line">        <span class="comment">//向浏览器发送cookie</span></span><br><span class="line">        resp.addCookie(cookie);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问servlet。第一次访问只有JESSIONID，但是cookie已经发到了浏览器。第二次访问发现打印出了我们自己设置的cookie。</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-26-cookie和session-2021-04-24-22-43-03"></div><br>
+
+<h3 id="2-3cookie的有效期"><a href="#2-3cookie的有效期" class="headerlink" title="2.3cookie的有效期"></a>2.3cookie的有效期</h3><p>Cookie的有效期是通过<code>setMaxAge()</code>来设置的。</p>
+<ul>
+<li>如果MaxAge为<strong>正数</strong>，<strong>浏览器会把Cookie写到硬盘中，只要还在MaxAge秒之前，不论关闭了浏览器还是电脑登陆网站时该Cookie就有效</strong></li>
+<li>如果MaxAge为<strong>负数</strong>，<strong>Cookie是临时性的，仅在本浏览器内有效</strong>，关闭浏览器Cookie就失效了，Cookie不会写到硬盘中。Cookie默认值就是-1。</li>
+<li>如果MaxAge为<strong>0</strong>，则表示<strong>删除该Cookie</strong>。Cookie机制没有提供删除Cookie对应的方法，把MaxAge设置为0等同于删除Cookie</li>
+</ul>
+<blockquote>
+<p><strong>删除cookie</strong></p>
+</blockquote>
+<ol>
+<li>不设置cookie有效期，默认是-1，关闭浏览器cookie直接失效</li>
+<li>设置过期时间为0，表示直接删除cookie  <code>cookie.setMaxAge(0);</code></li>
+</ol>
+<blockquote>
+<p><strong>修改cookie</strong></p>
+</blockquote>
+<p>Cookie存储的方式<strong>类似于Map集合</strong>，<strong>Cookie的名称相同，通过response添加到浏览器中，会覆盖原来的Cookie</strong>。这里就不演示了。</p>
+<h3 id="2-4cookie的常见应用"><a href="#2-4cookie的常见应用" class="headerlink" title="2.4cookie的常见应用"></a>2.4cookie的常见应用</h3><ul>
+<li>获得用户上次登录的时间</li>
+<li>获得用户上次访问商品等。</li>
+</ul>
+<blockquote>
+<p><strong>获得用户上次登录时间</strong></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CookieServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//设置编码</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        resp.setContentType(<span class="string">"text/html"</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line">        PrintWriter out = resp.getWriter();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//从浏览器获取cookie</span></span><br><span class="line">        Cookie[] cookies = req.getCookies();</span><br><span class="line">        <span class="keyword">if</span>(cookies!=<span class="keyword">null</span> &amp;&amp; cookies.length!=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cookies.length; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(cookies[i].getName().equals(<span class="string">"lastLoginTime"</span>))&#123;</span><br><span class="line">                    <span class="comment">//取出cookie中的额值</span></span><br><span class="line">                    <span class="keyword">long</span> lastLoginTime = Long.parseLong(cookies[i].getValue());</span><br><span class="line">                    Date date = <span class="keyword">new</span> Date(lastLoginTime);</span><br><span class="line">                    out.write(<span class="string">"您上次登录的时间为:"</span>+date.toLocaleString());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            out.write(<span class="string">"您是第一次登录本网站"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建cookie对象</span></span><br><span class="line">        Cookie cookie = <span class="keyword">new</span> Cookie(<span class="string">"lastLoginTime"</span>,System.currentTimeMillis()+<span class="string">""</span>);</span><br><span class="line">        <span class="comment">//向浏览器发送cookie</span></span><br><span class="line">        resp.addCookie(cookie);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一次访问</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-26-cookie和session-2021-04-24-22-43-52"></div><br>
+
+<p>第二次访问:</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-26-cookie和session-2021-04-24-22-44-20"></div><br>
+
+
+<blockquote>
+<p>获得用户上次访问商品</p>
+</blockquote>
+<p>其实就是把用户访问的商品id放到cookie中，使用_进行划分，之后访问页面时取出cookie值，即可知道之前访问的商品，实际上还是利用cookie存储。</p>
+<p>主页面：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//设置编码</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        resp.setContentType(<span class="string">"text/html"</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//显示所有书籍</span></span><br><span class="line">        PrintWriter writer = resp.getWriter();</span><br><span class="line">        writer.write(<span class="string">"网页上所有的书籍："</span> + <span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line">        LinkedHashMap&lt;Integer,Book&gt; books = DB.getAll();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(Map.Entry&lt;Integer,Book&gt; bookEntry:books.entrySet())&#123;</span><br><span class="line">            Book book = bookEntry.getValue();</span><br><span class="line">            writer.write(</span><br><span class="line">                    <span class="string">"&lt;a href='/bookInfoServlet?id="</span>+book.getId()+<span class="string">"'&gt;"</span>+book.getName()+<span class="string">"&lt;/a&gt;"</span>);</span><br><span class="line">            writer.write(<span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//显示已浏览书籍</span></span><br><span class="line">        writer.write(<span class="string">"您曾经浏览过的书籍为："</span> + <span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        Cookie[] cookies = req.getCookies();</span><br><span class="line">        <span class="keyword">if</span>(cookies!=<span class="keyword">null</span> &amp;&amp; cookies.length!=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cookies.length; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(cookies[i].getName().equals(<span class="string">"bookHistory"</span>))&#123;</span><br><span class="line">                    String bookHistory = cookies[i].getValue();</span><br><span class="line">                    String[] ids = bookHistory.split(<span class="string">"\\_"</span>);</span><br><span class="line">                    Integer[] bookId = <span class="keyword">new</span> Integer[ids.length];</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; ids.length; j++) &#123;</span><br><span class="line">                        bookId[j] = Integer.valueOf(ids[j]);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; bookId.length; j++) &#123;</span><br><span class="line">                        Book book = books.get(bookId[j]);</span><br><span class="line">                        writer.write(book.getName()+<span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>商品详情页：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookInfoServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//设置编码</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        resp.setContentType(<span class="string">"text/html"</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line">        Integer id = Integer.valueOf(req.getParameter(<span class="string">"id"</span>));</span><br><span class="line">        Book book = DB.getAll().get(id);</span><br><span class="line">        PrintWriter writer = resp.getWriter();</span><br><span class="line">        writer.write(<span class="string">"书籍编号为:"</span>+book.getId()+<span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line">        writer.write(<span class="string">"书籍名称为:"</span>+book.getName()+<span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line">        writer.write(<span class="string">"书籍作者为:"</span>+book.getAuthor()+<span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        String bookHistory = makeHistory(req,id);</span><br><span class="line">        Cookie cookie = <span class="keyword">new</span> Cookie(<span class="string">"bookHistory"</span>,bookHistory);</span><br><span class="line">        cookie.setMaxAge(<span class="number">30000</span>);</span><br><span class="line">        resp.addCookie(cookie);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">makeHistory</span><span class="params">(HttpServletRequest req, Integer id)</span> </span>&#123;</span><br><span class="line">        String bookHistory = <span class="keyword">null</span>;</span><br><span class="line">        Cookie[] cookies = req.getCookies();</span><br><span class="line">        <span class="keyword">if</span>(cookies!=<span class="keyword">null</span> &amp;&amp; cookies.length!=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cookies.length; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(cookies[i].getName().equals(<span class="string">"bookHistory"</span>))&#123;</span><br><span class="line">                    bookHistory = cookies[i].getValue();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(bookHistory==<span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> String.valueOf(id);</span><br><span class="line">        &#125;</span><br><span class="line">        String[] strs = bookHistory.split(<span class="string">"\\_"</span>);</span><br><span class="line">        Integer[] ids = <span class="keyword">new</span> Integer[strs.length];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; strs.length; i++) &#123;</span><br><span class="line">            ids[i] = Integer.valueOf(strs[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        List&lt;Integer&gt; list = Arrays.asList(ids);</span><br><span class="line">        LinkedList&lt;Integer&gt; linkedList = <span class="keyword">new</span> LinkedList&lt;&gt;(list);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(linkedList.contains(id))&#123;</span><br><span class="line">            linkedList.remove(id);</span><br><span class="line">            linkedList.addFirst(id);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(linkedList.size()&gt;=<span class="number">3</span>)&#123;</span><br><span class="line">                linkedList.removeLast();</span><br><span class="line">                linkedList.addFirst(id);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                linkedList.addFirst(id);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        StringBuffer stringBuffer = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">        <span class="keyword">for</span>(Integer i:linkedList)&#123;</span><br><span class="line">            stringBuffer.append(i+<span class="string">"_"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> stringBuffer.deleteCharAt(stringBuffer.length()-<span class="number">1</span>).toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Session机制"><a href="#3-Session机制" class="headerlink" title="3.Session机制"></a>3.Session机制</h2><h3 id="3-1-什么是session"><a href="#3-1-什么是session" class="headerlink" title="3.1 什么是session"></a>3.1 什么是session</h3><p>Session 是另一种记录浏览器状态的机制。不同的是Cookie保存在浏览器中，<strong>Session保存在服务器中</strong>。用户使用浏览器访问服务器的时候，服务器把用户的信息以某种的形式记录在服务器，这就是Session</p>
+<p>核心：<strong>Session通过在<code>服务器端</code>记录信息确定用户身份</strong></p>
+<p><strong>Session比Cookie使用方便，Session可以解决Cookie解决不了的事情【Session可以存储对象，Cookie只能存储字符串。】。</strong></p>
+<h3 id="3-2-Session流程"><a href="#3-2-Session流程" class="headerlink" title="3.2 Session流程"></a>3.2 Session流程</h3><p>首先我们看下session中常用的API</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">getId</span><span class="params">()</span>   <span class="comment">//获取Session的id</span></span></span><br><span class="line"><span class="function">    </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setMaxInactiveInterval</span><span class="params">(<span class="keyword">int</span> var1)</span> <span class="comment">//设置Session超时时间</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getMaxInactiveInterval</span><span class="params">()</span>  <span class="comment">//获取Session超时时间</span></span></span><br><span class="line"><span class="function"> </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setAttribute</span><span class="params">(String var1, Object var2)</span>  <span class="comment">//设置Session属性</span></span></span><br><span class="line"><span class="function">Object <span class="title">getAttribute</span><span class="params">(String var1)</span>  <span class="comment">//获取Session属性</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">removeAttribute</span><span class="params">(String var1)</span> <span class="comment">//移除Session属性</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">invalidate</span><span class="params">()</span>  <span class="comment">//销毁该Session</span></span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isNew</span><span class="params">()</span>  <span class="comment">//判断该Session是否为新的</span></span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>session作为域对象存储数据</p>
+</blockquote>
+<p>从上面的API看出，Session有着request和ServletContext类似的方法。其实<strong>Session也是一个域对象</strong>。Session作为一种记录浏览器状态的机制，<strong>只要Session对象没有被销毁，Servlet之间就可以通过Session对象实现通讯</strong></p>
+<p>在servlet1中设置Session属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取session对象</span></span><br><span class="line">HttpSession session = req.getSession();</span><br><span class="line"></span><br><span class="line"><span class="comment">//session中存储字符串和对象</span></span><br><span class="line">session.setAttribute(<span class="string">"name"</span>,<span class="string">"coderchen33"</span>);</span><br><span class="line">session.setAttribute(<span class="string">"person"</span>,<span class="keyword">new</span> Person(<span class="number">1</span>,<span class="string">"chen"</span>));</span><br></pre></td></tr></table></figure>
+
+<p>在servlet2中获得Session属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HttpSession session = req.getSession();</span><br><span class="line"><span class="comment">//session获取数据</span></span><br><span class="line">String name = (String) session.getAttribute(<span class="string">"name"</span>);</span><br><span class="line">Person person = (Person)session.getAttribute(<span class="string">"person"</span>);</span><br><span class="line">resp.getWriter().write(name+<span class="string">"  "</span>+person.getId()+<span class="string">"  "</span>+person.getName());</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2020-11-26-cookie和session-2021-04-24-22-45-14"></div><br>
+
+<p>一般来讲，当我们要存进的是<strong>用户级别的数据就用Session</strong>，那什么是用户级别呢？<strong>只要浏览器不关闭，希望数据还在，就使用Session来保存</strong>。</p>
+<blockquote>
+<p><strong>session的生命周期和有效期</strong></p>
+</blockquote>
+<ul>
+<li><p>Session在用户<strong>第一次访问服务器Servlet，jsp等动态资源就会被自动创建，Session对象保存在内存里</strong>。当然如果访问HTML,IMAGE等静态资源Session不会被创建。</p>
+</li>
+<li><p>Session生成后，只要用户继续访问，服务器就会更新Session的最后访问时间，无论<strong>是否对Session进行读写，服务器都会认为Session活跃了一次</strong>。</p>
+</li>
+</ul>
+<p>由于会有越来越多的用户访问服务器，因此Session也会越来越多。<strong>为了防止内存溢出，服务器会把长时间没有活跃的Session从内存中删除，这个时间也就是Session的超时时间</strong>。Session的超时时间默认是30分钟，有三种方式可以对Session的超时时间进行修改</p>
+<ol>
+<li><strong>第一种方式</strong>：在tomcat/conf/web.xml文件中设置，时间值为20分钟，<strong>所有的WEB应用都有效</strong></li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--session有效时间  20分钟--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">session-config</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">session-timeout</span>&gt;</span>20<span class="tag">&lt;/<span class="name">session-timeout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">session-config</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>第二种方式</strong>：在单个的web.xml文件中设置，对单个web应用有效，<strong>如果有冲突，以自己的web应用为准</strong>。</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--session有效时间  20分钟--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">session-config</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">session-timeout</span>&gt;</span>20<span class="tag">&lt;/<span class="name">session-timeout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">session-config</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>第三种方式</strong>：通过setMaxInactiveInterval()方法设置</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//设置Session最长超时时间为60秒，这里的单位是秒</span></span><br><span class="line">session.setMaxInactiveInterval(<span class="number">60</span>);</span><br><span class="line">System.out.println(session.getMaxInactiveInterval());</span><br></pre></td></tr></table></figure>
+
+<p>另外需要注意：session的有效期和cookie的有效期是不同的。</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-26-cookie和session-2021-04-24-22-46-02"></div><br>
+
+<h3 id="3-3-Session原理"><a href="#3-3-Session原理" class="headerlink" title="3.3 Session原理"></a>3.3 Session原理</h3><p>还是用上面的例子，Servlet1中设置Session属性，Servlet2中获得Session属性。</p>
+<p>在servlet1中设置Session属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取session对象</span></span><br><span class="line">HttpSession session = req.getSession();</span><br><span class="line"></span><br><span class="line"><span class="comment">//session中存储字符串和对象</span></span><br><span class="line">session.setAttribute(<span class="string">"name"</span>,<span class="string">"coderchen33"</span>);</span><br><span class="line">session.setAttribute(<span class="string">"people"</span>,<span class="keyword">new</span> People(<span class="number">1</span>,<span class="string">"people1"</span>));</span><br></pre></td></tr></table></figure>
+
+<p>在servlet2中获得Session属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HttpSession session = req.getSession();</span><br><span class="line"><span class="comment">//session获取数据</span></span><br><span class="line">String name = (String) session.getAttribute(<span class="string">"name"</span>);</span><br><span class="line">Person person = (Person)session.getAttribute(<span class="string">"person"</span>);</span><br><span class="line">resp.getWriter().write(name+<span class="string">"  "</span>+person.getId()+<span class="string">"  "</span>+person.getName());</span><br></pre></td></tr></table></figure>
+
+<p>换一个浏览器继续访问servlet2会产生如下结果，可以看到报了空指针异常。</p>
+<div align="center"><img src="http://coderchen33.life/2020-11-26-cookie和session-2021-04-24-22-46-25"></div><br>
+
+<p>现在问题来了：<strong>服务器是如何实现一个session为一个用户会话服务的?</strong></p>
+<p>我们知道Http协议是无状态的，Session不能依据HTTP连接来判断是否为同一个用户。于是乎：<strong>服务器向用户浏览器发送了一个名为<code>JESSIONID</code>的<code>Cookie</code>，它的值是Session的id值</strong>。<strong>Session依据Cookie来识别是否是同一个用户。</strong></p>
+<p>上面实验的工作流程为：</p>
+<ul>
+<li>当我们访问servlet1的时候，<strong>服务器就会创建一个Session对象，并自动颁发个Cookie给用户浏览器</strong></li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-11-26-cookie和session-2021-04-24-22-46-46"></div><br>
+
+<ul>
+<li>当浏览器访问servlet2的时候，<strong>浏览器会把Cookie的值通过http协议带过去给服务器，服务器就知道用哪一Session</strong>。</li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2020-11-26-cookie和session-2021-04-24-22-46-54"></div><br>
+
+<ul>
+<li>当我们使用新会话的时候由于没有cookie就无法识别session，所以出现空指针异常。</li>
+</ul>
+<h3 id="3-4-Session常见应用"><a href="#3-4-Session常见应用" class="headerlink" title="3.4 Session常见应用"></a>3.4 Session常见应用</h3><ul>
+<li><p>用户登录</p>
+</li>
+<li><p>购物车功能</p>
+</li>
+</ul>
+<blockquote>
+<p>用户登录</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//设置编码</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        resp.setContentType(<span class="string">"text/html"</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获得登录账号密码</span></span><br><span class="line">        String userCode = req.getParameter(<span class="string">"userCode"</span>);</span><br><span class="line">        String password = req.getParameter(<span class="string">"userPassWord"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//根据账号密码去数据库中查找</span></span><br><span class="line">        <span class="comment">//User user = userDao.findByCodeAndPassword(userCode,password);</span></span><br><span class="line">        <span class="keyword">if</span>(user == <span class="keyword">null</span>)&#123; <span class="comment">//登录不成功</span></span><br><span class="line">            resp.getWriter().write(<span class="string">"无法登录，请检查账户密码是否正确"</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//登录成功，放入session中表示登录成功</span></span><br><span class="line">        HttpSession session = req.getSession();</span><br><span class="line">        session.setAttribute(<span class="string">"user"</span>,user);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>购物车</p>
+</blockquote>
+<p>通过商品id，把选择的商品放入一个list中，然后使用session存储list即可。</p>
+<p>主界面</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookSessionServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//设置编码</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        resp.setContentType(<span class="string">"text/html"</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//显示所有书籍</span></span><br><span class="line">        PrintWriter writer = resp.getWriter();</span><br><span class="line">        writer.write(<span class="string">"网页上所有的书籍："</span> + <span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line">        LinkedHashMap&lt;Integer, Book&gt; books = DB.getAll();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(Map.Entry&lt;Integer,Book&gt; bookEntry:books.entrySet())&#123;</span><br><span class="line">            Book book = bookEntry.getValue();</span><br><span class="line">            String url = <span class="string">"/bookToBuyServlet?id="</span>+book.getId();</span><br><span class="line">            writer.write(book.getName());</span><br><span class="line">            writer.write(<span class="string">"&lt;a href="</span>+url+<span class="string">"&gt;添加购物车&lt;/a&gt;"</span>);</span><br><span class="line">            writer.write(<span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        HttpSession session = req.getSession();</span><br><span class="line">        List&lt;Book&gt; bookToBuyList = (List&lt;Book&gt;)session.getAttribute(<span class="string">"bookToBuyList"</span>);</span><br><span class="line">        <span class="keyword">if</span>(bookToBuyList==<span class="keyword">null</span>)&#123;</span><br><span class="line">            writer.write(<span class="string">"购物车是空的，先去选购商品吧"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(Book b:bookToBuyList)&#123;</span><br><span class="line">                writer.write(<span class="string">"您购买过以下商品:"</span>);</span><br><span class="line">                writer.write(b.getName()+<span class="string">"&lt;br/&gt;"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>购物车</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookToBuyServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//设置编码</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">        resp.setContentType(<span class="string">"text/html"</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line"></span><br><span class="line">        Integer bookId = Integer.valueOf(req.getParameter(<span class="string">"id"</span>));</span><br><span class="line">        Book book = DB.getAll().get(bookId);</span><br><span class="line"></span><br><span class="line">        HttpSession session = req.getSession();</span><br><span class="line">        List&lt;Book&gt; bookToBuyList = (List&lt;Book&gt;) session.getAttribute(<span class="string">"bookToBuyList"</span>);</span><br><span class="line">        <span class="keyword">if</span>(bookToBuyList==<span class="keyword">null</span>)&#123;</span><br><span class="line">            bookToBuyList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        bookToBuyList.add(book);</span><br><span class="line">        session.setAttribute(<span class="string">"bookToBuyList"</span>,bookToBuyList);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-cookie和Session的对比"><a href="#4-cookie和Session的对比" class="headerlink" title="4.cookie和Session的对比"></a>4.cookie和Session的对比</h2><p><strong>从存储方式上比较</strong></p>
+<ul>
+<li><p>Cookie只能存储字符串，如果要存储非ASCII字符串还要对其编码</p>
+</li>
+<li><p>Session可以存储任何类型的数据，可以把Session看成是一个容器</p>
+</li>
+</ul>
+<p><strong>从隐私安全上比较</strong></p>
+<ul>
+<li>Cookie保存在硬盘中，只需要设置maxAge属性为比较大的正整数，即使关闭浏览器，Cookie还是存在的</li>
+<li><strong>Session的保存在服务器中，设置maxInactiveInterval属性值来确定Session的有效期。并且Session依赖于名为JSESSIONID的Cookie，该Cookie默认的maxAge属性和Session相同</strong>。</li>
+</ul>
+<p><strong>从对服务器的负担比较</strong></p>
+<ul>
+<li>Session是保存在服务器的，每个用户都会产生一个Session，如果是并发访问的用户非常多，是不能使用Session的，Session会消耗大量的内存。</li>
+<li>Cookie是保存在客户端的。不占用服务器的资源。像baidu、Sina这样的大型网站，一般都是使用Cookie来进行会话跟踪。</li>
+</ul>
+<p><strong>从跨域名上比较</strong></p>
+<ul>
+<li>Cookie可以设置domain属性来实现跨域名</li>
+<li>Session只在当前的域名内有效，不可跨域名</li>
+</ul>
+
         </div>
         
         <div class="level is-size-7 is-uppercase">
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/JavaWeb/" rel="tag">JavaWeb</a>
+                    <a class="has-link-grey -link" href="/tags/JavaWeb/" rel="tag">JavaWeb</a>, <a class="has-link-grey -link" href="/tags/session/" rel="tag">session</a>
                 </div>
             </div>
         </div>
@@ -292,7 +485,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            103
+                            109
                         </p>
                     </a>
                 </div>
@@ -304,7 +497,7 @@
                     </p>
                     <a href="/categories">
                         <p class="title has-text-weight-normal">
-                            20
+                            21
                         </p>
                     </a>
                 </div>
@@ -316,7 +509,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            24
+                            26
                         </p>
                     </a>
                 </div>
@@ -352,6 +545,65 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-会话">
+        <span class="has-mr-6">1</span>
+        <span>1.会话</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-cookie机制">
+        <span class="has-mr-6">2</span>
+        <span>2.cookie机制</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-1-什么是cookie">
+        <span class="has-mr-6">2.1</span>
+        <span>2.1 什么是cookie</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-cookie的流程">
+        <span class="has-mr-6">2.2</span>
+        <span>2.2 cookie的流程</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-3cookie的有效期">
+        <span class="has-mr-6">2.3</span>
+        <span>2.3cookie的有效期</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-4cookie的常见应用">
+        <span class="has-mr-6">2.4</span>
+        <span>2.4cookie的常见应用</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-Session机制">
+        <span class="has-mr-6">3</span>
+        <span>3.Session机制</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#3-1-什么是session">
+        <span class="has-mr-6">3.1</span>
+        <span>3.1 什么是session</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-2-Session流程">
+        <span class="has-mr-6">3.2</span>
+        <span>3.2 Session流程</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-3-Session原理">
+        <span class="has-mr-6">3.3</span>
+        <span>3.3 Session原理</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-4-Session常见应用">
+        <span class="has-mr-6">3.4</span>
+        <span>3.4 Session常见应用</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#4-cookie和Session的对比">
+        <span class="has-mr-6">4</span>
+        <span>4.cookie和Session的对比</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
 
     
     

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Axios - chen33的个人博客</title>
+
+
+    <meta name="description" content="1.axios简介2.vue实例生命周期3.axios基本使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Axios">
+<meta property="og:url" content="http://coderchen33.life/2021/05/13/Axios/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="1.axios简介2.vue实例生命周期3.axios基本使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2021-05-13T13:19:33.000Z">
+<meta property="article:modified_time" content="2021-05-14T03:55:40.940Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Axios" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-05-13T13:19:33.000Z">2021-05-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/JavaWeb%E5%92%8C%E5%89%8D%E7%AB%AF/">JavaWeb和前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/JavaWeb%E5%92%8C%E5%89%8D%E7%AB%AF/Vue/">Vue</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    15 分钟 读完 (大约 2323 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Axios
+            
+        </h1>
+        <div class="content">
+            <p>1.axios简介<br>2.vue实例生命周期<br>3.axios基本使用</p>
+<a id="more"></a>
+
+<h3 id="一、Axios简介"><a href="#一、Axios简介" class="headerlink" title="一、Axios简介"></a>一、Axios简介</h3><p>Axios 是一个开源的可以用在浏览器端和Node.js的异步通信框架，它的主要作用是<strong>实现ajax的异步通信</strong>。它的主要特点如下:</p>
+<ul>
+<li>从浏览器中创建 <code>XMLHttpRequests</code></li>
+<li>从 node.js 创建 <code>http</code>请求</li>
+<li>支持 Promise API</li>
+<li>拦截请求和响应</li>
+<li>转换请求数据和响应数据</li>
+<li>取消请求</li>
+<li>自动转换 <code>JSON</code>数据</li>
+<li>客户端支持防御 <code>XSRF</code></li>
+</ul>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Axios-2021-05-14-11-47-40"></div><br>
+
+<p>官网:<a href="http://www.axios-js.com/">http://www.axios-js.com/</a></p>
+<p>官方文档:<a href="http://www.axios-js.com/zh-cn/docs/">http://www.axios-js.com/zh-cn/docs/</a></p>
+<p><strong>为什么要使用Axios?</strong></p>
+<p>因为vue是一个视图层框架，并且严格遵守SoC(关注度分离原则)，因此vue并不包含ajax的通信功能，为了解决通信功能，作者单独开发了一个名为<code>vue-resource</code>的插件，不过在进入2.0版本后停止了对该插件的维护并推荐了<code>Axios</code>框架。  少用jQuery,因为jQuery操作Dom太频繁。</p>
+<h3 id="二、vue实例生命周期"><a href="#二、vue实例生命周期" class="headerlink" title="二、vue实例生命周期"></a>二、vue实例生命周期</h3><p>学习使用Axios之前，我们需要先了解下vue实例的生命周期。每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做<strong>生命周期钩子</strong>的函数，这给了用户在不同阶段添加自己的代码的机会。</p>
+<p>我们的axios因为做的是异步请求，通常是在html加载完成后进行处理的，所以<strong>通常会在<code>mounted</code>方法中使用axios进行一些异步请求。</strong></p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Axios-2021-05-14-11-48-09"></div><br>
+
+<h3 id="三、Axios的使用"><a href="#三、Axios的使用" class="headerlink" title="三、Axios的使用"></a>三、Axios的使用</h3><h4 id="安装axios"><a href="#安装axios" class="headerlink" title="安装axios"></a>安装axios</h4><ul>
+<li><p>cdn方式引入<code>&lt;script src=&quot;https://unpkg.com/axios/dist/axios.min.js&quot;&gt;&lt;/script&gt;</code></p>
+</li>
+<li><p>项目中需要安装使用<code>npm install axios</code></p>
+</li>
+</ul>
+<h4 id="vue中使用axios"><a href="#vue中使用axios" class="headerlink" title="vue中使用axios"></a>vue中使用axios</h4><p>1.这里我们就直接在项目中进行测试，参照官方文档中vue-axios部分，首先安装axios和vue-axios。项目中打开命令行进行安装。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save axios vue-axios</span><br></pre></td></tr></table></figure>
+
+<p>2.在项目中的main.js中引入vue和vue-axios。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span></span><br><span class="line"><span class="keyword">import</span> VueAxios <span class="keyword">from</span> <span class="string">'vue-axios'</span></span><br><span class="line"></span><br><span class="line">Vue.use(VueAxios, axios)</span><br></pre></td></tr></table></figure>
+
+<p>3.在static文件夹下新建一个data.json文件，让axios进行请求。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"coderchen33"</span>,</span><br><span class="line">  <span class="attr">"url"</span>: <span class="string">"https://www.baidu.com"</span>,</span><br><span class="line">  <span class="attr">"page"</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">"isNonProfit"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"address"</span>: &#123;</span><br><span class="line">    <span class="attr">"street"</span>: <span class="string">"翻斗大街"</span>,</span><br><span class="line">    <span class="attr">"city"</span>: <span class="string">"翻斗市"</span>,</span><br><span class="line">    <span class="attr">"country"</span>: <span class="string">"中国"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"links"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"name"</span>: <span class="string">"bilibili"</span>,</span><br><span class="line">      <span class="attr">"url"</span>: <span class="string">"https://www.bilibili.com/"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"name"</span>: <span class="string">"taobao"</span>,</span><br><span class="line">      <span class="attr">"url"</span>: <span class="string">"https://www.taobao.com/"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"name"</span>: <span class="string">"douban"</span>,</span><br><span class="line">      <span class="attr">"url"</span>: <span class="string">"https://www.douban.com/"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.新建一个测试axios的组件axiostest.vue，并配置路由。</p>
+<p>axiostest.vue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  </span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">      name: &quot;axiostest&quot;,</span><br><span class="line">    &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>router文件夹下的index.js中配置路由</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">path</span>: <span class="string">'axt'</span>, <span class="attr">component</span>: axiostest&#125;</span><br></pre></td></tr></table></figure>
+
+<p>5.在新建的axiostest.vue组件中使用axios异步请求数据，并进行展示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;axiostest&quot;&gt;</span><br><span class="line">    &lt;!--渲染数据--&gt;</span><br><span class="line">    &#123;&#123;info&#125;&#125;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">      name: &quot;axiostest&quot;,</span><br><span class="line">      data()&#123;</span><br><span class="line">        return&#123;</span><br><span class="line">          info: null</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      mounted() &#123;</span><br><span class="line">        &#x2F;&#x2F;使用axios进行get请求</span><br><span class="line">        &#x2F;&#x2F;this.info&#x3D;response.data 将请求到的数据赋值给data</span><br><span class="line">        this.axios.get(&#39;http:&#x2F;&#x2F;localhost:8080&#x2F;static&#x2F;data.json&#39;).then((response) &#x3D;&gt; &#123;</span><br><span class="line">          this.info&#x3D;response.data;</span><br><span class="line">      &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>6.启动项目进行测试。</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Axios-2021-05-14-11-48-47"></div><br>
+
+<p>当然，如果要渲染每个数据的话，就需要对data中的info进行修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;axiostest&quot;&gt;</span><br><span class="line">    &#123;&#123;info.name&#125;&#125;</span><br><span class="line">    &#123;&#123;info.address.street&#125;&#125;</span><br><span class="line">    &#123;&#123;info.address.city&#125;&#125;</span><br><span class="line">    &#123;&#123;info.address.country&#125;&#125;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">      name: &quot;axiostest&quot;,</span><br><span class="line">      data()&#123;</span><br><span class="line">        return&#123;</span><br><span class="line">          info: &#123;</span><br><span class="line">            &#x2F;&#x2F;不全写了  理解即可</span><br><span class="line">            &#x2F;&#x2F;在data中摆返回json的格式</span><br><span class="line">            name: &#39;&#39;,</span><br><span class="line">            address: &#123;</span><br><span class="line">              street: &#39;&#39;,</span><br><span class="line">              city: &#39;&#39;,</span><br><span class="line">              country: &#39;&#39;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      mounted() &#123;</span><br><span class="line">        &#x2F;&#x2F;使用axios进行get请求</span><br><span class="line">        &#x2F;&#x2F;this.info&#x3D;response.data 将请求到的数据赋值给data</span><br><span class="line">        this.axios.get(&#39;http:&#x2F;&#x2F;localhost:8080&#x2F;static&#x2F;data.json&#39;)</span><br><span class="line">          .then((response) &#x3D;&gt; &#123;</span><br><span class="line">            this.info&#x3D;response.data;</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Axios-2021-05-14-11-50-02"></div><br>
+
+<h3 id="四、Axios详细使用"><a href="#四、Axios详细使用" class="headerlink" title="四、Axios详细使用"></a>四、Axios详细使用</h3><h4 id="1-案例"><a href="#1-案例" class="headerlink" title="1.案例"></a>1.案例</h4><p>上面的例子中我们使用axios执行了get请求，并获得了返回结果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.axios.get(<span class="string">'http://localhost:8080/static/data.json'</span>)</span><br><span class="line">  .then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.info=response.data;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>另一个比较常见的请求方法就是我们的post请求了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">axios.post(<span class="string">'/user'</span>, &#123;</span><br><span class="line">    <span class="comment">//传递firstName参数和lastName参数</span></span><br><span class="line">    firstName: <span class="string">'Fred'</span>,</span><br><span class="line">    lastName: <span class="string">'Flintstone'</span></span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(response);</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="comment">//链式编程，使用catch处理错误</span></span><br><span class="line">  .catch(<span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(error);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-axios传递相关配置"><a href="#2-axios传递相关配置" class="headerlink" title="2.axios传递相关配置"></a>2.axios传递相关配置</h4><p>除了上面这种f方便的写法外，可以通过向 <code>axios</code> 传递相关配置来创建请求。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//发送get请求</span></span><br><span class="line">axios(&#123;</span><br><span class="line">  method: <span class="string">'get'</span>,</span><br><span class="line">  url: <span class="string">'api'</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发送 POST 请求</span></span><br><span class="line">axios(&#123;</span><br><span class="line">  method: <span class="string">'post'</span>,</span><br><span class="line">  url: <span class="string">'/user/12345'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    firstName: <span class="string">'Fred'</span>,</span><br><span class="line">    lastName: <span class="string">'Flintstone'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这些是创建请求时可以用的配置选项。只有 <code>url</code> 是必需的。如果没有指定 <code>method</code>，请求将默认使用 <code>get</code> 方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="comment">// `url` 是用于请求的服务器 URL</span></span><br><span class="line">  url: <span class="string">'/user'</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `method` 是创建请求时使用的方法</span></span><br><span class="line">  method: <span class="string">'get'</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL。</span></span><br><span class="line">  <span class="comment">// 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL</span></span><br><span class="line">  baseURL: <span class="string">'https://some-domain.com/api/'</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `transformRequest` 允许在向服务器发送前，修改请求数据</span></span><br><span class="line">  <span class="comment">// 只能用在 'PUT', 'POST' 和 'PATCH' 这几个请求方法</span></span><br><span class="line">  <span class="comment">// 后面数组中的函数必须返回一个字符串，或 ArrayBuffer，或 Stream</span></span><br><span class="line">  transformRequest: [<span class="function"><span class="keyword">function</span> (<span class="params">data, headers</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 对 data 进行任意转换处理</span></span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;],</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `transformResponse` 在传递给 then/catch 前，允许修改响应数据</span></span><br><span class="line">  transformResponse: [<span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 对 data 进行任意转换处理</span></span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;],</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `headers` 是即将被发送的自定义请求头</span></span><br><span class="line">  headers: &#123;<span class="string">'X-Requested-With'</span>: <span class="string">'XMLHttpRequest'</span>&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `params` 是即将与请求一起发送的 URL 参数</span></span><br><span class="line">  <span class="comment">// 必须是一个无格式对象(plain object)或 URLSearchParams 对象</span></span><br><span class="line">  params: &#123;</span><br><span class="line">    ID: <span class="number">12345</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">   <span class="comment">// `paramsSerializer` 是一个负责 `params` 序列化的函数</span></span><br><span class="line">  <span class="comment">// (e.g. https://www.npmjs.com/package/qs, http://api.jquery.com/jquery.param/)</span></span><br><span class="line">  paramsSerializer: <span class="function"><span class="keyword">function</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Qs.stringify(params, &#123;<span class="attr">arrayFormat</span>: <span class="string">'brackets'</span>&#125;)</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `data` 是作为请求主体被发送的数据</span></span><br><span class="line">  <span class="comment">// 只适用于这些请求方法 'PUT', 'POST', 和 'PATCH'</span></span><br><span class="line">  <span class="comment">// 在没有设置 `transformRequest` 时，必须是以下类型之一：</span></span><br><span class="line">  <span class="comment">// - string, plain object, ArrayBuffer, ArrayBufferView, URLSearchParams</span></span><br><span class="line">  <span class="comment">// - 浏览器专属：FormData, File, Blob</span></span><br><span class="line">  <span class="comment">// - Node 专属： Stream</span></span><br><span class="line">  data: &#123;</span><br><span class="line">    firstName: <span class="string">'Fred'</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `timeout` 指定请求超时的毫秒数(0 表示无超时时间)</span></span><br><span class="line">  <span class="comment">// 如果请求话费了超过 `timeout` 的时间，请求将被中断</span></span><br><span class="line">  timeout: <span class="number">1000</span>,</span><br><span class="line"></span><br><span class="line">   <span class="comment">// `withCredentials` 表示跨域请求时是否需要使用凭证</span></span><br><span class="line">  withCredentials: <span class="literal">false</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// `adapter` 允许自定义处理请求，以使测试更轻松</span></span><br><span class="line">  <span class="comment">// 返回一个 promise 并应用一个有效的响应 (查阅 [response docs](#response-api)).</span></span><br><span class="line">  adapter: <span class="function"><span class="keyword">function</span> (<span class="params">config</span>) </span>&#123;</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line"> <span class="comment">// `auth` 表示应该使用 HTTP 基础验证，并提供凭据</span></span><br><span class="line">  <span class="comment">// 这将设置一个 `Authorization` 头，覆写掉现有的任意使用 `headers` 设置的自定义 `Authorization`头</span></span><br><span class="line">  auth: &#123;</span><br><span class="line">    username: <span class="string">'janedoe'</span>,</span><br><span class="line">    password: <span class="string">'s00pers3cret'</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">   <span class="comment">// `responseType` 表示服务器响应的数据类型，可以是 'arraybuffer', 'blob', 'document', 'json', 'text', 'stream'</span></span><br><span class="line">  responseType: <span class="string">'json'</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// `responseEncoding` indicates encoding to use for decoding responses</span></span><br><span class="line">  <span class="comment">// Note: Ignored for `responseType` of 'stream' or client-side requests</span></span><br><span class="line">  responseEncoding: <span class="string">'utf8'</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// `xsrfCookieName` 是用作 xsrf token 的值的cookie的名称</span></span><br><span class="line">  xsrfCookieName: <span class="string">'XSRF-TOKEN'</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// `xsrfHeaderName` is the name of the http header that carries the xsrf token value</span></span><br><span class="line">  xsrfHeaderName: <span class="string">'X-XSRF-TOKEN'</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// `onUploadProgress` 允许为上传处理进度事件</span></span><br><span class="line">  onUploadProgress: <span class="function"><span class="keyword">function</span> (<span class="params">progressEvent</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// Do whatever you want with the native progress event</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `onDownloadProgress` 允许为下载处理进度事件</span></span><br><span class="line">  onDownloadProgress: <span class="function"><span class="keyword">function</span> (<span class="params">progressEvent</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 对原生进度事件的处理</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">   <span class="comment">// `maxContentLength` 定义允许的响应内容的最大尺寸</span></span><br><span class="line">  maxContentLength: <span class="number">2000</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `validateStatus` 定义对于给定的HTTP 响应状态码是 resolve 或 reject  promise 。如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，promise 将被 resolve; 否则，promise 将被 rejecte</span></span><br><span class="line">  validateStatus: <span class="function"><span class="keyword">function</span> (<span class="params">status</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> status &gt;= <span class="number">200</span> &amp;&amp; status &lt; <span class="number">300</span>; <span class="comment">// default</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `maxRedirects` 定义在 node.js 中 follow 的最大重定向数目</span></span><br><span class="line">  <span class="comment">// 如果设置为0，将不会 follow 任何重定向</span></span><br><span class="line">  maxRedirects: <span class="number">5</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// `socketPath` defines a UNIX Socket to be used in node.js.</span></span><br><span class="line">  <span class="comment">// e.g. '/var/run/docker.sock' to send requests to the docker daemon.</span></span><br><span class="line">  <span class="comment">// Only either `socketPath` or `proxy` can be specified.</span></span><br><span class="line">  <span class="comment">// If both are specified, `socketPath` is used.</span></span><br><span class="line">  socketPath: <span class="literal">null</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// `httpAgent` 和 `httpsAgent` 分别在 node.js 中用于定义在执行 http 和 https 时使用的自定义代理。允许像这样配置选项：</span></span><br><span class="line">  <span class="comment">// `keepAlive` 默认没有启用</span></span><br><span class="line">  httpAgent: <span class="keyword">new</span> http.Agent(&#123; <span class="attr">keepAlive</span>: <span class="literal">true</span> &#125;),</span><br><span class="line">  httpsAgent: <span class="keyword">new</span> https.Agent(&#123; <span class="attr">keepAlive</span>: <span class="literal">true</span> &#125;),</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 'proxy' 定义代理服务器的主机名称和端口</span></span><br><span class="line">  <span class="comment">// `auth` 表示 HTTP 基础验证应当用于连接代理，并提供凭据</span></span><br><span class="line">  <span class="comment">// 这将会设置一个 `Proxy-Authorization` 头，覆写掉已有的通过使用 `header` 设置的自定义 `Proxy-Authorization` 头。</span></span><br><span class="line">  proxy: &#123;</span><br><span class="line">    host: <span class="string">'127.0.0.1'</span>,</span><br><span class="line">    port: <span class="number">9000</span>,</span><br><span class="line">    auth: &#123;</span><br><span class="line">      username: <span class="string">'mikeymike'</span>,</span><br><span class="line">      password: <span class="string">'rapunz3l'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// `cancelToken` 指定用于取消请求的 cancel token</span></span><br><span class="line">  <span class="comment">// （查看后面的 Cancellation 这节了解更多）</span></span><br><span class="line">  cancelToken: <span class="keyword">new</span> CancelToken(<span class="function"><span class="keyword">function</span> (<span class="params">cancel</span>) </span>&#123;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-请求方法"><a href="#3-请求方法" class="headerlink" title="3.请求方法"></a>3.请求方法</h4><p>我们知道除了get请求和post请求外，http还有其他几种请求。axios都提供了相应的方法。  这些方法的使用和get和post请求相同这里就不演示了。  同样可以直接使用简便方法，或者通过配置文件中的method属性进行指定。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">axios.get(url[, config])</span><br><span class="line">axios.post(url[, data[, config]])</span><br><span class="line">axios.put(url[, data[, config]])</span><br><span class="line">axios.patch(url[, data[, config]])</span><br><span class="line">axios.delete(url[, config])</span><br><span class="line">axios.head(url[, config])</span><br><span class="line">axios.options(url[, config])</span><br><span class="line">axios.request(config)</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-响应结构"><a href="#4-响应结构" class="headerlink" title="4. 响应结构"></a>4. 响应结构</h4><p>某个请求的response响应包含以下信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &#x2F;&#x2F; &#96;data&#96; 由服务器提供的响应</span><br><span class="line">  data: &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; &#96;status&#96; 来自服务器响应的 HTTP 状态码</span><br><span class="line">  status: 200,</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; &#96;statusText&#96; 来自服务器响应的 HTTP 状态信息</span><br><span class="line">  statusText: &#39;OK&#39;,</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; &#96;headers&#96; 服务器响应的头</span><br><span class="line">  headers: &#123;&#125;,</span><br><span class="line"></span><br><span class="line">   &#x2F;&#x2F; &#96;config&#96; 是为请求提供的配置信息</span><br><span class="line">  config: &#123;&#125;,</span><br><span class="line"> &#x2F;&#x2F; &#39;request&#39;</span><br><span class="line">  &#x2F;&#x2F; &#96;request&#96; is the request that generated this response</span><br><span class="line">  &#x2F;&#x2F; It is the last ClientRequest instance in node.js (in redirects)</span><br><span class="line">  &#x2F;&#x2F; and an XMLHttpRequest instance the browser</span><br><span class="line">  request: &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>then</code> 时，你将接收下面这样的响应 :</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">axios.get(<span class="string">'/user/12345'</span>)</span><br><span class="line">  .then(<span class="function"><span class="keyword">function</span>(<span class="params">response</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(response.data);</span><br><span class="line">    <span class="built_in">console</span>.log(response.status);</span><br><span class="line">    <span class="built_in">console</span>.log(response.statusText);</span><br><span class="line">    <span class="built_in">console</span>.log(response.headers);</span><br><span class="line">    <span class="built_in">console</span>.log(response.config);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Vue/" rel="tag">Vue</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/05/13/Vue-Router/">
+                <span class="level-item">Vue-Router</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            109
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            21
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            26
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#一、Axios简介">
+        <span class="has-mr-6">1</span>
+        <span>一、Axios简介</span>
+        </a></li><li>
+        <a class="is-flex" href="#二、vue实例生命周期">
+        <span class="has-mr-6">2</span>
+        <span>二、vue实例生命周期</span>
+        </a></li><li>
+        <a class="is-flex" href="#三、Axios的使用">
+        <span class="has-mr-6">3</span>
+        <span>三、Axios的使用</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#安装axios">
+        <span class="has-mr-6">3.1</span>
+        <span>安装axios</span>
+        </a></li><li>
+        <a class="is-flex" href="#vue中使用axios">
+        <span class="has-mr-6">3.2</span>
+        <span>vue中使用axios</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#四、Axios详细使用">
+        <span class="has-mr-6">4</span>
+        <span>四、Axios详细使用</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-案例">
+        <span class="has-mr-6">4.1</span>
+        <span>1.案例</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-axios传递相关配置">
+        <span class="has-mr-6">4.2</span>
+        <span>2.axios传递相关配置</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-请求方法">
+        <span class="has-mr-6">4.3</span>
+        <span>3.请求方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-响应结构">
+        <span class="has-mr-6">4.4</span>
+        <span>4. 响应结构</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Axios" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

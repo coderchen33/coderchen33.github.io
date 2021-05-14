@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Vue-cli - chen33的个人博客</title>
+
+
+    <meta name="description" content="1.Vue-cli简介2.构建Vue项目3.Vue标准项目结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue-cli">
+<meta property="og:url" content="http://coderchen33.life/2021/05/13/Vue-cli/index.html">
+<meta property="og:site_name" content="chen33的个人博客">
+<meta property="og:description" content="1.Vue-cli简介2.构建Vue项目3.Vue标准项目结构">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://coderchen33.life/images/og_image.png">
+<meta property="article:published_time" content="2021-05-13T13:18:58.000Z">
+<meta property="article:modified_time" content="2021-05-14T03:55:46.159Z">
+<meta property="article:author" content="coderchen33">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coderchen33.life/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    <script async="" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+<body class="is-3-column"></body>
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Vue-cli" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/tools">工具</a>
+                
+                <a class="navbar-item"
+                href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    <a class="navbar-item" target="_blank" rel="noopener" title="View Github" href="https://github.com/coderchen33">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-05-13T13:18:58.000Z">2021-05-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/JavaWeb%E5%92%8C%E5%89%8D%E7%AB%AF/">JavaWeb和前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/JavaWeb%E5%92%8C%E5%89%8D%E7%AB%AF/Vue/">Vue</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    10 分钟 读完 (大约 1514 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Vue-cli
+            
+        </h1>
+        <div class="content">
+            <p>1.Vue-cli简介<br>2.构建Vue项目<br>3.Vue标准项目结构</p>
+<a id="more"></a>
+
+<h3 id="一、vue-cli简介"><a href="#一、vue-cli简介" class="headerlink" title="一、vue-cli简介"></a>一、vue-cli简介</h3><p>vue-cli是官方提供的一个<strong>脚手架，用于快速生成一个vue项目模板。</strong>   就好像我们java在创建maven项目时可以选择一个项目模板一样，这个模板就是脚手架，目的在于规范目录结构，使得我们的开发更加快速。</p>
+<p>官网:<a href="https://cli.vuejs.org/zh/">https://cli.vuejs.org/zh/</a></p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-11-34"></div><br>
+
+<p>主要功能包括:</p>
+<ul>
+<li>统一目录结构</li>
+<li>本地调试</li>
+<li>热部署</li>
+<li>单元测试</li>
+<li>集成打包上线</li>
+</ul>
+<h3 id="二-构建Vue项目"><a href="#二-构建Vue项目" class="headerlink" title="二. 构建Vue项目"></a>二. 构建Vue项目</h3><blockquote>
+<p><strong>0.预备环境</strong></p>
+</blockquote>
+<p><strong>安装Node.js</strong>     官网下载安装即可。<a href="https://nodejs.org/en/">https://nodejs.org/en/</a>    安装完成后查看对应版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看node版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看npm版本</span></span><br><span class="line">npm-v</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-12-04"></div><br>
+
+<p><strong>安装Node.js 淘宝镜像加速器(cnpm)</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -g表示全局安装   --registry表示使用淘宝镜像</span></span><br><span class="line">npm  install  -g  cnpm  --registry=https://registry.npm.taobao.org</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看cnpm版本</span></span><br><span class="line">cnpm -v</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-12-45"></div><br>
+
+<p><strong>安装vue-cli</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cnpm install vue-cli</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试是否安装成功</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看可以基于哪些模板</span></span><br><span class="line">vue list</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-13-07"></div><br>
+
+<blockquote>
+<p><strong>1.新建一个项目文件</strong></p>
+</blockquote>
+<p>环境安装好后就可以开始新建一个vue项目，过程中会出现如下提示，我们一路选择默认和no即可。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue init webpack myvue  //新建一个名为myvue的项目</span><br></pre></td></tr></table></figure>
+
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-13-43"></div><br>
+
+<p>详细说明:</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-13-57"></div><br>
+
+<blockquote>
+<p><strong>2.安装项目环境依赖</strong></p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd myvue  //切换到项目目录</span><br><span class="line">npm install (or if using yarn: yarn)  //安装项目环境依赖</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>npm install</code>安装后，我们项目的文件目录结构如下:</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-14-33"></div><br>
+
+<blockquote>
+<p><strong>3.运行项目</strong></p>
+</blockquote>
+<p>通过<code>npm run dev</code>运行项目，可以看到我们的项目运行在80端口。</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-14-54"></div><br>
+
+<p>我们直接访问localhost:8080，即可看到vue项目。</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-15-08"></div><br>
+
+
+
+<h3 id="三、-Vue标准项目结构"><a href="#三、-Vue标准项目结构" class="headerlink" title="三、 Vue标准项目结构"></a>三、 Vue标准项目结构</h3><p>上面项目构建完成后，我们使用webstorm或者idea打开，就是一个标准的vue项目结构，我们可以自己点进去看一看里面都包含哪些文件。</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-15-20"></div><br>
+
+<p><strong>目录解析</strong></p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-15-34"></div><br>
+
+<blockquote>
+<p><strong>1 ） index.html</strong></p>
+</blockquote>
+<p>项目的入口文件，可以看到里面只有一些meta信息和一个div标签用来和vue实例进行绑定。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width,initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>myvue<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>2） src目录</strong></p>
+</blockquote>
+<p>src文件夹是我们主要写前端代码的位置，主要包含两个文件夹和两个文件：</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-15-58"></div><br>
+
+<p><strong>assets文件夹和components文件夹</strong></p>
+<ul>
+<li>assets文件夹:   存放图片等的位置。  比如这里的logo.png就是我们上面打开的页面中的vue的logo</li>
+<li>components文件夹:   存放vue组件的位置。  比如这里的HelloWorld组件中就是打开页面中的vue下面的内容</li>
+</ul>
+<p>我们可以直接修改相应的内容，可以看到页面直接进行了修改。</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-16-12"></div><br>
+
+<p>为什么直接修改HelloWorld组件中的内容，这个页面内容就修改了呢?</p>
+<p><strong>main.js文件</strong></p>
+<p>上面我们知道，<code>index.html</code>是页面主入口，这里main.js就是通过vue实例绑定我们的<code>index.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import Vue from 'vue'</span><br><span class="line">import App from './App'</span><br><span class="line">Vue.config.productionTip = false</span><br><span class="line"></span><br><span class="line">new Vue(&#123;</span><br><span class="line">  el: '#app',  //对应index.html中的div标签的id   用来绑定index.html</span><br><span class="line">  components: &#123; App &#125;,  //包含组件App</span><br><span class="line">  template: '<span class="tag">&lt;<span class="name">App</span>/&gt;</span>'  //使用组件App</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>vue实例中通过el属性来绑定index.html文件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">el: '#app',  //对应index.html中的div标签的id   用来绑定index.html</span><br></pre></td></tr></table></figure>
+
+<p>通过components属性注册需要用到的组件，这里就是在实例中注册了App组件，并且命名为了’App’，这里如果组件名和需要命名的名称相同时，可以简写为下面形式。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">components: &#123; App &#125;,  //实例中注册组件App//相当于下面的代码components:&#123;	'App': App&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>App.vue组件</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span>  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span>    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"./assets/logo.png"</span>&gt;</span>    <span class="tag">&lt;<span class="name">HelloWorld</span>/&gt;</span>  <span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">template</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"><span class="keyword">import</span> HelloWorld <span class="keyword">from</span> <span class="string">'./components/HelloWorld'</span><span class="keyword">export</span> <span class="keyword">default</span> &#123;  <span class="attr">name</span>: <span class="string">'App'</span>,  <span class="attr">components</span>: &#123;    HelloWorld  &#125;&#125;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"><span class="selector-id">#app</span> &#123;  <span class="attribute">font-family</span>: <span class="string">'Avenir'</span>, Helvetica, Arial, sans-serif;  <span class="attribute">-webkit-font-smoothing</span>: antialiased;  <span class="attribute">-moz-osx-font-smoothing</span>: grayscale;  <span class="attribute">text-align</span>: center;  <span class="attribute">color</span>: <span class="number">#2c3e50</span>;  <span class="attribute">margin-top</span>: <span class="number">60px</span>;&#125;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Vue组件包含三个部分:</p>
+<ul>
+<li><code>&lt;template&gt;</code>  模板内容</li>
+<li><code>&lt;script&gt;</code>  js</li>
+<li><code>&lt;style&gt;</code>   样式</li>
+</ul>
+<p>template中写我们的html代码，可以看到就是我们页面看到的logo和一个HelloWorld组件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span>  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span>    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"./assets/logo.png"</span>&gt;</span>    <span class="tag">&lt;<span class="name">HelloWorld</span>/&gt;</span>  <span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>script中主要是导入导出组件，组件需要先导出<code>export</code>，然后其他组件导入<code>import</code>后，才能够供其他组件使用。有点类似于java中的jar包。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="actionscript"><span class="comment">//导入HelloWorld组件import HelloWorld from './components/HelloWorld'//导出App组件export default &#123;  name: 'App',  components: &#123;    HelloWorld  &#125;&#125;</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>style中就是我们组件的样式，如果没有scoped属性，则style中的样式对所有组件生效，如果有scoped属性，则只在当前组件生效。  下面的就是在所有组件生效。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"><span class="selector-id">#app</span> &#123;  <span class="attribute">font-family</span>: <span class="string">'Avenir'</span>, Helvetica, Arial, sans-serif;  <span class="attribute">-webkit-font-smoothing</span>: antialiased;  <span class="attribute">-moz-osx-font-smoothing</span>: grayscale;  <span class="attribute">text-align</span>: center;  <span class="attribute">color</span>: <span class="number">#2c3e50</span>;  <span class="attribute">margin-top</span>: <span class="number">60px</span>;&#125;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span>有scoped属性的则只在当前组件生效<span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>总结</strong></p>
+<p>到这里我们就清楚了，index.html是页面的主入口，main.js中通过vue实例(根组件)绑定index.html,并且根组件中包含子组件App，子组件App中包含一个logo和一个App的子组件HelloWorld。通过dev-tools也可以看到我们的组件树结构。之后我们编写页面，就可以在App组件中添加组件，来构成页面内容即可。</p>
+<div align="center"><img src="http://coderchen33.life/2021-05-13-Vue-cli-2021-05-14-11-16-40"></div><br>
+
+<p>另外，学习的时候有一个点困惑了我很久，就是index.html中有<code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>而我们的Vue实例中也有<code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>构成页面时，两个难道不会构成冲突吗?</p>
+<p>答案是不会，原因在于：</p>
+<ul>
+<li><code>index.html</code>中的<code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>是用于指定绑定元素根路径的</li>
+<li>而<code>App.vue</code>的<code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>则是用于具体注入绑定元素的内容</li>
+</ul>
+<p>实际想想也是，如果冲突，需要index中使用我们的App组件，即index中需要有<code>&lt;App&gt;</code>标签的使用。而实际上index.html是在main.js中绑定了App.vue，使用的时候即是App.Vue中的模板。</p>
+<p>详细介绍可以参考这篇文章:<a href="https://segmentfault.com/q/1010000010136363">https://segmentfault.com/q/1010000010136363</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Vue/" rel="tag">Vue</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="/images/Alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/WechatPay.jpg" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2021/05/13/webpack%E5%85%A5%E9%97%A8/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">webpack入门</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/05/13/Vue%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3/">
+                <span class="level-item">Vue组件</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left is-sticky">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="is-rounded" src="/images/avatar.png" alt="chen33">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        chen33
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        时光你别催 我还有梦要追
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;an</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            109
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            21
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            26
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/coderchen33" target="_blank" rel="noopener">
+                关注我</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="QQ" href="/images/QQ.jpg">
+                
+                <i class="fab fa-qq"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="Github" href="https://github.com/coderchen33">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    目录
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#一、vue-cli简介">
+        <span class="has-mr-6">1</span>
+        <span>一、vue-cli简介</span>
+        </a></li><li>
+        <a class="is-flex" href="#二-构建Vue项目">
+        <span class="has-mr-6">2</span>
+        <span>二. 构建Vue项目</span>
+        </a></li><li>
+        <a class="is-flex" href="#三、-Vue标准项目结构">
+        <span class="has-mr-6">3</span>
+        <span>三、 Vue标准项目结构</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen is-sticky">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Vue-cli" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 coderchen33&nbsp;版权所有
+                <br>
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                <!-- 
+                <br>
+                <span id="busuanzi_container_site_uv">
+                共<span id="busuanzi_value_site_uv">0</span>个访客
+                </span>
+                 -->
+                <br>
+                <span id="busuanzi_container_site_pv" class="theme-info">
+                    本站总访问量<span id="busuanzi_value_site_pv">0</span>次 |
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    本站访客数<span id="busuanzi_value_site_uv">0</span>人
+                </span>
+                <br>
+                <a class="has-link-black-ter-2 -link" href="http://beian.miit.gov.cn/" target="_blank">陕ICP备20002539号</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'http://coderchen33.life',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
